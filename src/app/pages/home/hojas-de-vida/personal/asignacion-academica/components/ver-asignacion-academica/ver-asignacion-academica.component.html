@@ -1,0 +1,96 @@
+<div  class="col-12 contenedorTablas tablasDocentes">
+    
+    <div class="nombre">
+        <h1>{{infoFuncionario.funcionario}}</h1>
+    </div>
+   
+    <div class="tabla">
+        <div class="row titulos">
+            <div class="apellidoNombre titulo">
+                Apellidos y nombre
+                <span *ngIf="numero_identificacion" class="material-symbols-outlined">arrow_drop_down</span>
+                <span *ngIf="!numero_identificacion" class="material-symbols-outlined" >arrow_drop_up
+                </span>
+            </div>
+            <div class="tipoDocumento titulo">
+                Tipo de documento
+                <span *ngIf="numero_identificacion" class="material-symbols-outlined">arrow_drop_down</span>
+                <span *ngIf="!numero_identificacion" class="material-symbols-outlined" >arrow_drop_up
+                </span>
+            </div>
+            <div class="numeroDocumento titulo">
+                Número de documento
+                <span *ngIf="numero_identificacion" class="material-symbols-outlined">arrow_drop_down</span>
+                <span *ngIf="!numero_identificacion" class="material-symbols-outlined" >arrow_drop_up
+                </span>
+            </div>
+            <div class="asignatura titulo">
+                Asignatura
+                <span *ngIf="numero_identificacion" class="material-symbols-outlined">arrow_drop_down</span>
+                <span *ngIf="!numero_identificacion" class="material-symbols-outlined" >arrow_drop_up
+                </span>
+            </div>
+            <div class="grado titulo">
+                Grado
+                <span *ngIf="numero_identificacion" class="material-symbols-outlined">arrow_drop_down</span>
+                <span *ngIf="!numero_identificacion" class="material-symbols-outlined" >arrow_drop_up
+                </span>
+            </div>
+            <div class="grupo titulo">
+                Grupo
+                <span *ngIf="numero_identificacion" class="material-symbols-outlined">arrow_drop_down</span>
+                <span *ngIf="!numero_identificacion" class="material-symbols-outlined" >arrow_drop_up
+                </span>
+            </div>
+            <div class="numeroHoras titulo">
+                Nº de horas
+                <span *ngIf="numero_identificacion" class="material-symbols-outlined">arrow_drop_down</span>
+                <span *ngIf="!numero_identificacion" class="material-symbols-outlined" >arrow_drop_up
+                </span>
+            </div>
+        </div>
+
+        <!-- <hr class="hrTabla"> -->
+
+        <div  *ngFor="let infoDocentes of listadoDocentes" class="row contenidoTabla">
+            <div class="tituloMobile">Apellidos y nombre:</div>
+            <div class="apellidoNombre infoTabla">
+              {{infoDocentes.apellidoNombre}}
+            </div>
+            <div class="tituloMobile">Tipo de documento:</div>
+            <div class="tipoDocumento infoTabla">
+               {{infoDocentes.tipoDocumento}}
+            </div>
+            <div class="tituloMobile">Número de documento:</div>
+            <div class="numeroDocumento infoTabla">
+               {{infoDocentes.numeroDocumento}}
+            </div>
+            <div class="tituloMobile">Asignatura:</div>
+            <div class="asignatura infoTabla">
+               {{infoDocentes.asignatura}}
+            </div>
+            <div class="tituloMobile">Grado:</div>
+            <div class="grado infoTabla">
+                {{infoDocentes.grado}}
+            </div>
+            <div class="tituloMobile">Grupo:</div>
+            <div class="grupo infoTabla">
+               {{infoDocentes.grupo}}
+            </div>
+            <div class="tituloMobile">Nº de horas:</div>
+            <div class="numeroHoras infoTabla">
+               {{infoDocentes.numeroHoras}}
+            </div>
+        </div>
+
+    </div>
+
+    <div class="contenedorHorasTotales">
+         <span> Total de horas {{totalHorasAsignadasDocente}}</span> 
+    </div>
+
+    <div class="acciones">
+        <button (click)="cerrarModal()" class="btn boton_primario">cerrar</button>
+    </div>
+
+</div>

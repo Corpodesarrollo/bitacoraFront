@@ -1,0 +1,8 @@
+<div id="paginador">
+    <span>{{ rangoPagina }} - {{ contadorPaginas[contadorPaginas.length -1] }} de {{ totalRegistros }}</span>
+    <button (click)="primeraPagina()" class="material-symbols-outlined" [disabled]="paginaActual === 1"> first_page </button>
+    <button (click)="anterior()" class="material-symbols-outlined" [disabled]="!showPreviousButton" [disabled]="paginaActual === 1"> chevron_left </button>
+    <button (click)="siguiente()" class="material-symbols-outlined" [disabled]="paginaActual === contadorPagina">chevron_right</button>
+    <button (click)="ultimaPagina()" class="material-symbols-outlined" [disabled]="paginaActual === contadorPagina">last_page</button>
+</div>
+

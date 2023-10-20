@@ -1,0 +1,398 @@
+.titulos {
+    margin: auto;
+    padding: 0rem 0rem 0rem 0rem;
+    border-bottom: 1px solid gainsboro;
+    border-top: 1px solid gainsboro;
+    // margin-bottom: 13px;
+    // margin-top: 13px;
+}
+
+.checkboxTodos {
+    width: 12%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.checkboxMovile{
+    display: none;
+}
+
+.checkboxTodos input[type="checkbox"] {
+    margin-top: 1rem;
+    width: 17px;
+    height: 17px;
+}
+
+input.checkboxInfo {
+    width: 17px;
+    height: 17px;
+    margin-top: 0 !important;
+}
+
+.totalHorasSemanales .input-wrapper {
+    position: initial;
+    height: initial;
+}
+
+
+.totalHorasSemanales input {
+    text-align: center;
+    width: 79px;
+    height: 35px;
+    padding-left: 1.8rem;
+    padding-right: 1.8rem;
+}
+
+.nomenclatura {
+    width: 8%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.funcionario {
+    width: 48%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.totalHorasSemanales {
+    width: 19%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.apellidoNombre {
+    width: 16%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.tipoDocumento {
+    width: 16%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.numeroDocumento {
+    width: 17%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.asignatura {
+    width: 13%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.grado {
+    width: 13%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.grupo {
+    width: 8%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.numeroHoras {
+    width: 17%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.infoTabla {
+    //styleName: M3/body/medium;
+    font-family: Raleway;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0.25px;
+    text-align: center;
+    color: #000000;
+}
+
+.acciones {
+    width: 13%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.acciones.accionesInfo {
+    justify-content: space-around;
+    padding: 0rem 0.9rem;
+}
+
+.accionesBoton {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: -0.5rem;
+    margin-top: 2rem;
+}
+
+.contenedorTablas {
+    padding: 2rem 0rem 0rem 0rem;
+}
+
+.tablasDocentes {
+    padding: 1rem 0rem 0rem 0rem;
+}
+
+.contenedorTablas .contenidoTabla:nth-child(odd) {
+    background-color: #F8FAFA;
+}
+
+.contenedorTablas .titulo {
+    color: #000;
+    font-size: 11px;
+    font-family: Raleway;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 16px;
+    letter-spacing: 0.5px;
+}
+
+.contenedorTablas .contenidoTabla {
+    margin: auto;
+    display: flex;
+    align-items: center;
+    padding: 1.3rem 0rem;
+    border-bottom: 1px solid gainsboro;
+    // margin-bottom: 17px;
+    width: 100%;
+}
+
+.tituloMobile {
+    display: none;
+}
+
+span.signoGrado {
+    font-size: 1rem;
+}
+
+.paginacion {
+    // padding: 0.6rem 0rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.paginacion .pagina_deshabilitada {
+    cursor: unset;
+    color: var(--borde_claro);
+}
+
+.paginacion .control_paginacion {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 3rem;
+    width: 3rem;
+    cursor: pointer;
+}
+
+.paginacion .control_paginacion span {
+    font-weight: 600;
+    font-size: 1.25rem;
+}
+
+.etiqueta_hoverAsignacion,
+.etiqueta_hoverVer {
+    display: none;
+    cursor: pointer;
+}
+
+.accionesInfo span:nth-child(1):hover .etiqueta_hoverAsignacion {
+    display: block !important;
+    width: 77px;
+    position: absolute;
+    height: 40px;
+    /* top: 770px; */
+    /* left: 1134px; */
+    padding: 4px 8px 4px 8px;
+    border-radius: 4px;
+    gap: 10px;
+    // font-size: 4px;
+    color: #EFF1F1;
+    background: #2E3132;
+    //styleName: M3/body/small;
+    font-family: Raleway;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 16px;
+    letter-spacing: 0em;
+    text-align: left;
+    text-wrap: wrap;
+    right: 91px;
+}
+
+.accionesInfo span:nth-child(2):hover .etiqueta_hoverVer {
+    width: 37px;
+    height: 20px;
+    right: 106px;
+    display: block !important;
+    position: absolute;
+    padding: 4px 8px 4px 8px;
+    border-radius: 4px;
+    gap: 10px;
+    // font-size: 4px;
+    color: #EFF1F1;
+    background: #2E3132;
+    //styleName: M3/body/small;
+    font-family: Raleway;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 16px;
+    letter-spacing: 0em;
+    text-align: left;
+    text-wrap: wrap;
+    right: 66px;
+}
+
+.contenedorHorasTotales {
+    padding: 0rem 0rem 1rem 0rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 21px;
+}
+
+.contenedorHorasTotales .material-symbols-outlined {
+    color: #005CBB;
+}
+
+.tituloMobile{
+    display: none;
+}
+
+@media (max-width: 991.98px) {
+    .acciones.accionesInfo {
+        justify-content: space-between;
+    }
+
+    .funcionario {
+        width: 42%;
+    }
+
+    .acciones {
+        width: 16%;
+    }
+
+    .nomenclatura {
+        width: 11%;
+    }
+
+}
+
+
+@media (max-width: 767.98px) {
+
+    .contenedorTablas .contenidoTabla {
+        margin: auto;
+        align-items: flex-start;
+    }
+
+    .titulos .checkboxTodos{
+        display: none !important;
+    }
+
+    .checkboxMovile{
+        display: flex !important;
+        flex-direction: row-reverse;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+
+    .accionesBoton {
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .checkboxMovile input[type="checkbox"]{
+        width: 17px;
+        height: 17px;
+    }
+
+    .checkboxMovile p{
+        padding: 0;
+        margin: 0;
+        font-size: 14px;
+    }
+
+    .tituloMobile{
+        display: initial;
+        width: 50%;
+        padding-bottom: 9px;
+        font-weight: 500;
+    }
+
+    .infoTabla{
+        width: 50%;
+        justify-content: flex-end;
+        align-items: flex-end;
+        padding-bottom: 9px;
+    }
+
+    .titulo{
+        display: none;
+    }
+
+    .infoTabla {
+        text-align: right;
+    }
+
+    .infoTabla.checkboxTodos{
+        display: flex;
+        align-items: flex-end;
+    }
+
+    .checkboxTodos{
+        display: flex;
+        padding-bottom: 9px;
+    }
+
+    .acciones.accionesInfo{
+        justify-content: flex-end;
+        /* align-items: center; */
+        width: 50%;
+        gap: 32px;
+    }
+
+    .totalHorasSemanales .input-wrapper {
+        display: flex;
+        justify-content: flex-end;
+        padding-bottom: 9px;
+    }
+
+}
+
+@media (max-width: 575.98px) {
+
+    .accionesBoton {
+        gap: 13px;
+        // flex-direction: column-reverse;
+    }
+
+}

@@ -1,0 +1,86 @@
+#ListaUsuarios{
+  padding: 0 2rem;
+}
+
+.col-nombres,
+.col-apellidos,
+.col-politicas-datos,
+.col-politicas-uso{
+  width: 25%;
+}
+
+.estado{
+  width: 5.125rem;
+  height: 1.5rem;
+  line-height: 1.5rem;
+  color: #fff;
+  border-radius: 6.25rem;
+  margin: 0 auto;
+}
+
+.no_aceptado{
+  background-color: #E81534;
+  content: "Inactivo";
+}
+.aceptado{
+  background-color:  #008900;
+  content: "Activo"
+}
+.acciones{
+  border-top: 1px solid #BFC8CA;
+  padding-top: 1.5rem;
+  justify-content: center;
+}
+
+@media (max-width: 767.98px) {
+  #ListaUsuarios{
+    padding: 0 1rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .tabla_lista {
+    width: 100%;
+    .titulos {
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
+    }
+
+    .fila {
+      height: auto;
+      border: none;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      row-gap: 0.5rem;
+      padding: 1.2rem;
+      margin-bottom: 0.75rem;
+      background-color: #F8FAFA;
+      border-radius: 20px;
+      text-align: start;
+    }
+
+    .titulo_movil {
+      display: block;
+      font-weight: 600;
+      width: 40%;
+      line-height: 1.2;
+      text-align: start;
+    }
+
+    .col-nombres,
+    .col-apellidos,
+    .col-politicas-datos,
+    .col-politicas-uso{
+      width: 50%;
+    }
+    .estado{
+      text-align: center;
+      margin: 0;
+    }
+    .col-acciones{
+      justify-content: flex-start;
+    }
+  }
+}

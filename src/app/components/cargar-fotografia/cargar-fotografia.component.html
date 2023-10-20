@@ -1,0 +1,31 @@
+<div class="seleccionar_foto">
+  <div class="contenedor_imagen">
+    <span *ngIf="!fotoUsuario && !fotoPrevisualizada" class="material-symbols-outlined">
+    account_circle
+    </span>
+    <img *ngIf="fotoUsuario && !fotoPrevisualizada" src="data:image/jpeg;base64,{{urlFoto}}" alt="imagen_usuario">
+    <img *ngIf="fotoPrevisualizada" [src]="urlNuevaFoto">
+  </div>
+  <div class="botones_imagen" *ngIf="traeBotones">
+    <span *ngIf="nombreArchivo" class="mb-2 nombre_archivo">Archivo: {{ nombreArchivo }}</span>
+    <button class="btn boton_primario mb-2" (click)="foto.click()" [disabled]="!estaActivo">
+      <span class="material-symbols-outlined">
+        upload
+      </span>
+      Subir Foto
+    </button>
+    <button class="btn boton_secundario mb-2 camera" (click)="tomarFoto()" [disabled]="!estaActivo">
+      <span class="material-symbols-outlined">
+        photo_camera
+      </span>
+      Tomar Foto
+    </button>
+    <input type="file" #foto class="d-none" (change)="cambiarFoto($event)" accept=".jpg, .png,.bmp">
+  </div>
+</div>
+<div class="mensaje" [class.error_mensaje]="mensaje.error" *ngIf="traeMensaje">
+  <p class="mensaje_titulo"> {{ mensaje.titulo}}</p>
+  <p>
+    {{ mensaje.informacion}}
+  </p>
+</div>

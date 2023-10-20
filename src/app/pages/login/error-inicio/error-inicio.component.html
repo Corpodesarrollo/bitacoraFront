@@ -1,0 +1,26 @@
+<div class="modal-header">
+  <span class="material-symbols-outlined modal-icon"> sms_failed </span>
+  <div class="modal-title" id="modal-basic-title">
+    <span *ngIf="!usuarioNoEncontrado">
+      Error de inicio de sesión
+    </span>
+    <span *ngIf="usuarioNoEncontrado">Usuario no encontrado</span>
+  </div>
+</div>
+<div class="modal-body">
+  <div class="modal-texto" *ngIf="usuarioNoEncontrado">
+    Lamentablemente, no hemos encontrado el usuario en nuestro sistema. Si su acceso se realiza a través del correo electrónico de Microsoft Office 365 y desea cambiar su contraseña, le recomendamos ponerse en contacto con nuestra mesa de servicio.
+  </div>
+  <div class="modal-texto" *ngIf="!usuarioNoEncontrado">
+    Lo siento, no se pudo iniciar sesión en su cuenta. Por favor, revise sus
+    credenciales de inicio de sesión e inténtelo de nuevo. Si sigue teniendo
+    problemas, póngase en contacto con el soporte técnico al siguiente correo:
+  </div>
+  <div class="modal-correo">apoyoescolardexon@educacionbogota.gov.co</div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn boton_secundario" (click)="cerrar()">
+    Cerrar
+  </button>
+</div>
+

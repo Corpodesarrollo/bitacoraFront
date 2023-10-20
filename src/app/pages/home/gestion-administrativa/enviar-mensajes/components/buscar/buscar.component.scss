@@ -1,0 +1,247 @@
+
+.contenedorTablas .contenidoTabla .fecha {
+    text-align: left;
+    margin-left: 15%;
+}
+
+.contenedorTablas .contenidoTabla .infoAsunto {
+    margin-bottom: 0;
+    text-align: center;
+}
+
+.contenedorTablas .contenidoTabla {
+    margin: auto;
+    display: flex;
+    align-items: center;
+    padding: 0.3rem 1rem;
+    border-bottom: 1px solid gainsboro;
+    margin-bottom: 17px;
+    width: 98%;
+}
+
+.contenedorTablas .contenidoTabla:last-child {
+    border-bottom: 1px solid transparent;
+}
+
+.titulos .titulo:nth-child(1) {
+    text-align: left;
+    padding-left: 20px;
+}
+
+.contenedorTitulo {
+    justify-content: space-between;
+    display: flex;
+    margin-top: 2rem;
+    padding: 0rem 2rem;
+}
+
+.contenedorTitulo button {
+    background: var(--alterno);
+    color: white;
+    border-radius: 100px;
+    display: flex;
+    padding: 10px 24px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.contenedorTablas {
+    padding: 1rem 0.7rem 0rem 0.7rem;
+}
+
+.contenedorTablas .titulo {
+    color: #000;
+    font-size: 11px;
+    font-family: Raleway;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 16px;
+    letter-spacing: 0.5px;
+}
+
+.titulos .titulo:nth-child(2) {
+    padding-right: 6.3rem;
+    text-align: center;
+}
+
+.titulos .titulo:nth-child(3) {
+    text-align: left;
+    padding-left: 3.59rem;
+}
+
+.titulos {
+    margin: auto;
+    padding: 0.6rem 0rem 0.6rem 0rem;
+    border-bottom: 1px solid gainsboro;
+    margin-bottom: 13px;
+    border-top: 1px solid gainsboro;
+}
+
+.contenidoTabla .mensajeNuevo {
+    display: inline-flex;
+    padding: 0px 4px;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 100px;
+    gap: 10px;
+    background: #BA1A1A;
+    color: white;
+    margin-left: 2rem;
+    font-family: Raleway;
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 16px;
+    letter-spacing: 0.5px;
+}
+
+
+.iconosListaBuscar a {
+    list-style: none;
+    color: initial;
+}
+
+.iconosListaBuscar a span:hover {
+    border-radius: 100px;
+    background: #D8E2FF;
+    display: flex;
+    width: 48px;
+    height: 48px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.iconosListaBuscar a span {
+    display: flex;
+    width: 48px;
+    height: 48px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.iconosListaBuscar a p {
+    color: #3F484A;
+    text-align: center;
+    /* M3/label/small */
+    font-family: Raleway;
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 16px;
+    /* 145.455% */
+    letter-spacing: 0.5px;
+}
+
+
+.iconosListaBuscar {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.tituloMobile {
+    display: none;
+}
+
+.sinMensajes {
+    color: #000;
+    font-family: Raleway;
+    font-size: 21px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+    padding-top: 2rem;
+    text-align: center;
+}
+
+.control_paginacion {
+    display: flex;
+    cursor: pointer;
+}
+
+.paginacion .pagina_deshabilitada {
+    cursor: unset;
+    color: var(--borde_claro);
+}
+
+.tituloTotalRegistros{
+    font-weight: 600;
+    font-size: 1.375rem;
+    line-height: 1;
+    padding: 1rem 0rem;
+}
+
+@media (max-width: 1199.98px) {
+    .iconosListaBuscar {
+        justify-content: flex-end;
+        gap: 17px;
+    }
+}
+
+@media (max-width: 767.98px) {
+
+
+    .contenedorTablas .contenidoTabla{
+        // border: none;
+        row-gap: 0.5rem;
+        padding: 1.2rem;
+        background-color: #F8FAFA;
+        border-radius: 20px;
+        padding: 1.2rem !important;
+    }
+
+}
+
+
+@media (max-width: 991.98px) {
+
+    .tituloMobile {
+        display: initial;
+    }
+
+    .titulo{
+        display: none;
+    }
+
+    .contenedorTablas .contenidoTabla .infoAsunto {
+        padding-left: 0rem;
+    }
+
+    .contenidoTabla .mensajeNuevo {
+        margin-left: 0rem;
+    }
+
+    .contenedorTablas .contenidoTabla .fecha {
+        margin-bottom: 0;
+        text-align: left;
+    }
+
+ }
+
+
+
+
+ @media (max-width: 575.98px) {
+
+    .contenedorTablas .contenedorTitulo {
+        padding: 0.3rem 0rem;
+    }
+
+    .contenedorTablas .contenidoTabla {
+        padding: 0.3rem 0rem;
+        width: 100%;
+    }
+
+    .subContenedorBuscar {
+        margin: 0rem 0rem 0rem -2% ;
+    }
+
+ }

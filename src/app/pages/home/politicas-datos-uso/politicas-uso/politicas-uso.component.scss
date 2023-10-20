@@ -1,0 +1,92 @@
+#PoliticasUso {
+  padding: 0 2rem;
+}
+
+.fila {
+  height: 5.25rem;
+}
+
+.col-fecha,
+.col-version {
+  width: 32.5%;
+}
+
+.col-estado {
+  width: 15%;
+}
+
+.col-acciones {
+  width: 20%;
+  display: flex;
+  justify-content: center;
+  column-gap: 0.875rem;
+}
+
+.contenedor_iconos {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  border: none;
+  row-gap: 0.875rem;
+
+  span {
+    font-size: 1.6rem;
+    color: var(--textos_azul);
+  }
+}
+
+@media (max-width: 767.98px) {
+  #PoliticasUso {
+    padding: 0 1rem;
+
+    .tabla_lista {
+      width: 100%;
+
+      .titulos {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+      }
+
+      .fila {
+        height: auto;
+        border: none;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        row-gap: 0.5rem;
+        padding: 1.2rem;
+        margin-bottom: 0.75rem;
+        background-color: #F8FAFA;
+        border-radius: 20px;
+        text-align: start;
+      }
+
+      .titulo_movil {
+        display: block;
+        font-weight: 600;
+        width: 40%;
+        line-height: 1.2;
+        text-align: start;
+      }
+
+      .col-fecha,
+      .col-version,
+      .col-estado,
+      .col-acciones {
+        width: 50%;
+      }
+
+      .estado{
+        text-align: center;
+        margin: 0;
+      }
+      .col-acciones{
+        justify-content: flex-start;
+      }
+    }
+  }
+
+}

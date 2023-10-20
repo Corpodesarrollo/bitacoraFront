@@ -1,0 +1,33 @@
+<div id="contenedorCopiaAsignacionAcademica">
+
+    <!-- <div class="icono">
+        <span class="material-symbols-outlined">
+            feedback
+        </span>
+    </div> -->
+
+    <div class="titulo">
+        <h1>Copiar asignación académica</h1>
+    </div>
+
+    <div class="infoMensaje">
+        <p>Desea copiar la asignación académica de <span class="fw-bold">{{infoMensaje.funcionarioSeleccionado.funcionario}}</span> a los siguientes perfiles:</p>
+    </div>
+
+    <div class="listadoDocentes mb-2 mt-2 d-flex justify-content-center">
+        
+        <div class="infoTabla" *ngFor="let funcionario of infoMensaje.listadosFuncionarios">
+            <input type="checkbox" class="checkboxInfo">
+            <div class="funcionario infoTabla">
+                {{funcionario.funcionario}}
+             </div>
+        </div>
+
+    </div>
+
+    <div class="acciones">
+        <button (click)="cerrarModal()" class="btn boton_secundario">Cancelar</button>
+        <button class="btn boton_primario">Copiar</button>
+    </div>
+
+</div>

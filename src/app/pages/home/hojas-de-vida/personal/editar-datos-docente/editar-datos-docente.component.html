@@ -1,0 +1,128 @@
+<app-cargando *ngIf="cargandoInformacion"></app-cargando>
+<div class="row" id="editarDatos" *ngIf="!cargandoInformacion">
+  <app-cargar-fotografia
+    [estaActivo]="!estaInactivo"
+    [identificacion]="identficacionUsuario"
+    (actualizarFoto)="actualizarFoto($event)"
+    (esFotografia)="esTomada($event)"
+    [fotoUsuario]="urlFotoUsuario">
+  </app-cargar-fotografia>
+  <div class="contenedor_datos">
+    <form [formGroup]="formDatosDocete" class="row">
+      <div class="campo col_documento col-md-6 col-12 mb-3" [class.invalid]="campoNoValido('tipo_identificacion')">
+        <div class="input-wrapper campo-sin-icono">
+          <label for="sede" class="etiqueta_select">
+            Tipo de identificación
+          </label>
+          <input type="text" formControlName="tipo_identificacion"
+          class="form_input">
+        </div>
+      </div>
+
+      <div class="campo col_documento col-md-6 col-12 mb-3" [class.invalid]="campoNoValido('numero_identificacion')">
+        <div class="input-wrapper campo-sin-icono">
+          <label for="numero_identificacion">
+            Número de identificación
+          </label>
+          <input type="text" formControlName="numero_identificacion"
+           class="form_input">
+        </div>
+      </div>
+
+      <div class="campo col_documento col-md-6 col-12 mb-3" [class.invalid]="campoNoValido('apellidos')">
+        <div class="input-wrapper campo-sin-icono">
+          <label for="apellidos">
+            Apellidos
+          </label>
+          <input type="text" formControlName="apellidos"
+           class="form_input">
+        </div>
+      </div>
+
+      <div class="campo col_documento col-md-6 col-12 mb-3" [class.invalid]="campoNoValido('nombres')">
+        <div class="input-wrapper campo-sin-icono">
+          <label for="nombres">
+            Nombres
+          </label>
+          <input type="text" formControlName="nombres"
+           class="form_input">
+        </div>
+      </div>
+
+      <div class="campo col_documento col-md-6 col-12 mb-3" [class.invalid]="campoNoValido('cargo')">
+        <div class="input-wrapper campo-sin-icono">
+          <label for="cargo">
+            Cargo
+          </label>
+          <input type="text" formControlName="cargo"
+           class="form_input" >
+        </div>
+      </div>
+
+      <div class="campo col_documento col-md-6 col-12 mb-3" [class.invalid]="campoNoValido('correo')">
+        <div class="input-wrapper campo-sin-icono">
+          <label for="correo">
+            Correo institucional
+          </label>
+          <input type="text" formControlName="correo"
+           class="form_input" appFormartEmail>
+        </div>
+        <div class="contenedor_errores">
+          <span class="campo_requerido"*ngIf="formDatosDocete.controls['correo'].hasError('required')">Debe ingresar un email institucional</span>
+          <span class="campo_requerido"*ngIf="formDatosDocete.controls['correo'].hasError('pattern')">Debe ingresar un email institucional terminado en @educacionbogota.edu.co y/o @educacionbogota.gov.co</span>
+        </div>
+      </div>
+
+      <div class="acciones col-12">
+        <button type="submit" class="btn boton_primario" (click)="actualizarCorreo()" [disabled]="estaInactivo">
+          <div  *ngIf="!guardandoCorreo">
+            <span>Guardar</span>
+          </div>
+          <div class="d-flex align-items-center gap-2" *ngIf="guardandoCorreo">
+            <div>Guardando</div>
+            <div class="spinner-border float-end" role="status"></div>
+          </div>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<ng-template #modalExito let-modalExito>
+  <div class="modal-header">
+    <span class="material-symbols-outlined">
+      done
+      </span>
+    <div class="modal-title" id="modal-basic-title">
+      ¡Exito!
+    </div>
+  </div>
+  <div class="modal-body">
+    Correo actualizado correctamente.
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn boton_secundario" (click)="modalExito.close()">
+      Ok
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #modalError let-modalError>
+  <div class="modal-header">
+    <span class="material-symbols-outlined">
+      error
+      </span>
+    <div class="modal-title" id="modal-basic-title">
+      ¡Error!
+    </div>
+  </div>
+  <div class="modal-body">
+    No se pudo actualizar el correo correctamente.
+    <span *ngIf="mensajeError">{{ mensajeError }}</span>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn boton_secundario" (click)="modalError.close()">
+      Ok
+    </button>
+  </div>
+</ng-template>

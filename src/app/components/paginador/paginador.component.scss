@@ -1,0 +1,26 @@
+#paginador {
+    width: 100%;
+    display: flex;
+    margin-top: 1rem;
+    justify-content: flex-end;
+
+    span {
+        margin-right: 1rem;
+        opacity: 50%;
+        font-size: .875rem;
+        font-family: "Raleway";
+    }
+
+    button {
+        border: none;
+        background-color: transparent;
+        color: black;
+        opacity: 50%;
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+
+    button:disabled {
+        opacity: 25%;
+    }
+}

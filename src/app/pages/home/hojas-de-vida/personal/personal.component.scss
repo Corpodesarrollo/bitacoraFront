@@ -1,0 +1,30 @@
+#Personal{
+  padding: 0 2rem;
+}
+
+.no_perfil{
+  .titulo{
+    line-height: 1;
+    text-align: center;
+  }
+  .contenedor_imagen{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+
+    img{
+      width: 100%;
+      max-width: 600px ;
+      object-fit: cover;
+    }
+  }
+}
+
+
+@media (max-width:575.98px) {
+  #Personal{
+    padding: 0;
+  }
+}

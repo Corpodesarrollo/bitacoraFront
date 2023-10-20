@@ -1,0 +1,164 @@
+<div *ngIf="mostrarFiltros">
+  <app-filtros (filtros)="filtrar($event)" [cargandoRegistros]="cargandoRegistros"></app-filtros>
+</div>
+
+<app-cargando *ngIf="cargandoRegistros && !mostrarFiltros" class="cargando"></app-cargando>
+
+<div id="listaFiltros" *ngIf="!cargandoRegistros && !mostrarFiltros">
+  <div class="cabecera row">
+    <div class="col-12 d-flex justify-content-start align-items-center mb-3 mb-md-0">
+      <button class="btn boton_secundario" (click)="abrirFiltros()">Nueva Busqueda</button>
+    </div>
+    <div class="contenedor_botones col-12">
+      <button class="btn boton_secundario" (click)="exportarDatos()">
+        <div *ngIf="!exportandoDatos">
+          <span>Exportar</span>
+        </div>
+        <div class="d-flex align-items-center gap-2 exportando" *ngIf="exportandoDatos">
+          <div>Exportando</div>
+          <div class="spinner-border float-end" role="status"></div>
+        </div>
+      </button>
+      <button class="btn boton_secundario" (click)="abrirAnuario()">Anuario</button>
+      <button class="btn boton_secundario" routerLink="./asignacion-academica">Asignación académica</button>
+    </div>
+  </div>
+  <div class="contenedor_titulo col-12 row mt-3">
+      <div class="titulo col-12 col-md-6">Se encontraron {{ totalResultados}} resultados</div>
+      <div class="filtros col-12 col-md-6">
+        <span>Mostrar</span>
+        <ng-select [(ngModel)]="pageSize" [clearable]="false" [searchable]="false" class="select_lista" (change)="actualizarTamano($event)" >
+          <ng-option [value]="10">10</ng-option>
+          <ng-option [value]="20">20</ng-option>
+        </ng-select>
+        <span>Resultados por página</span>
+      </div>
+    </div>
+    <app-cargando *ngIf="cargandoDatos"></app-cargando>
+    <div class="contenedor_tabla" *ngIf="!cargandoDatos">
+      <div class="tabla_lista">
+        <div class="titulos_tabla" >
+          <div class="col-n" (click)="ordenarColumna('n')" [class.no_ordenada]="columnaOrden !== 'n'">
+            Nº
+            <span class="material-symbols-outlined" *ngIf="!ordenadaAscendente.n">arrow_drop_down</span>
+            <span class="material-symbols-outlined" *ngIf="ordenadaAscendente.n">
+              arrow_drop_up
+            </span>
+          </div>
+          <div class="col-documento" (click)="ordenarDatos('tipoIdentificacion')" [class.no_ordenada]="columnaOrden !== 'tipoIdentificacion'">
+            Tipo Identificación
+            <span class="material-symbols-outlined" *ngIf="!ordenadaAscendente.tipoIdentificacion">arrow_drop_down</span>
+            <span class="material-symbols-outlined" *ngIf="ordenadaAscendente.tipoIdentificacion">
+              arrow_drop_up
+            </span>
+          </div>
+          <div class="col-identificacion" (click)="ordenarDatos('identificacion')" [class.no_ordenada]="columnaOrden !== 'identificacion'">
+            Identificación
+            <span class="material-symbols-outlined" *ngIf="!ordenadaAscendente.identificacion">arrow_drop_down</span>
+            <span class="material-symbols-outlined" *ngIf="ordenadaAscendente.identificacion">
+              arrow_drop_up
+            </span>
+          </div>
+          <div class="col-cargo" (click)="ordenarDatos('cargo')" [class.no_ordenada]="columnaOrden !== 'cargo'">
+            Cargo
+            <span class="material-symbols-outlined" *ngIf="!ordenadaAscendente.cargo">arrow_drop_down</span>
+            <span class="material-symbols-outlined" *ngIf="ordenadaAscendente.cargo">
+              arrow_drop_up
+            </span>
+          </div>
+          <div class="col-apellidos" (click)="ordenarDatos('primerApellido')" [class.no_ordenada]="columnaOrden !== 'primerApellido'">
+            Apellidos
+            <span class="material-symbols-outlined" *ngIf="!ordenadaAscendente.primerApellido">arrow_drop_down</span>
+            <span class="material-symbols-outlined" *ngIf="ordenadaAscendente.primerApellido">
+              arrow_drop_up
+            </span>
+          </div>
+          <div class="col-nombres" (click)="ordenarDatos('primerNombre')" [class.no_ordenada]="columnaOrden !== 'primerNombre'">
+            Nombres
+            <span class="material-symbols-outlined" *ngIf="!ordenadaAscendente.primerNombre">arrow_drop_down</span>
+            <span class="material-symbols-outlined" *ngIf="ordenadaAscendente.primerNombre">
+              arrow_drop_up
+            </span>
+          </div>
+          <div class="col-estados">
+            Estados
+          </div>
+          <div class="col-acciones">
+            Acciones
+          </div>
+        </div>
+        <div class="fila"
+          *ngFor="let registro of listaRegistros; let i = index ">
+          <div class="titulo_movil">Nº</div>
+          <div class="col-n">{{ registro.indice }}</div>
+          <div class="titulo_movil">Tipo Identificación</div>
+          <div class="col-documento">{{ registro.tipoIdentificacion}}</div>
+          <div class="titulo_movil">Identificación</div>
+          <div class="col-identificacion">{{ registro.identificacion }}</div>
+          <div class="titulo_movil">Cargo</div>
+          <div class="col-cargo"> {{ registro.cargo }}</div>
+          <div class="titulo_movil">Apellidos</div>
+          <div class="col-apellidos"> {{ registro.apellidos}}</div>
+          <div class="titulo_movil">Nombres</div>
+          <div class="col-nombres"> {{ registro.nombres }}</div>
+          <div class="titulo_movil">Estado</div>
+          <div class="col-estados">
+            <div class="estado" [ngClass]="registro.estado === 'ACTIVO' ? 'estado_activo' : 'estado_inactivo'">
+              <span *ngIf="registro.estado === 'ACTIVO' ">Activo</span>
+              <span *ngIf="registro.estado === 'INACTIVO' || !registro.estado">Inactivo</span>
+            </div>
+          </div>
+          <div class="titulo_movil">Acciones</div>
+          <div class="col-acciones">
+            <div class="btn_acciones" (click)="editarUsuario(registro)">
+              <span class="material-symbols-outlined">
+                edit
+              </span>
+              <span class="etiqueta_hover">Editar</span>
+            </div>
+            <div class="btn_acciones" (click)="editarFotografia(registro)">
+              <span class="material-symbols-outlined">
+                add_a_photo
+              </span>
+              <span class="etiqueta_hover">Capturar fotografía</span>
+            </div>
+            <div class="form-check form-switch">
+              <input (click)="abrirInactivar($event, registro)" class="btn-swtich form-check-input" type="checkbox" role="switch" id="flexSwitchCheck{{i}}"
+              [checked]="registro.estado === 'ACTIVO'">
+              <span class="etiqueta_hover">Activar/Inactivar</span>
+            </div>
+            <div class="btn_acciones mx-2" (click)="abrirDesasociar(registro)">
+              <span class="material-symbols-outlined">
+                person_remove
+              </span>
+              <span class="etiqueta_hover">Desasociar
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="paginacion">
+          <div class="d-flex flex-nowrap align-items-center">
+              <span class="text-nowrap px-2">Página {{pagina + 1  }}&nbsp;-&nbsp;{{totalPaginas}}</span>
+              <div class="control_paginacion" [class.pagina_deshabilitada]="pagina === 0" (click)="cambiarPagina()">
+                <span class="material-symbols-outlined">
+                  chevron_left
+                </span>
+              </div>
+              <div [class.pagina_deshabilitada]="pagina >= totalPaginas - 1" class="control_paginacion" (click)="cambiarPagina('siguiente')">
+                  <span class="material-symbols-outlined">
+                    chevron_right
+                  </span>
+              </div>
+          </div>
+      </div>
+    </div>
+</div>
+
+<div class="no_encontrado mt-4 mb-4" *ngIf="datosNoEncontrados && !cargandoRegistros">
+  <span class="material-symbols-outlined">
+    error
+  </span>
+  <div class="texto_no_encontrado">
+    No se encontraron resultados según los criterios de búsqueda. Por favor, intente con otros términos o ajuste los filtros para obtener mejores resultados.
+  </div>

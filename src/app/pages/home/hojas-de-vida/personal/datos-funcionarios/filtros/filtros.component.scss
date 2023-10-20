@@ -1,0 +1,60 @@
+.titulo{
+  font-weight: 700;
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  .material-symbols-outlined{
+    font-weight: 700;
+    transform: rotateX(180deg);
+
+  }
+}
+
+.contenedor_filtros{
+  padding: 1.5rem;
+  background-color: var(--fondo_claro);
+  border-radius: 1.25rem;
+}
+
+.titulo_filtros{
+  font-weight: 700;
+}
+
+.input-wrapper input{
+  padding-left: 1rem;
+  background-color: var(--fondo_claro);
+}
+
+.input-wrapper label::before{
+  background-color: var(--fondo_claro) !important;
+}
+
+.acciones{
+  padding: 1rem 0;
+}
+
+.colapsado{
+  display: none;
+}
+
+.jornada_error{
+  color: var(--textos);
+}
+
+
+@media (max-width:575.98px) {
+
+  .boton_primario{
+    width: 100%;
+  }
+
+  .contenedor_filtros{
+    padding: 1rem;
+  }
+  .titulo_filtros{
+    text-align: center;
+    line-height: 1.2;
+  }
+}

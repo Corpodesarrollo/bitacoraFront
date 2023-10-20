@@ -1,0 +1,21 @@
+<div class="modal-header">
+    <span class="material-symbols-outlined modal-icon"> feedback </span>
+    <div class="modal-title" id="modal-basic-title">
+        <span *ngIf="!cambioExitoso">Cambio de contraseña exitoso</span>
+        <span *ngIf="cambioExitoso">Vuelva a iniciar sesión</span>
+    </div>
+</div>
+<div class="modal-body">
+    <div class="modal-texto" *ngIf="!cambioExitoso">
+        Su contraseña ha sido actualizada exitosamente. A partir de ahora, utilice su nueva contraseña para iniciar sesión en su cuenta.
+    </div>
+    <div class="d-flex align-items-center gap-2 mb-3" *ngIf="cambioExitoso">
+        <div>Cerrando sesión</div>
+        <div class="spinner-border float-end" role="status"></div>
+    </div>
+</div>
+<div class="modal-footer" *ngIf="!cambioExitoso">
+    <button type="button" class="btn boton_secundario" (click)="cerrar()">
+        Cerrar
+    </button>
+</div>

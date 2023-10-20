@@ -1,0 +1,114 @@
+.titulo h1 {
+    //: ;
+    font-family: Raleway;
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 32px;
+    letter-spacing: 0em;
+    text-align: left;
+    padding: 1rem 1rem 0rem 1rem;
+
+}
+
+.titulo p {
+    //styleName: M3/body/medium;
+    font-family: Raleway;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0.25px;
+    text-align: left;
+    margin: 0;
+    color: #191C1D;
+    font-weight: 500;
+}
+
+div#accordionFlushOne {
+    width: 100%;
+}
+
+.asignacionMaterias .input-wrapper .form_input , .contenedorHorasTotales .input-wrapper input {
+    text-align: center;
+    width: 79px;
+    height: 35px;
+    padding-left: 1.8rem;
+    padding-right: 1.8rem;
+}
+
+.asignacionMaterias .input-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+}
+
+.asignacionMaterias {
+    display: flex;
+    align-items: center;
+    margin: 0rem 0rem;
+    // border-bottom: 2px solid gainsboro;
+    margin-bottom: 0.4rem;
+}
+
+.asignacionMaterias input[type=checkbox] {
+    width: 17px;
+    height: 17px;
+    margin: 0rem 1.6rem 0rem 1rem;
+}
+
+.accordion-flush .accordion-item .accordion-button, .accordion-flush .accordion-item .accordion-button.collapsed {
+    padding-top: 0;
+    padding-bottom: 0;
+    // border-bottom: 1px solid gainsboro;
+    background: transparent;
+}
+
+.accordion-body {
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-right: 0;
+}
+
+button.accordion-button {
+    padding: 0;
+}
+
+.accordion-button::after {
+    margin-left: 20px !important;
+}
+
+div#flush-collapseThree .accordion-button::after {
+    display: none;
+}
+
+div#flush-collapseThree .form_input {
+    text-align: center;
+    width: 62px;
+    height: 35px;
+    padding-left: 0.8rem;
+    padding-right: 0.8rem;
+    margin-right: 3rem;
+}
+
+div#accordionFlushOne {
+    overflow-y: auto;
+    max-height: 330px;
+}
+
+.contenedorHorasTotales {
+    padding: 0.5rem 1rem 1rem 1.7rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 21px;
+    align-items: center;
+    border-top: 1px solid gainsboro;
+}
+
+.contenedorHorasTotales .material-symbols-outlined {
+    color: #005CBB;
+    // margin-right: auto;
+}
+
+.contenedorHorasTotales .input-wrapper {
+    height: auto;
+}

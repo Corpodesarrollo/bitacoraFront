@@ -1,0 +1,42 @@
+#lista-mensajes {
+
+    .contenedor-mensaje {
+        background-color: #FFFFFF;
+        padding: 0.5rem 1rem;
+        border-radius: 9px;
+        margin-top: 1rem;
+    }
+
+    .mensaje {
+        display: flex;
+        flex-direction: column;
+        margin-top: 0.25rem;
+
+        h1 {
+            font-size: 12px;
+            text-align: justify;
+        }
+
+        p{
+            padding: 0;
+            margin: 0;
+            font-size: 12px;
+            font-weight: 700;
+            text-align: end;
+        }
+    }
+}
+
+.pill_estado {
+    padding-left: .6875rem;
+    padding-right: .6875rem;
+    padding-top: .3125rem;
+    padding-bottom: .3125rem;
+    align-items: center;
+    background-color: var(--error);
+    border-radius: 2rem;
+    font-family: "Raleway";
+    font-weight: 500;
+    font-size: .6875rem;
+    color: var(--blanco);
+}

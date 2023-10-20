@@ -1,0 +1,28 @@
+
+  <div class="modal-header">
+    <span class="material-symbols-outlined modal-icon">
+      feedback
+    </span>
+    <div class="modal-title" id="modal-basic-title">
+      Confirmar quitar perfiles a usuarios
+    </div>
+  </div>
+  <div class="modal-body text-center">
+    ¿Está seguro de eliminar estos perfiles para el usuario seleccionado?
+  </div>
+  <div class="modal-footer">
+    <div class="acciones col-12">
+      <div class="btn boton_secundario" (click)="cerrar(false)">
+        Cancelar
+      </div>
+      <button type="submit" class="btn boton_primario" (click)="cerrar(true)">
+        <div *ngIf="!eliminandoPerfil">
+          <span>Sí, continuar</span>
+        </div>
+        <div class="d-flex align-items-center gap-2" *ngIf="eliminandoPerfil">
+          <div>Eliminando</div>
+          <div class="spinner-border float-end" role="status"></div>
+        </div>
+      </button>
+    </div>
+  </div>

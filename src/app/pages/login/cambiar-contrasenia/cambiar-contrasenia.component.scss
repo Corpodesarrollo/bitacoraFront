@@ -1,0 +1,18 @@
+#contenedor {
+    width: 70%;
+    padding: 36px 20px;
+    padding-top: 2.25rem;
+    padding-bottom: 2.25rem;
+    padding-left: 20px;
+    padding-right: 20px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    margin: auto;
+}
+
+@media (max-width: 992px) {
+    #contenedor {
+        width: 100%;
+    }
+}

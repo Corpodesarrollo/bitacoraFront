@@ -1,0 +1,226 @@
+#contenedorInicio {
+  width: 100%;
+  padding: 0 1.25rem;
+  position: relative;
+};
+
+.subtitulo {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 0.875rem;
+  font-weight: 500;
+};
+
+.titulo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.75rem;
+};
+
+.tituloContenedor {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 1rem;
+  font-weight: 600;
+};
+
+.contenedor-tabla,
+.contenedor-mensajes {
+  button {
+    margin-right: 1rem;
+    margin-left: auto;
+  };
+};
+
+.contenedor-tabla,
+.contenedor-mensajes,
+.contenedor-accesos {
+  background-color: #f8fafa;
+  padding: 1rem 1rem;
+  border-radius: 1.25rem;
+};
+
+.botones {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 1rem;
+  column-gap: 0.5rem;
+  row-gap: 0.625rem;
+};
+
+#titulos {
+  display: flex;
+  background-color: #d7e3ff;
+  color: var(--titulos_tablas);
+
+  .item_1,
+  .item_2,
+  .item_3,
+  .item_4,
+  .item_4, 
+  .item_5, 
+  .item_6 {
+    padding: 0.5rem 0.5rem;
+    line-height: 1.3;
+    font-family: "Raleway";
+    font-size: 0.6875rem;
+    font-weight: 500;
+  };
+};
+
+#filas {
+  display: flex;
+  margin: auto;
+
+  .registro {
+    display: flex;
+    width: 100%;
+    background-color: var(--blanco);
+    padding: 0 .75rem;
+    border-bottom: .0625rem solid var(--gris_degradado);
+  };
+
+  .item_1,
+  .item_2,
+  .item_3,
+  .item_4,
+  .item_5,
+  .item_6 {
+    padding: 0.5rem 0.5rem;
+    line-height: 1.3;
+    font-family: "Raleway";
+    font-size: .6875rem;
+    font-weight: 500;
+  };
+};
+
+.item_1 {
+  width: 10%;
+};
+
+.item_2 {
+  width: 20%;
+};
+
+.item_3 {
+  width: 30%;
+};
+
+.item_4 {
+  width: 40%;
+};
+
+.item_5 {
+  min-width: 70%;
+  display: flex;
+  justify-content: flex-start;
+};
+
+.item_6 {
+  min-width: 30%;
+  display: flex;
+  justify-content: center;
+};
+
+.contenedor_botones {
+  .boton_primario {
+    margin-right: 0;
+  };
+};
+
+.botones .boton_primario {
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem;
+  line-height: 1.2;
+  width: 100%;
+  min-width: 6.875rem;
+};
+
+.escondido {
+  display: none;
+}
+
+.mostrar {
+  display: inline-block;
+}
+
+@media (max-width: 1200px) and (min-width: 992.1px) {
+  #contenedorInicio {
+    width: 90%;
+  };
+};
+
+@media (max-width: 992px) and (min-width: 768.1px) {
+  #contenedorInicio {
+    padding-right: 0 !important;
+  };
+};
+
+@media (max-width: 768px) {
+  .botones {
+    flex-direction: column;
+  };
+
+  #contenedorInicio {
+    z-index: 0;
+  };
+
+  .contenedor-accesos .col-12 {
+    display: flex;
+    justify-content: center;
+  };
+};
+
+@media (max-width: 991.98px) {
+  .contenedor-mensajes {
+    margin-top: 1.5rem;
+  };
+};
+
+@media (max-width: 1199.98px) {
+  .btn {
+    line-height: 1;
+  };
+
+  #contenedorInico > .row {
+    row-gap: 0.625rem;
+  };
+
+  .botones {
+    flex-wrap: wrap;
+  };
+};
+
+@media (min-width: 768.1px) and (max-width: 1199.98px) {
+  .botones .boton_primario {
+    width: 40%;
+  };
+};
+
+@media (max-width: 575.98px) {
+  #contenedorInicio {
+    padding: 0;
+  };
+
+  .btn {
+    width: 100%;
+    font-size: .75rem;
+    margin: 0 auto;
+  };
+
+  #filas,
+  #titulos,
+  .registro {
+    width: 26.25rem;
+  };
+
+  .lista_tabla {
+    table-layout: fixed;
+    white-space: nowrap;
+    overflow-x: scroll;
+  };
+};

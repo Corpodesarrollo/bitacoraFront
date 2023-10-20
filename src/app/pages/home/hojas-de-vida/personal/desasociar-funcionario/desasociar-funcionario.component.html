@@ -1,0 +1,30 @@
+<div id="contenedorDesasociar">
+  <div class="modal-header">
+    <span class="material-symbols-outlined modal-icon"> feedback </span>
+    <div class="modal-title" id="modal-basic-title">
+      <span>Desasociar funcionario de la institución</span>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="modal-texto">
+      <p>¿Está seguro de desasociar al funcionario de la institución?</p>
+      <p>Esta acción no se puede revertir.</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="acciones col-12">
+      <button type="button" class="btn boton_secundario" (click)="cerrar()">
+        Cancelar
+      </button>
+      <button type="button" class="btn boton_primario" (click)="desasociarFuncionario()">
+        <div *ngIf="!desasociando">
+          <span>Sí, continuar</span>
+        </div>
+        <div class="d-flex align-items-center gap-2" *ngIf="desasociando">
+          <div>Desasociando</div>
+          <div class="spinner-border float-end"></div>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>

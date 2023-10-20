@@ -1,0 +1,14 @@
+<div class="modal-header">
+  <span class="material-symbols-outlined" [class.error]="informacion.error"> {{informacion.esExitoso}} </span>
+  <div class="modal-title titulo" id="modal-basic-title">
+    {{ informacion.titulo}}
+  </div>
+</div>
+<div class="modal-body contenido">
+  <span>{{ informacion.mensaje }}</span>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn boton_secundario" (click)="cerrar()">
+    Cerrar
+  </button>
+</div>

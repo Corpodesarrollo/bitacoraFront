@@ -1,0 +1,69 @@
+<form class="row col-12" [formGroup]="formularioFiltros">
+
+    <div class="campo mt-4 col-12 col-md-4">
+        <div class="input-wrapper">
+            <label for="usuario" class="etiqueta_select"> Perfil:<span class="asterisco">*</span></label>
+            <ng-select [items]="listadoPerfiles" bindValue="id" bindLabel="nombre" class="select"
+                placeholder="Seleccione el perfil" formControlName="perfil_id">
+            </ng-select>
+        </div>
+        <div class="contenedor_errores"><span class="campo_requerido"></span>
+        </div>
+    </div>
+
+    <div class="campo mt-4 col-12 col-md-4">
+        <div class="input-wrapper">
+            <label for="usuario" class="etiqueta_select"> Localidad:<span class="asterisco">*</span></label>
+            <ng-select [items]="listadoLocalidades" bindValue="id" bindLabel="nombre"
+                (change)="localidadSeleccionado($event)" class="select" placeholder="Seleccione la localidad" formControlName="localidad_id">
+            </ng-select>
+        </div>
+        <div class="contenedor_errores"><span class="campo_requerido"></span>
+        </div>
+    </div>
+
+    <div class="campo mt-4 col-12 col-md-4">
+        <div [class.deshabilitarInputSelect]="deshabilitarSelectColegio" class="input-wrapper">
+            <label for="usuario" class="etiqueta_select"> Colegio:<span class="asterisco">*</span></label>
+            <ng-select [items]="listadoColegios" bindValue="id" bindLabel="nombre" class="select"
+                placeholder="Seleccione el colegio" formControlName="colegio_id">
+            </ng-select>
+        </div>
+        <div class="contenedor_errores"><span class="campo_requerido"></span>
+        </div>
+    </div>
+
+    <div class="campo mt-2 col-12 col-md-5">
+        <div class="input-wrapper">
+            <label for="usuario"> Fecha de inicio:<span class="asterisco">*</span></label>
+            <span class="material-symbols-outlined input-icon"> account_circle </span>
+            <input type="text" placeholder="Seleccione la fecha de inicio" ng-reflect-name="fechaInicio" class=""
+                (click)="date.toggle()" value="05/02/2020" type="datetime" readonly 
+                ngbDatepicker #date="ngbDatepicker" formControlName="fecha_inicio" 
+                [ngClass]="{'error':  campoNoValido('fecha_inicio')}">
+            <span (click)="date.toggle()" class="material-symbols-outlined inputIconDate"> today </span>
+        </div>
+        <div [ngClass]="{'contenedor_errores':  campoNoValido('fecha_inicio')}" class=""><span class="campo_requerido">DD/MM/YYYY</span>
+        </div>
+    </div>
+
+    <div class="campo mt-2 col-12 col-md-5">
+        <div class="input-wrapper">
+            <label for="usuario"> Fecha de finalizacion:<span class="asterisco">*</span></label>
+            <span class="material-symbols-outlined input-icon"> account_circle </span>
+            <input type="text" placeholder="Seleccione la fecha de finalizacion" class="" (click)="date2.toggle()"
+                value="05/02/2023" type="datetime" readonly ngbDatepicker
+                #date2="ngbDatepicker" formControlName="fecha_final" [ngClass]="{'error':  campoNoValido('fecha_final')}">
+            <span (click)="date2.toggle()" class="material-symbols-outlined inputIconDate"> today </span>
+        </div>
+        <div [ngClass]="{'contenedor_errores':  campoNoValido('fecha_final')}" class=""><span class="campo_requerido">DD/MM/YYYY</span>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-2 ps-0 d-flex justify-content-end justify-content-md-center">
+        <button class="btn buttonBuscar mt-3" (click)="buscar()">
+            Buscar
+        </button>
+    </div>
+
+</form>

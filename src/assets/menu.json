@@ -1,0 +1,130 @@
+{
+  "exito": true,
+  "opciones": [
+    {
+      "nombre": "P.E.I",
+      "embeber": false,
+      "url": "",
+      "opciones": [
+        {
+          "nombre": "Registro PEI",
+          "embeber": true,
+          "url": "http://52.2.36.217/apoyo_escolar/pei/registro/Nuevo.do"
+        }
+      ]
+    },{
+      "nombre": "P.O.A",
+      "embeber": false,
+      "url": "",
+      "opciones": [
+        {
+          "nombre": "Opcion Fotografia",
+          "embeber": true,
+          "url": "https://apoyopruebas.educacionbogota.edu.co/#/administrative/photo/1230021/539/1/4"
+        },
+        {
+          "nombre": "Apoyo S",
+          "embeber": true,
+          "url": "tes2"
+        },
+        {
+          "nombre": "Subemnu S",
+          "embeber": true,
+          "url": "test2"
+        },
+        {
+          "nombre": "Subemnu S",
+          "embeber": true,
+          "url": "test"
+        }
+      ]
+    },
+    {
+      "nombre": "Participación",
+      "embeber": true,
+      "url": "https://apoyopruebas.educacionbogota.edu.co/#/administrative/photo/1230021/539/1/4",
+      "opciones": []
+    },
+    {
+      "nombre": "Hojas de Vida",
+      "embeber": false,
+      "url": "",
+      "opciones": [
+        {
+          "nombre": "Personal",
+          "embeber": false,
+          "url": "hojas-de-vida/personal"
+        }
+      ]
+    },
+    {
+      "nombre": "G. Académica ",
+      "embeber": false,
+      "url": "test",
+      "opciones": []
+    },
+    {
+      "nombre": "Colegio",
+      "embeber": false,
+      "url": "test",
+      "opciones": []
+    },
+    {
+      "nombre": "G. Administrativa ",
+      "embeber": false,
+      "url": "",
+      "opciones": [
+        {
+          "nombre": "Enviar Mesajes",
+          "embeber": false,
+          "url": "gestion-administrativa/enviar-mensajes"
+        },
+        {
+          "nombre": "Apoyo S",
+          "embeber": true,
+          "url": "tes2"
+        },
+        {
+          "nombre": "Subemnu S",
+          "embeber": true,
+          "url": "test2"
+        },
+        {
+          "nombre": "Subemnu S",
+          "embeber": true,
+          "url": "test"
+        }
+      ]
+    },
+    {
+      "nombre": "Conflicto Escolar",
+      "embeber": false,
+      "url": "test",
+      "opciones": []
+    },
+    {
+      "nombre": "Mensajes",
+      "embeber": false,
+      "url": "mensajes",
+      "opciones": []
+    },
+    {
+      "nombre": "Manuales del sistema",
+      "embeber": false,
+      "url": "manuales-sistema",
+      "opciones": []
+    },
+    {
+      "nombre": "Reportes Generados",
+      "embeber": true,
+      "url": "http://52.2.36.217/apoyo_escolar/Reportes.do",
+      "opciones": []
+    },
+    {
+      "nombre": "Politicas de datos y uso",
+      "embeber": false,
+      "url": "politicas-datos-uso",
+      "opciones": []
+    }
+  ]
+}

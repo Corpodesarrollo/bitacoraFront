@@ -1,0 +1,44 @@
+<div id="camara" *ngIf="!webcamImage">
+  <webcam [trigger]="triggerObservable" [imageQuality]="1" (imageCapture)="handleImage($event)" *ngIf="!webcamImage"
+      [height]="alturaCamara" [width]="anchoCamara" (initError)="errorAlIniciar($event)"></webcam>
+  <div id="actions">
+      <button id="takePhoto" (click)="triggerSnapshot()">
+      </button>
+      <span>Tomar Foto</span>
+  </div>
+</div>
+<div class="snapshot" *ngIf="webcamImage">
+  <div class="titulo">Recortar</div>
+  <div id="croppedImage">
+      <angular-cropper class="take_photo" [imageUrl]="webcamImage.imageAsDataUrl" #croppedImage></angular-cropper>
+  </div>
+  <div class="acciones">
+    <div class="btn boton_secundario" (click)="cancelar()">
+      Cancelar
+    </div>
+    <div class="btn boton_primario" (click)="enviarFoto()">
+      Finalizar
+    </div>
+  </div>
+</div>
+
+
+<ng-template #modalError let-modalError>
+  <div class="modal-header">
+    <span class="material-symbols-outlined">
+      error
+      </span>
+    <div class="modal-title" id="modal-basic-title">
+      Error al iniciar cámara.
+    </div>
+  </div>
+  <div class="modal-body">
+    ¡Acceso a la cámara no fue permitido por el usuario! <br>
+    Por favor conecte el dispositivo y/o cámara y/o autoricelo
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn boton_secundario" (click)="modalError.close()">
+      Ok
+    </button>
+  </div>
+</ng-template>

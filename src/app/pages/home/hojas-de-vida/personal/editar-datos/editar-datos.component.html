@@ -1,0 +1,161 @@
+<div class="row" id="editarDatos">
+  <div class="titulos">
+    Editar datos básicos
+  </div>
+  <form [formGroup]="formDatosUsuario" (ngSubmit)="guardar()">
+    <div class="contenedor_datos">
+      <app-cargar-fotografia [traeBotones]="false" [fotoUsuario]="urlFoto">
+      </app-cargar-fotografia>
+      <div class="col-datos row">
+        <div class="campo col_documento col-md-6 col-12 mb-3">
+          <div class="input-wrapper">
+            <label for="tipo_identificacion">
+              Tipo de identificación
+            </label>
+            <input type="text" formControlName="tipo_identificacion" class="form_input">
+          </div>
+        </div>
+        <div class="campo col_documento col-md-6 col-12 mb-3">
+          <div class="input-wrapper">
+            <label for="numero_identificacion">
+              Número de identificación
+            </label>
+            <input type="text" formControlName="numero_identificacion" class="form_input">
+          </div>
+        </div>
+
+        <div class="campo col_documento col-md-6 col-12 mb-3">
+          <div class="input-wrapper">
+            <label for="apellidos">
+              Apellidos
+            </label>
+            <input type="text" formControlName="apellidos" class="form_input">
+          </div>
+        </div>
+
+        <div class="campo col_documento col-md-6 col-12 mb-3">
+          <div class="input-wrapper">
+            <label for="nombres">
+              Nombres
+            </label>
+            <input type="text" formControlName="nombres" class="form_input">
+          </div>
+        </div>
+
+        <div class="campo col_documento col-md-6 col-12 mb-3">
+          <div class="input-wrapper">
+            <label for="cargo">
+              Cargo
+            </label>
+            <input type="text" formControlName="cargo" class="form_input">
+          </div>
+        </div>
+
+        <div class="campo col_documento col-md-6 col-12 mb-3" [class.invalid]="campoNoValido('correo')">
+          <div class="input-wrapper">
+            <label for="correo">
+              Correo institucional
+            </label>
+            <input type="text" formControlName="correo" class="form_input" appFormartEmail>
+          </div>
+          <div class="contenedor_errores">
+            <span class="campo_requerido" *ngIf="formDatosUsuario.controls['correo'].hasError('pattern')">Debe ingresar
+              un email institucional terminado en @educacionbogota.edu.co y/o @educacionbogota.gov.co</span>
+            <span class="campo_requerido" *ngIf="formDatosUsuario.controls['correo'].hasError('required')">Debe ingresar
+              un email institucional</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  <div class="perfiles mb-4">
+    <div class="titulo">
+      Perfiles asociados
+    </div>
+    <app-cargando *ngIf="cargandoPerfiles"></app-cargando>
+    <ng-container *ngIf="!cargandoPerfiles">
+      <div formArrayName="lista_perfiles"  *ngFor="let perfil of listaPerfiles.controls; let p = index">
+        <div class="perfil" [formGroupName]="p">
+          <div class="contenedor_checkbox">
+            <input type="checkbox" formControlName="seleccionado">
+          </div>
+          <div class="contenedor_perfiles row w-100">
+            <div class="campo col-12 mb-3" [class.invalid]="campoNoValidoEnFormArray('cod_sede',p)">
+              <div class="input-wrapper">
+                <label for="sede" class="etiqueta_select">
+                  Sede:
+                </label>
+                <ng-select [clearable]="false"
+                  [items]="perfil.get('sedes')?.value" formControlName="cod_sede"   bindValue="codigo"
+                  bindLabel="nombre"
+                  class="select"
+                  placeholder="Seleccione la sede"
+                  (change)="actualizarJornadas($event,p)"
+                  name="sede" [searchable]="false">
+                </ng-select>
+              </div>
+              <div class="contenedor_errores">
+                <span class="campo_requerido" *ngIf="campoNoValidoEnFormArray('cod_sede', p)">Debe seleccionar una sede</span>
+              </div>
+            </div>
+            <div class="campo col-lg-6 col-12 mb-3" [class.invalid]="campoNoValidoEnFormArray('cod_jornada',p)">
+              <div class="input-wrapper">
+                <label for="sede" class="etiqueta_select">
+                  Jornada:
+                </label>
+                <ng-select [clearable]="false" [items]="perfil.get('jornadas')?.value"  formControlName="cod_jornada" bindValue="id"
+                (change)="limpiarPerfil(p)"
+                  bindLabel="nombre" class="select" placeholder="Seleccione la jornada" name="jornada"
+                  [searchable]="false"
+                  >
+                </ng-select>
+              </div>
+              <div class="contenedor_errores">
+                <span class="campo_requerido" *ngIf="campoNoValidoEnFormArray('cod_jornada', p)">Debe seleccionar una jornada</span>
+                <span class="campo_requerido" *ngIf="perfil.get('cod_jornada')?.hasError('noSede')">Debe seleccionar una sede</span>
+              </div>
+            </div>
+            <div class="campo col-lg-6 col-12 mb-3" [class.invalid]="campoNoValidoEnFormArray('cod_perfil',p)">
+              <div class="input-wrapper">
+                <label for="sede" class="etiqueta_select">
+                  Perfil:
+                </label>
+                <ng-select [clearable]="false" [items]="perfiles" formControlName="cod_perfil" bindValue="codigo" (change)="seleccionarPerfil(p)"
+                  [class.invalid]="yaSeEncuentraPerfil" bindLabel="nombre" class="select"
+                  placeholder="Seleccione el perfil" name="perfil" [searchable]="false">
+                </ng-select>
+              </div>
+              <div class="contenedor_errores">
+                <span class="campo_requerido" *ngIf="campoNoValidoEnFormArray('cod_perfil', p)">Debe seleccionar un perfil</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <div class="acciones">
+      <button class="btn boton_primario" type="button" (click)="abrirModalEliminarPerfil()">
+        Quitar perfil para otra sede/jornada
+      </button>
+      <button class="btn boton_primario" type="button"  (click)="agregarNuevoPerfil()">
+        Agregar perfil para otra sede/jornada
+      </button>
+    </div>
+  </div>
+    <div class="acciones col-12">
+      <div class="btn boton_secundario" type="button"  (click)="cancelar()">
+        Cancelar
+      </div>
+      <button type="submit" class="btn boton_primario">
+        <div *ngIf="!guardandoDatos">
+          <span>Guardar cambios</span>
+        </div>
+        <div class="d-flex align-items-center gap-2" *ngIf="guardandoDatos">
+          <div>Guardando</div>
+          <div class="spinner-border float-end" role="status"></div>
+        </div>
+      </button>
+    </div>
+  </form>
+</div>
+
+

@@ -1,0 +1,8 @@
+<nav style="--bs-breadcrumb-divider: '>';" class="migaPan" aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item" *ngFor="let ruta of rutas; let ultima">
+      <a *ngIf="!ultima" [routerLink]="ruta.url">{{ ruta.etiqueta }}</a>
+      <span *ngIf="ultima">{{ ruta.etiqueta }}</span>
+    </li>
+  </ol>
+</nav>

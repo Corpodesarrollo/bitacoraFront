@@ -1,0 +1,28 @@
+<div class="modal-header">
+  <span class="material-symbols-outlined modal-icon"> sms_failed </span>
+  <div class="modal-title" id="modal-basic-title">
+    {{ titulo }}
+  </div>
+</div>
+<div class="modal-body">
+  <div class="modal-texto">
+    <div class="col_text" *ngIf="!candidatoNoEncontrado">
+      {{mensajeError}}
+    </div>
+    <ul class="col_lista">
+      <ng-container  *ngFor="let error of lista_errores">
+        <li>{{ error }}</li>
+      </ng-container>
+    </ul>
+
+    <div class="col_texto-final">
+      Por favor, corrija los errores y vuelva a intentarlo.
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn boton_secundario" (click)="cerrar()">
+    Cerrar
+  </button>
+</div>
+

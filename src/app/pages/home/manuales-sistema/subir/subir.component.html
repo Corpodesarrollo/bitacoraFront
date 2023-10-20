@@ -1,0 +1,116 @@
+<div id="contenedorManuales">
+
+  <div class="row">
+    <div class="contenedor mb-3 col-12 col-md-12 col-lg-12 container-fluid">
+      <div class="titulo mb-3">
+        <div class="volver">
+          <span class="material-symbols-outlined" (click)="verManuales()">
+            arrow_back_ios
+          </span>
+        </div>
+        Agregar manual nuevo
+      </div>
+      <div class="my-3">
+        Por favor, seleccione la categoría del manual:
+      </div>
+      <form [formGroup]="formulario">
+        <div class="campo my-3" [class.invalid]="campoNoValidoFormulario('categoriaManual') || errorCategoria">
+          <div class="input-wrapper">
+            <label for="nombreJornada" class="etiqueta_select">
+              Categoría manual:<span class="asterisco">*</span>
+            </label>
+            <ng-select [items]="tiposManuales" bindValue="id" bindLabel="nombre" class="select"
+              placeholder="Seleccione el tipo" name="categorias" formControlName="categoriaManual" [clearable]="false"
+              (change)="categoriaManual($event)">
+            </ng-select>
+          </div>
+        </div>
+        <div class="my-3">
+          Por favor, haga clic a continuación para subir un archivo:
+        </div>
+        <div class="my-3" style="color: var(--error)" *ngIf="errorCategoria">
+          ¡Debe seleccionar una categoría!
+        </div>
+        <div class="boton my-3" (click)="eventoClick()">
+          <label for="archivo" class="btn boton_primario" *ngIf="!cargandoArchivo">
+            <span class="material-symbols-outlined">
+              upload
+            </span>
+            <div>Subir archivo</div>
+          </label>
+          <label class="btn boton_primario" *ngIf="cargandoArchivo">
+            <div class="d-flex align-items-center gap-2 ">
+              <div>Subiendo</div>
+              <div class="spinner-border  float-end" role="status"></div>
+            </div>
+          </label>
+          <input #fileInput (change)="archivoSeleccionado()" id="archivo" type="file" class="btn boton_primario"
+            style="display: none;" accept=".pdf" [disabled]="!categoriaSeleccionada">
+        </div>
+        <div class="info my-3">
+          <p>Tamaño máximo de archivo 10 MB.</p>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<ng-template #archivoPesado let-modal>
+  <div class="modal-header">
+    <span class="material-symbols-outlined modal-icon"> feedback </span>
+    <div class="modal-title" id="modal-basic-title">
+      <span>¡Error al cargar el archivo!</span>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="modal-texto">
+      <p>El archivo supera el tamaño límite (10 MB).</p>
+      <p>Por favor vuelva a intentar.</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn boton_secundario" (click)="cerrar()">
+      Cerrar
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #archivoNoPdf let-modal>
+  <div class="modal-header">
+    <span class="material-symbols-outlined modal-icon"> feedback </span>
+    <div class="modal-title" id="modal-basic-title">
+      <span>¡Error al cargar el archivo!</span>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="modal-texto">
+      <p>El archivo no es de tipo .pdf</p>
+      <p>Por favor vuelva a intentar.</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn boton_secundario" (click)="cerrarNoPdf()">
+      Cerrar
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #archivoCargado let-modal>
+  <div class="modal-header">
+    <span class="material-symbols-outlined modal-icon"> feedback </span>
+    <div class="modal-title" id="modal-basic-title">
+      <span>¡Carga Exitosa!</span>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="modal-texto">
+      Los manuales han sido cargados correctamente.
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn boton_secundario" (click)="cerrarCargado()">
+      Cerrar
+    </button>
+  </div>
+</ng-template>

@@ -1,0 +1,22 @@
+#contenedorInactivar {
+    padding: 1.5625rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: "Raleway";
+    color: var(--textos);
+    font-weight: 400;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    padding: 0;
+    margin-top: 1rem;
+}
+
+.modal-title {
+    text-align: center;
+}

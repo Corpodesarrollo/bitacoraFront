@@ -1,0 +1,95 @@
+<div id="contenedorManuales" class="container-lg container-fluid">
+
+    <div class="row cargando text-center" *ngIf="!cargaExitosa">
+        <p>Cargando manuales del sistema</p>
+        <div class="spinner-border cargando_inicio text-dark" role="status">
+            <span class="visually-hidden">Loading</span>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="cargaExitosa">
+        <div class="titulo my-3 col-12 col-md-12 col-lg-12 container-fluid">MANUALES DEL SISTEMA</div>
+        <div class="boton col-12 col-sm-12 col-md-12 col-lg-12 mb-2" *ngIf="esAdmin">
+            <button type="submit" class="btn boton_primario" (click)="subirManual()">
+                <div>Agregar manual nuevo</div>
+            </button>
+        </div>
+        <div *ngFor="let categoriaManual of categoriasConManuales">
+            <div class="tituloContenedor mb-3">{{ categoriaManual.nombre }}</div>
+            <div class="sinManuales container-fluid my-3" *ngIf="categoriaManual.manuales === null">
+                Actualmente no existen manuales para esta categoría.
+            </div>
+            <div id="manual" class="row">
+                <div *ngFor="let manual of categoriaManual.manuales" class="col-12 col-md-12 col-lg-6">
+                    <div class="manual">
+                        <div class="info_manual">
+                            <div class="icono archivo" (click)="verManual(manual.id)">
+                                <img src="assets/iconos/archivo_icono.svg" alt="">
+                            </div>
+                            <div class="textos">
+                                <p (click)="verManual(manual.id)"> {{ transformarNombre(manual.nombreArchivo) }}
+                                </p>
+                                <p class="fecha">Fecha: {{manual.fecha | date:'dd-MM-yyyy' }}</p>
+                            </div>
+                        </div>
+                        <div class="opcionesCRUD">
+                            <div class="eliminar" (click)="abrirConfirmarBorrado()" (click)="obtenerId(manual.id)"
+                                *ngIf="esAdmin">
+                                <div class="icono descarga">
+                                    <span class="material-symbols-outlined">
+                                        delete
+                                    </span>
+                                </div>
+                                <p>Eliminar</p>
+                            </div>
+                            <div class="descargar">
+                                <a class="descargar" (click)="descargarManual(manual.id)">
+                                    <div class="icono descarga">
+                                        <span class="material-symbols-outlined">
+                                            download
+                                        </span>
+                                    </div>
+                                    <p>Descargar</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #confirmarBorradoModal let-modal>
+    <div class="modal-header">
+        <span class="material-symbols-outlined modal-icon"> feedback </span>
+        <div class="modal-title" id="modal-basic-title">
+            <span>¡Está a punto de eliminar este manual!</span>
+        </div>
+    </div>
+    <div class="modal-body">
+        <div class="modal-texto" *ngIf="!manualEliminado">
+            ¿Está seguro de que desea continuar?
+        </div>
+        <div class="modal-texto" *ngIf="manualEliminado">
+            <div class="contenido">
+                <div class="my-2"> Eliminando el manual. </div>
+                <div class="spinner-border float-end" role="status"></div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn boton_secundario" (click)="cerrar()" [disabled]="manualEliminado">
+            Cerrar
+        </button>
+        <button type="button" class="btn boton_primario" (click)="eliminarManual(idManual)"
+            [disabled]="manualEliminado">
+            <div *ngIf="!manualEliminado">
+                <div>Eliminar</div>
+            </div>
+            <div *ngIf="manualEliminado">
+                <div>Eliminando</div>
+            </div>
+        </button>
+    </div>
+</ng-template>

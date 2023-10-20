@@ -1,0 +1,40 @@
+<div id="contenedorAnuario">
+    <div class="modal-header">
+        <div class="modal-title" id="modal-basic-title">
+            <span>Anuario</span>
+        </div>
+    </div>
+    <div class="modal-body">
+        <div class="row flex-row">
+            <ng-container *ngFor="let usuario of listaRegistrosAnuario">
+                <div class="contenedor_card col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12 card-container">
+                    <div class="card" (click)="editarUsuario(usuario)">
+                        <ng-container *ngIf="usuario.foto; else noImage">
+                            <img src="data:image/png;base64,{{usuario.foto}}" class="card-img-top fixed-height">
+                        </ng-container>
+                        <ng-template #noImage>
+                            <span class="material-symbols-outlined fixed-height">
+                                account_circle
+                            </span>
+                        </ng-template>
+                        <div class="card-body">
+                            <p class="card-text">{{usuario.apellidos}} {{usuario.nombres}}</p>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+        <div class="mensaje-carga" *ngIf="cargandoFotos">
+            <p>Cargando información del anuario</p>
+            <div class="spinner-border cargando_inicio text-dark" role="status">
+                <span class="visually-hidden">Cargando..</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn boton_primario" (click)="cerrar()">
+            Cerrar
+        </button>
+    </div>
+</div>

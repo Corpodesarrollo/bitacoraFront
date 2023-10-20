@@ -1,0 +1,23 @@
+<div>
+    <div id="lista-mensajes" *ngIf="conMensajesCargados == true">
+        <div class="contenedor-mensaje" *ngFor="let mensaje of primerosMensajes"  (click)="verMensaje(mensaje.msjCodigo)">
+            <span *ngIf="fechaActual ==  mensaje.msjFechaIni" class="badge pill_estado">Nuevo</span>
+            <div class="mensaje">
+                <h1>{{ mensaje.msjAsunto}}</h1>
+                <p>{{ mensaje.msjFecha | date:'dd/MM/yyyy'}}</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="lista-mensajes" *ngIf="conMensajesCargados == false && cargandoMensajes == false">
+        <div class="contenedor-mensaje">
+            <p class="perfilesAgreg">Sin mensajes agregados</p>
+        </div>
+    </div>
+    
+    <div id="lista-mensajes">
+        <div class="contenedor-mensaje" *ngIf="cargandoMensajes" >
+        <app-cargando></app-cargando>
+        </div>
+    </div>
+</div>

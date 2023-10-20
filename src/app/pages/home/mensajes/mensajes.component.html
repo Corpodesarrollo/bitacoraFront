@@ -1,0 +1,43 @@
+<div class="conteiner-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="contenedorTitulo">
+                <h3 class="tituloMensajes">
+                    Mensajes
+                </h3>
+                <button class="btn" routerLink="/home/gestion-administrativa/enviar-mensajes">Enviar mensajes</button>
+            </div>
+        </div>
+        <div class="col-12 contenedorTablas">
+            <div class="tabla" *ngIf="mensajeResp == true">
+                <div class="row titulos">
+                    <div class="col-2 titulo">Enviado por</div>
+                    <div class="col-5 titulo">Asunto</div>
+                    <div class="col-2 titulo">Fecha</div>
+                    <div class="col-3 titulo">&nbsp;</div>
+                </div>
+
+                <!-- <hr class="hrTabla"> -->
+
+                <div class="row contenidoTabla" *ngFor="let mensaje of listadoMensajes">
+                    <div class="col-6 col-md-5 tituloMobile">Enviado por:</div>
+                    <div class="col-6 col-md-3 col-lg-2"><p class="pb-0 mb-0">{{mensaje.msjEnviadoPorNombre}}</p></div>
+                    <div class="col-6 col-md-5 tituloMobile">Asunto:</div>
+                    <div class="col-6 col-md-5 col-lg-5"><p class="infoAsunto">{{mensaje.msjAsunto}}</p> <p *ngIf="fechaActual ==  mensaje.msjFechaIni" class="mensajeNuevo">Nuevo</p> </div>
+                    <div class="col-6 col-md-5 col-lg-2 tituloMobile">Fecha:</div>
+                    <div class="col-2"><p class="fecha">{{mensaje.msjFecha | date:'dd/MM/yyyy'}}</p></div>
+                    <div class="col-12 col-lg-3 d-flex justify-content-center"><button (click)="verMensaje(mensaje.msjCodigo)" class="btn">Ver mensaje</button></div>
+                    <!-- {{fechaActual}}{{mensaje.msjFechaIni}} -->
+                </div>
+
+                
+            </div>
+            <div class="sinMensajes" *ngIf="mensajeResp == false  && conMensajesCargados == false">Sin mensajes cargados</div>
+
+            <app-cargando *ngIf="conMensajesCargados == true"></app-cargando>
+
+
+
+        </div>
+    </div>
+</div>

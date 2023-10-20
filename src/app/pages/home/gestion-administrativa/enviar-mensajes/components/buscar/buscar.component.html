@@ -1,0 +1,75 @@
+<div class="col-12">
+
+    <div class="subContenedorBuscar row col-12">
+
+       <app-filtros (filtros)="filtros($event)"></app-filtros>
+
+       <div *ngIf="mensajes.length > 0" class="col-12 contenedorTablas">
+            <div class="tituloTotalRegistros col-12 col-md-6">Se encontraron {{totalRegistros}} resultados</div>
+            <div class="tabla">
+                <div class="row titulos">
+                    <div class="col-2 titulo">Enviado por</div>
+                    <div class="col-5 titulo">Asunto</div>
+                    <div class="col-5 titulo">Fecha</div>
+                </div>
+
+                <!-- <hr class="hrTabla"> -->
+
+                <div class="row contenidoTabla" *ngFor="let mensaje of mensajes">
+                    <div class="col-6 tituloMobile">Enviado por:</div>
+                    <div class="col-6 col-md-1"><p class="mb-0">{{mensaje.msjEnviadoPorNombre}}</p></div>
+                    <div class="col-6 tituloMobile mt-2 mt-sm-0">Asunto:</div>
+                    <div class="col-6 col-sm-6"><p class="infoAsunto">{{mensaje.msjAsunto}}</p> <p  *ngIf="fechaActual ==  mensaje.msjFechaIni" class="mensajeNuevo">Nuevo</p> </div>
+
+                    <div class="col-6 tituloMobile">Fecha:</div>
+                    <div class="col-6 col-md-2"><p class="fecha">{{mensaje.msjFecha | date:'dd/MM/yyyy'}}</p></div>
+                    <div class="col-12 col-xl-3 mt-2 mt-md-0 iconosListaBuscar"> 
+                        <a  (click)="verMensaje(mensaje.msjCodigo)">
+                            <span class="material-symbols-outlined">
+                                visibility
+                            </span> 
+                            <p>Ver</p>
+                        </a> 
+  
+                        <a (click)="editarMensajes(mensaje.msjCodigo)">
+                            <span class="material-symbols-outlined">
+                                edit
+                            </span>
+                            <p>Editar</p>
+                        </a> 
+
+                        <a (click)="eliminarMensaje(mensaje.msjCodigo)">
+                            <span class="material-symbols-outlined">
+                                delete
+                            </span>
+                            <p>Eliminar</p>
+                        </a> 
+                    </div>
+                </div>
+                <div class="paginacion">
+                    <div class="d-flex flex-nowrap align-items-center justify-content-end">
+                        <span class="text-nowrap px-2">Página {{pagina + 1  }}&nbsp;-&nbsp;{{totalPaginas}}</span>
+                        <div class="control_paginacion" [class.pagina_deshabilitada]="pagina === 0" (click)="cambiarPagina()">
+                          <span class="material-symbols-outlined">
+                            chevron_left
+                          </span>
+                        </div>
+                        <div [class.pagina_deshabilitada]="pagina >= totalPaginas - 1" class="control_paginacion" (click)="cambiarPagina('siguiente')">
+                            <span class="material-symbols-outlined">
+                              chevron_right
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="sinMensajes" *ngIf="mensajesCargados == false">Sin mensajes cargados</div>
+        
+    </div>
+
+    <app-cargando *ngIf="cargandoMensajes"></app-cargando>
+
+
+</div>

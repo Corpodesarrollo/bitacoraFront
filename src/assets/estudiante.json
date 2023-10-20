@@ -1,0 +1,44 @@
+ {
+    "exito": true,
+    "estudiante": {
+      "tipo_documento": {
+        "id": 1,
+        "nombre": "C.C"
+      },
+      "numero_documento": 82023233,
+      "codigo_estudiante": 20203,
+      "nombre": "Daniel Almanza",
+      "colegio": {
+        "id": 2,
+        "nombre": "COLEGIO ALVARO GOMEZ HURTADO (IED)"
+      },
+      "sede": {
+        "id": 1,
+        "nombre": "femenino_lorencita_de_santos"
+      },
+      "jornada": {
+        "id": 1,
+        "nombre": "Mañana"
+      },
+      "metodologia": {
+        "id": 1,
+        "nombre": "MA"
+      },
+      "grado": {
+        "id": 1,
+        "nombre": "MA"
+      },
+      "grupo": {
+        "id": 1,
+        "nombre": "MA"
+      },
+      "periodos": [
+        {
+          "id": 1,
+          "nombre": "1er Trimestre"
+        }
+      ]
+    }
+  }
+
+

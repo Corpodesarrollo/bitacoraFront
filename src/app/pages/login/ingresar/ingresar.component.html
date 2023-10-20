@@ -1,0 +1,110 @@
+<div id="contenedorLogin" class="container-lg">
+  <div class="row">
+    <div class="d-none d-md-block col-8">
+      <div id="carousel-escuela" class="carousel carousel-dark slide" data-bs-ride="carousel" *ngIf="slides">
+        <div class="carousel-inner">
+          <div class="carousel-item mb-2" [class.active]="i === 0" *ngFor="let slide of slides; let i = index"
+            [attr.data-bs-interval]="3000">
+            <div class="carousel-image">
+              <img [src]="slide.url" class="slide-one" alt=""  loading="lazy"/>
+            </div>
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carousel-escuela" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carousel-escuela" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-4">
+      <div id="formLogin">
+        <div class="titulos">BIENVENIDO</div>
+        <div class="text-center mb-3">
+          Inicie Sesión con el usuario asignado
+        </div>
+        <form [formGroup]="formLogin" (ngSubmit)="ingresar()">
+          <div class="campo mb-2" [class.invalid]="campoNoValido('usuario')">
+            <div class="input-wrapper">
+              <label for="usuario">
+                Usuario<span class="asterisco">*</span>
+              </label>
+              <span class="material-symbols-outlined input-icon">
+                account_circle
+              </span>
+              <input type="text" formControlName="usuario" placeholder="Escribir identificación" autocomplete="on" >
+            </div>
+            <div class="contenedor_errores">
+              <span class="campo_requerido">Recuerde escribir su usuario sin espacios</span>
+              <span class="campo_requerido"
+                *ngIf="formLogin.controls['usuario'].hasError('maxlength')">Debe tener la longitud menor a 15 dígitos.</span>
+              <span class="campo_requerido"*ngIf="formLogin.controls['usuario'].hasError('pattern')">Debe digitar únicamente números.</span>
+            </div>
+          </div>
+          <div class="campo mb-2" [class.invalid]="campoNoValido('contrasenia')">
+            <div class="input-wrapper">
+              <label for="contrasenia">
+                Contraseña<span class="asterisco">*</span>
+              </label>
+              <span class="material-symbols-outlined input-icon">
+                key
+              </span>
+              <input [type]="verContrasenia ? 'text' : 'password'"    formControlName="contrasenia"
+                placeholder="Escribir contraseña" class="input_password"
+                autocomplete="on" />
+              <div (click)="mostrarContrasenia()" class="input-icon input_icon-password">
+                <span class="material-symbols-outlined" *ngIf="!verContrasenia">
+                  visibility
+                </span>
+                <span class="material-symbols-outlined" *ngIf="verContrasenia">
+                  visibility_off
+                </span>
+              </div>
+            </div>
+            <div class="contenedor_errores">
+              <span class="campo_requerido">Recuerde escribir su contraseña sin espacios</span>
+              <span class="campo_requerido"
+                *ngIf="formLogin.controls['contrasenia'].hasError('minlength')">Debe tener la longitud mayor o igual a 8 dígitos.</span>
+              <span class="campo_requerido"
+                *ngIf="formLogin.controls['contrasenia'].hasError('maxlength')">Debe tener la longitud menor o igual a 12 dígitos.</span>
+            </div>
+          </div>
+          <div class="mb-2 mt-3">
+            <button type="submit" class="btn boton_primario">
+              <span *ngIf="!ingresando" class="material-symbols-outlined">
+                arrow_forward
+              </span>
+              <div *ngIf="!ingresando">Iniciar sesión</div>
+              <div class="d-flex align-items-center gap-2" *ngIf="ingresando">
+                <div>Ingresando</div>
+                <div class="spinner-border float-end" role="status"></div>
+              </div>
+            </button>
+          </div>
+          <div class="enlaces">
+            <a (click)="abrirRecuperarContrasena()">¿Ha olvidado su contraseña?</a>
+          </div>
+        </form>
+      </div>
+      <div id="loginMicrosoft">
+        <div class="etiqueta">O inicie sesión mediante:</div>
+        <button type="button" class="btn boton_microsoft" (click)="login()">
+          <img src="assets\img\microsoft-icon.png" alt="icon-microsoft" class="" />
+          <span>Ingresar con Office 365</span>
+        </button>
+      </div>
+      <div id="consultas">
+        <div class="etiqueta">Consulta de boletines:</div>
+        <button type="button" class="btn boton_secundario" routerLink="consultas">
+          <span> Ir a consultas</span>
+          <span class="etiqueta_hover">Aquí puede generar boletines, validar la autenticidad de
+            constancias, certificados y paz y salvos</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

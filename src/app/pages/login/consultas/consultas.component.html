@@ -1,0 +1,259 @@
+<div id="consultas" class="container-xl">
+    <div class="contenedor_imagenes">
+      <img src="assets/img/consultas.svg" class="imagen" alt="">
+    </div>
+    <div id="boletines">
+      <div class="titulos">CONSULTAS</div>
+      <div class="text-center mb-3">
+        Haga clic en cada botón para desplegar las opciones
+      </div>
+      <div ngbAccordion>
+        <div ngbAccordionItem>
+          <h2 ngbAccordionHeader>
+            <button ngbAccordionButton>Consulta de boletines:</button>
+          </h2>
+          <div ngbAccordionCollapse class="container_forms">
+              <form [formGroup]="formBuscar" id="formBoletines" (ngSubmit)="buscarEstudiante()">
+                <div class="etiqueta">Los campos con asterisco (*) son obligatorios</div>
+                <div class="contenedor_inputs">
+                  <div class="campo col_documento" [class.invalid]="campoNoValidoBoletines('tipo_documento')">
+                    <div class="input-wrapper">
+                      <label for="tipo_documento" class="etiqueta_select">
+                        Tipo de documento:<span class="asterisco">*</span>
+                      </label>
+                      <ng-select [items]="tiposDocumentos" bindValue="id" bindLabel="nombre" class="select"
+                        placeholder="Tipo Documento" name="tipo_documento" [searchable]="false"
+                        formControlName="tipo_documento">
+                      </ng-select>
+                    </div>
+                    <div class="contenedor_errores">
+                      <span class="campo_requerido">Requerido</span>
+                    </div>
+                  </div>
+                  <div class="campo col_numero" [class.invalid]="campoNoValidoBoletines('numero_documento')">
+                    <div class="input-wrapper">
+                      <label for="numero_docmento">
+                        Número de documento:<span class="asterisco">*</span>
+                      </label>
+                      <input type="text" formControlName="numero_documento" placeholder="Escriba el número de documento"
+                        class="form_input">
+                    </div>
+                    <div class="contenedor_errores">
+                      <span class="campo_requerido">Requerido</span>
+                      <span class="campo_requerido"
+                        *ngIf="formBuscar.controls['numero_documento'].hasError('minlength')">Debe tener la longitud
+                        mayor o igual a 8 dígitos.</span>
+                      <span class="campo_requerido"
+                        *ngIf="formBuscar.controls['numero_documento'].hasError('maxlength')">Debe tener la longitud
+                        menor o igual a 12 dígitos.</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="campo" [class.invalid]="campoNoValidoBoletines('codigo_estudiante')">
+                  <div class="input-wrapper">
+                    <label for="codigo_estudiante">
+                      Código del estudiante:<span class="asterisco">*</span>
+                    </label>
+                    <input type="text" formControlName="codigo_estudiante"
+                      placeholder="Escriba el código del estudiante" class="form_input">
+                  </div>
+                  <div class="contenedor_errores">
+                    <span class="campo_requerido">Requerido</span>
+                  </div>
+                </div>
+                <div class="acciones">
+                  <button type="submit" class="btn boton_primario">
+                    <div *ngIf="!buscandoEstudiante">
+                      <span class="material-symbols-outlined">
+                        search
+                      </span>
+                      <span>Buscar</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2" *ngIf="buscandoEstudiante">
+                      <div>Buscando</div>
+                      <div class="spinner-border float-end" role="status"></div>
+                    </div>
+                  </button>
+                </div>
+              </form>
+              <form [formGroup]="formCertificado" *ngIf="estudianteEncontrado" id="formCertificado"
+                (ngSubmit)="generarCertificado()">
+                <div class="etiqueta text-start">Datos del estudiante</div>
+                <div class="contenedor_inputs">
+                  <div class="campo deshabilitado" [class.invalid]="campoNoValidoCertificado('nombre_estudiante')">
+                    <div class="input-wrapper">
+                      <label for="nombre_estudiante">
+                        Nombre:<span class="asterisco">*</span>
+                      </label>
+                      <input type="text" formControlName="nombre_estudiante"
+                        placeholder="Escriba el nombre del estudiante" class="form_input" readonly>
+                    </div>
+                    <div class="contenedor_errores">
+                      <span class="campo_requerido">Nombre estudante</span>
+                    </div>
+                  </div>
+                  <div class="campo deshabilitado" [class.invalid]="campoNoValidoCertificado('colegio')">
+                    <div class="input-wrapper">
+                      <label for="colegio">
+                        Colegio:<span class="asterisco">*</span>
+                      </label>
+                      <input type="text" formControlName="colegio" placeholder="Escriba el colegio" class="form_input"
+                        readonly>
+                    </div>
+                    <div class="contenedor_errores">
+                      <span class="campo_requerido">Nombre Colegio</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="contenedor_inputs">
+                  <div class="campo deshabilitado" [class.invalid]="campoNoValidoCertificado('sede')">
+                    <div class="input-wrapper">
+                      <label for="sede" class="etiqueta_select">
+                        Sede:<span class="asterisco">*</span>
+                      </label>
+                      <ng-select [clearable]="false" [readonly]="true" [items]="sedeEstudiante" bindValue="id"
+                        bindLabel="nombre" class="select" placeholder="Seleccione la sede" name="sede"
+                        [searchable]="false" formControlName="sede">
+                      </ng-select>
+                    </div>
+                    <div class="contenedor_errores">
+                      <span class="campo_requerido">Nombre Sede</span>
+                    </div>
+                  </div>
+
+                  <div class="campo deshabilitado" [class.invalid]="campoNoValidoCertificado('jornada')">
+                    <div class="input-wrapper">
+                      <label for="jornada" class="etiqueta_select">
+                        Jornada:<span class="asterisco">*</span>
+                      </label>
+                      <ng-select [clearable]="false" [readonly]="true" [items]="jornadaEstudiante" bindValue="id"
+                        bindLabel="nombre" class="select" placeholder="Seleccione la jornada" name="jornada"
+                        [searchable]="false" formControlName="jornada">
+                      </ng-select>
+                    </div>
+                    <div class="contenedor_errores">
+                      <span class="campo_requerido">Jornada a la que pertenece el estudiante</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="contenedor_inputs">
+                  <div class="campo deshabilitado" [class.invalid]="campoNoValidoCertificado('metodologia')">
+                    <div class="input-wrapper">
+                      <label for="metodologia" class="etiqueta_select">
+                        Metodología:<span class="asterisco">*</span>
+                      </label>
+                      <ng-select [clearable]="false" [readonly]="true" bindValue="id"
+                        bindLabel="nombre" class="select" [items]="metodologiasEstudiante" placeholder="Seleccione la metodologia" name="metodologia"
+                        [searchable]="false" formControlName="metodologia">
+                      </ng-select>
+                    </div>
+                    <div class="contenedor_errores">
+                      <span class="campo_requerido">Metodologia del colegio</span>
+                    </div>
+                  </div>
+
+                  <div class="campo deshabilitado" [class.invalid]="campoNoValidoCertificado('grado')">
+                    <div class="input-wrapper">
+                      <label for="grado" class="etiqueta_select">
+                        Grado:<span class="asterisco">*</span>
+                      </label>
+                      <ng-select [clearable]="false" [readonly]="true" [items]="gradoEstudiante" bindValue="id"
+                        bindLabel="nombre" class="select" placeholder="Seleccione el grado" name="grado"
+                        [searchable]="false" formControlName="grado">
+                      </ng-select>
+                    </div>
+                    <div class="contenedor_errores">
+                      <span class="campo_requerido">Grado al que pertenece el estudiante</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="contenedor_inputs">
+                  <div class="campo deshabilitado" [class.invalid]="campoNoValidoCertificado('grupo')">
+                    <div class="input-wrapper">
+                      <label for="grupo" class="etiqueta_select">
+                        Grupo:<span class="asterisco">*</span>
+                      </label>
+                      <ng-select [clearable]="false" [readonly]="true" [items]="grupoEstudiante" bindValue="id"
+                        bindLabel="nombre" class="select" placeholder="Seleccione el grupo" name="grupo"
+                        [searchable]="false" formControlName="grupo">
+                      </ng-select>
+                    </div>
+                    <div class="contenedor_errores">
+                      <span class="campo_requerido">Grupo del estudiante</span>
+                    </div>
+                  </div>
+
+                  <div class="campo" [class.invalid]="campoNoValidoCertificado('periodos')">
+                    <div class="input-wrapper">
+                      <label for="grupo" class="etiqueta_select">
+                        Periodo:<span class="asterisco">*</span>
+                      </label>
+                      <ng-select [items]="periodoEstudiante" bindValue="id" bindLabel="nombre" class="select"
+                        placeholder="Seleccione el periodo" name="periodos" [searchable]="false"
+                        formControlName="periodos">
+                      </ng-select>
+                    </div>
+                    <div class="contenedor_errores">
+                      <span class="campo_requerido">Periodo cursado</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="acciones">
+                  <button type="submit" class="btn boton_primario">
+                    <div *ngIf="!generandoCertificado">
+                      <span class="material-symbols-outlined">
+                        article
+                      </span>
+                      <span>Generar</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2" *ngIf="generandoCertificado">
+                      <div>Generando</div>
+                      <div class="spinner-border float-end" role="status"></div>
+                    </div>
+                  </button>
+                </div>
+              </form>
+          </div>
+        </div>
+
+        <div ngbAccordionItem>
+          <h2 ngbAccordionHeader>
+            <button ngbAccordionButton>Consultas externas</button>
+          </h2>
+          <div ngbAccordionCollapse class="container_forms">
+              <form [formGroup]="formPin" id="formPines" (ngSubmit)="generarConsultaExterna()">
+                <div class="etiqueta etiqueta_error"  *ngIf="mostrarErrorPin">Los campos con asterisco (*) son obligatorios</div>
+                <div class="campo" [class.invalid]="campoNoValidoPines('numero_pin')">
+                  <div class="input-wrapper">
+                    <label for="numero_pin">
+                      Pin del documento<span class="asterisco">*</span>
+                    </label>
+                    <input type="text" formControlName="numero_pin"
+                      placeholder="Escriba el pin del documento"
+                      class="form_input">
+                  </div>
+                  <div class="contenedor_errores">
+                    <span class="campo_requerido" *ngIf="formPin.controls['numero_pin'].hasError('required') && this.formPin.invalid">Requerido</span>
+                    <span class="campo_requerido"
+                      *ngIf="formPin.controls['numero_pin'].hasError('maxlength')">
+                      Debe tener la longitud menor o igual a 15 dígitos.
+                    </span>
+                  </div>
+                </div>
+                <div class="acciones">
+                  <button type="submit" class="btn boton_primario">
+                    <div *ngIf="!generandoConsultaExterna">
+                      <img src="assets/iconos/pin_icono.svg" alt="pin_icono">
+                      <span>Validar</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2" *ngIf="generandoConsultaExterna">
+                      <div>Validando </div>
+                      <div class="spinner-border float-end" role="status"></div>
+                    </div>
+                  </button>
+                </div>
+              </form>
+        </div>
+      </div>
+    </div>
+</div>

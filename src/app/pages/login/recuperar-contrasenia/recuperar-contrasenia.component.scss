@@ -1,0 +1,165 @@
+div.modal-content {
+    width: 600px !important;
+}
+
+#contenedorRecuperar {
+    padding: 1.5625rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: "Raleway";
+    color: var(--textos);
+    font-weight: 400;
+}
+
+.imagen {
+    img {
+        height: 1.5rem;
+    }
+}
+
+.titulo {
+    margin-top: 1rem;
+
+    h1 {
+        font-size: 1.5rem;
+        line-height: 2rem;
+        margin: 0;
+    }
+}
+
+.texto {
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+
+    p {
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+        text-align: justify;
+        margin: 0;
+    }
+}
+
+form {
+    margin-top: 1rem;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    input {
+        width: 373px;
+        padding-left: 1rem;
+    }
+
+    p {
+        font-size: 0.75rem;
+        line-height: 1rem;
+        padding-left: 1rem;
+        margin: 0;
+        margin-left: 0;
+        margin-right: auto;
+        margin-top: 0.5rem;
+    }
+}
+
+.botones {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-right: 0;
+    margin-left: auto;
+
+    .btn {
+        font-weight: 600 !important;
+    }
+}
+
+.enviado {
+    p {
+        padding: 0;
+        margin: 0;
+    }
+
+    .parrafo {
+        margin-top: 1rem;
+    }
+}
+
+.error {
+    input {
+        border: 1px solid var(--error) !important;
+    }
+
+    label,
+    p {
+        color: var(--error);
+    }
+}
+
+.campo_requerido {
+    color: var(--error);
+}
+
+.contenedor_errores{ 
+    display: flex;
+    justify-content: flex-start;
+    margin-left: 0;
+    margin-right: auto;
+}
+
+.spinner-border {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.texto .email {
+    text-decoration: underline; 
+    text-align: center; 
+    font-weight: 700; 
+    margin-top: 1rem;
+    word-wrap: break-word;
+    text-align: center;
+}
+
+@media (max-width: 767.98px) {
+    form input {
+        width: 90% !important;
+    }
+}
+
+@media (max-width: 575.98px) {
+    #contenedorRecuperar {
+        padding: 1rem 0rem;
+    }
+
+    .contenedor {
+        padding: 0rem 1rem;
+    }
+
+    form {
+        width: 90%;
+    }
+
+    .botones {
+        margin-top: 1rem;
+        display: flex;
+        justify-content: center;
+    }
+
+    .input-wrapper {
+        display: flex;
+        justify-content: center;
+    }
+
+    .titulo h1 {
+        text-align: center;
+    }
+
+    .enviado {
+        word-wrap: break-word;
+        text-align: justify;
+    }
+}

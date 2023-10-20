@@ -1,0 +1,31 @@
+<div id="contenedorMensajeError">
+
+    <div class="icono">
+        <span class="material-symbols-outlined">
+            feedback
+        </span>
+    </div>
+
+    <div class="titulo">
+        <h1>{{infoMensaje.titulo}}</h1>
+    </div>
+
+    <div class="infoMensaje">
+        <p>{{infoMensaje.mensaje}}</p>
+    </div>
+
+    <div class="acciones" *ngIf="infoMensaje.botonesAsignacionErrorEliminar " >
+        <button (click)="cerrarModal()" class="btn boton_primario">Aceptar</button>
+    </div>
+
+    <div class="acciones" *ngIf="infoMensaje.botonesAsignacionFuncionarioConfirmarC">
+        <button (click)="cerrarModal()" class="btn boton_primario">Cancelar</button>
+        <button (click)="cerrarModal()" class="btn boton_primario">Si, cerrar</button>
+    </div>
+
+    <div class="acciones" *ngIf="infoMensaje.botonesAsignacionEliminar">
+        <button (click)="cerrarModal()" class="btn boton_primario">Cancelar</button>
+        <button (click)="cerrarModal()" class="btn boton_primario">Si, continuar</button>
+    </div>
+
+</div>

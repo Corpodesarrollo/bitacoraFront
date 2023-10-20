@@ -1,0 +1,76 @@
+.seleccionar_foto{
+  padding: 2rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+.contenedor_imagen{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  min-width: 11.875rem;
+  max-width: 11.875rem;
+  height: 11.875rem;
+  margin-right: 1rem;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.10);
+}
+
+.contenedor_imagen span{
+  font-size: 10rem;
+  color: #C0C1C1;
+}
+.contenedor_imagen img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mensaje{
+  background: #DBE4E6;
+  font-size: 1rem;
+  text-align: center;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.3125rem;
+  border-radius: 1.25rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  .mensaje_titulo{
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+  p{
+    margin-bottom: 0;
+  }
+}
+
+.error_mensaje{
+  border: 1px solid #F5C2C7;
+  background: #F8D7DA;
+  color: #58151C;
+}
+
+.botones_imagen{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1rem 0;
+}
+
+.nombre_archivo{
+  max-width:12rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+
+@media (max-width: 575.98px) {
+  .seleccionar_foto{
+    flex-wrap: wrap;
+    padding: 1rem 0;
+  }
+}

@@ -1,0 +1,207 @@
+#contenedorLogin{
+  width: 100%;
+  padding: 19.5px 20px;
+  position: relative;
+}
+
+#formLogin{
+  border-bottom: 1px solid var(--borde_claro);
+  .titulo{
+    font-size: 1.75rem;
+    padding-top: 2rem;
+    padding-bottom: 1rem;
+    text-align: center;
+  }
+}
+
+.enlaces{
+  color: var(--alterno);
+  font-weight: 500;
+  text-align: center;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  margin-bottom: .8rem;
+}
+
+.carousel{
+  height: 100%;
+  position: relative;
+}
+
+.carousel-inner{
+
+  display: flex;
+  height: 100%;
+  align-items: center;
+
+}
+
+.carousel-caption{
+  position: static;
+  font-size: 1rem;
+  padding-bottom: 0;
+  color: var(--textos_claro);
+}
+
+.carousel-control-next,
+.carousel-control-prev{
+  width: 24px;
+  color: #fff;
+  opacity: 0.9;
+}
+.carousel-indicators{
+  bottom: -3rem;
+}
+.carousel-indicators [data-bs-target] {
+  background-color: #BBB9B9 !important;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.carousel-indicators .active {
+  border: 1px solid #FEFEFE;
+  background-color: #989794 !important;
+  width: 10px;
+  height: 10px;
+  box-shadow: 0px 1px 5px #BBB9B9;
+  margin-top: 8px;
+}
+.titulo-imagen{
+  color: var(--textos);
+  font-size: 2rem;
+  margin-bottom: 0;
+  line-height: 1;
+}
+
+
+.boton_primario{
+  margin: 0 auto;
+  margin-bottom: 1rem;
+}
+
+#loginMicrosoft{
+  border-bottom: 1px solid var(--borde_claro);
+  padding:  1.8rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .etiqueta{
+    font-weight: 500;
+    margin-bottom: 1rem;
+  }
+}
+
+.input_password{
+  padding-right: 3rem;
+}
+
+.boton_microsoft img{
+  width: 22px;
+  height: 22px;
+}
+
+.boton_microsoft:first-child:active{
+  border: 1px solid var(--border_ligth);
+  border-radius: 1.2813rem;
+  color: #647477;
+  font-weight: 600;
+}
+.boton_microsoft{
+  border: 1px solid var(--border_ligth);
+  border-radius: 1.2813rem;
+  color: #647477;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.boton_microsoft:hover{
+  border: 1px solid var(--border_ligth);
+  color: #647477;
+  font-weight: 600;
+}
+
+.spinner-border{
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+
+#consultas{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 1.5rem 0;
+  .etiqueta{
+    font-weight: 500 !important;
+  }
+  .boton_secundario{
+    position: relative;
+  }
+  .etiqueta_hover {
+    display: none;
+  }
+  .boton_secundario{
+    margin-left: 0.625rem;
+  }
+  .boton_secundario:hover .etiqueta_hover {
+    position: absolute;
+    display: block;
+    width: 265px;
+    line-height: 1.4;
+    top: -60px;
+    border-radius: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    text-align: center;
+    background-color: var(--fondo_oscuro);
+    color: var(--blanco_alterno);
+  }
+}
+
+.carousel-image{
+  display: flex;
+  justify-content: center;
+  img{
+    width: 90%;
+    height: 100%;
+    border-radius: 20px;
+    object-fit: cover;
+
+  }
+  img:hover{
+    transform: translateY(-10px);
+    transition: transform 1s ease-out;
+  }
+}
+
+.custom-tooltip {
+  --bs-tooltip-bg: var(--alterno);
+}
+
+
+
+@media (max-width:767.98px) {
+  #contenedorLogin{
+    padding: 0 0 19.5px 0;
+  }
+  .campo{
+    align-items: center;
+  }
+  #consultas{
+    flex-direction: column;
+    row-gap: 0.625rem;
+  }
+  #formLogin{
+    padding-top: 0;
+  }
+  .btn{
+    min-width: 14.125rem;
+    max-width: 20rem;
+  }
+
+  .input-wrapper{
+    min-width: 16.25rem;
+    max-width: 20rem;
+  }
+}

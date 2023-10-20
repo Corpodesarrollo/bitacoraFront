@@ -1,0 +1,63 @@
+<div class="modal-header">
+  <div class="modal-title">
+    <span *ngIf="!cambioPolitica">
+      Aceptación de Política de Datos y Política de Uso
+    </span>
+    <span *ngIf="cambioPolitica">
+      Nuestra Política de Datos y Política de Uso ha cambiado
+    </span>
+  </div>
+</div>
+<div class="modal-body">
+  <div class="modal-texto">
+    <form action="" [formGroup]="formProteccion">
+      <div>
+        <p *ngIf="!cambioPolitica">
+          Estamos comprometidos con la protección de su privacidad y la seguridad de sus datos personales. Hemos
+          actualizado nuestras Políticas de Datos y Política de Uso para brindarle una experiencia más transparente y
+          segura al utilizar nuestros servicios
+        </p>
+        <p *ngIf="cambioPolitica">
+          Hemos actualizado nuestras Políticas de Datos y Política de Uso para brindarle una experiencia más transparente y segura al utilizar nuestros servicios.
+        </p>
+        <div class="mt-3">
+          Por favor, tómese un momento para revisar ambas políticas a continuación:
+        </div>
+      </div>
+      <div class="informacion">
+        <a  class="hypervinculo" (click)="verPolitica()">Ver Política de Datos</a>
+        <a class="hypervinculo" (click)="verPolitica()">Ver Política de Uso</a>
+      </div>
+      <div>
+        Es importante que esté completamente informado/a sobre cómo recopilamos, utilizamos, protegemos y compartimos su
+        información personal, así como sobre las condiciones de uso de nuestra plataforma.<br><br>
+        Después de revisar ambas políticas, marque las casillas de verificación a continuación para indicar su
+        consentimiento:
+      </div>
+      <div class="informacion">
+        <div class="campo_checkbox">
+            <input type="checkbox" formControlName="politica_datos">
+            <span>Acepto la Política de Datos</span>
+        </div>
+        <div class="campo_checkbox">
+            <input type="checkbox" formControlName="politica_uso">
+            <span>Acepto la Política de Uso</span>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="modal-footer acciones">
+    <button type="button" class="btn boton_secundario" (click)="cancelar()">
+      Cancelar
+    </button>
+    <button type="submit" class="btn boton_primario" (click)="guardar()" [disabled]="this.formProteccion.invalid">
+      <div *ngIf="!guardandoPoliticas">
+        <span>Aceptar</span>
+      </div>
+      <div class="d-flex align-items-center gap-2" *ngIf="guardandoPoliticas">
+        <div>Guardando</div>
+        <div class="spinner-border float-end" role="status"></div>
+      </div>
+    </button>
+</div>

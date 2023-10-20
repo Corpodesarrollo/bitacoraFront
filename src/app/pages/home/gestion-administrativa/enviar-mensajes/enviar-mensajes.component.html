@@ -1,0 +1,35 @@
+<div class="conteiner-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="contenedorTitulo">
+                <h3 class="tituloMensajes">
+                    Enviar Mensajes
+                </h3>
+                <!-- <button class="btn">Enviar mensajes</button> -->
+            </div>
+        </div>
+        <div class="col-12 contenedorMensaje">
+
+            <ul ngbNav #nav="ngbNav" [(activeId)]="tabActivo" class="nav-tabs">
+                <li [ngbNavItem]="1">
+                    <button ngbNavLink>Buscar</button>
+                    <ng-template ngbNavContent>
+                        
+                        <app-buscar></app-buscar>
+
+                    </ng-template>
+                </li>
+                <li [ngbNavItem]="2">
+                    <button ngbNavLink>Nuevo Mensaje</button>
+                    <ng-template ngbNavContent>
+
+                        <app-nuevo-mensaje (tabActivo)="tab($event)"></app-nuevo-mensaje>
+
+                    </ng-template>
+                </li>
+            </ul>
+
+            <div [ngbNavOutlet]="nav" class="mt-2"></div>
+        </div>
+    </div>
+</div>

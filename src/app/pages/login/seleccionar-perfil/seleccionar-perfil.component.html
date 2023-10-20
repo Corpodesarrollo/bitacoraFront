@@ -1,0 +1,236 @@
+<div id="contenedorSeleccion" class="container-lg" *ngIf="cargandoPerfil">
+    <div id="cargando" class="mensajeCarga">
+        <p>Cargando información del usuario</p>
+        <div class="spinner-border cargando_inicio text-dark" role="status">
+            <span class="visually-hidden">Loading</span>
+        </div>
+    </div>
+</div>
+
+<div id="contenedorSeleccion" class="container-lg" *ngIf="!cargandoPerfil">
+    <div class="row">
+        <div class="d-none d-md-block col-7">
+            <div id="carousel-escuela" class="carousel carousel-dark slide" data-bs-ride="carousel" *ngIf="slides">
+                <div class="carousel-inner">
+                    <div class="carousel-item" [class.active]="i === 0" *ngFor="let slide of slides; let i = index"
+                        [attr.data-bs-interval]="3000">
+                        <div class="carousel-image">
+                            <img [src]="slide.url" class="slide-one" alt="" />
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carousel-escuela"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carousel-escuela"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+        <div class="col-12 col-md-5" [ngClass]="{'escondido': tieneMasPerfiles}">
+            <div id="formSeleccion" *ngIf="rolRector =='rector' && !tieneMasPerfiles">
+                <div class="bienvenido">BIENVENIDO</div>
+                <div class="text-center mb-3">Seleccione el colegio, la sede y la jornada en la cual va a trabajar</div>
+                <span class="recordatorio">Los campos con asterisco (*) son obligatorios</span>
+                <form [formGroup]="formulario" (ngSubmit)="ingresar()" *ngIf="!cargaExitosa">
+                    <div class="campo" [class.invalid]="campoNoValidoFormulario('nombreColegio')">
+                        <div class="input-wrapper">
+                            <label for="nombreColegio" class="etiqueta_select"> Colegio <span class="asterisco">* </span></label>
+                            <ng-select #selectCol 
+                            [items]="listaInstituciones" 
+                            bindValue="id" 
+                            bindLabel="nombre"
+                            class="select" 
+                            placeholder="Seleccione el colegio" 
+                            [placeholder]="placeHolderColegio" 
+                            name="colegios"
+                            formControlName="nombreColegio" 
+                            (change)="obtenerSedes($event)">
+                            </ng-select>
+                        </div>
+                    </div>
+                    <div class="campo" [class.invalid]="campoNoValidoFormulario('nombreSede')">
+                        <div class="input-wrapper">
+                            <label for="nombreSede" class="etiqueta_select">Sede<span class="asterisco">* </span></label>
+                            <ng-select #selectSede 
+                                [items]="sedeFiltrada" 
+                                bindValue="id" 
+                                bindLabel="nombre"
+                                class="select" 
+                                placeholder="Seleccione la sede" 
+                                name="sedes"
+                                formControlName="nombreSede" 
+                                (change)="obtenerJornadas()">
+                            </ng-select>
+                        </div>
+                    </div>
+                    <div class="campo " [class.invalid]="campoNoValidoFormulario('nombreJornada')">
+                        <div class="input-wrapper">
+                            <label for="nombreJornada" class="etiqueta_select"> Jornada <span class="asterisco">* </span></label>
+                            <ng-select #selectJornada 
+                                [items]="jornadaFiltrada" 
+                                bindValue="id" 
+                                bindLabel="nombre"
+                                class="select" 
+                                placeholder="Seleccione la jornada" 
+                                name="jornadas"
+                                formControlName="nombreJornada" 
+                                (change)="guardarJornada()">
+                            </ng-select>
+                        </div>
+                    </div>
+                    <div class="mb-2 mt-2 botones">
+                        <div class="btn boton_secundario" (click)="cerrarSesion()">
+                            <span class="material-symbols-outlined azul">
+                                logout
+                            </span>
+                            <div>Salir</div>
+                        </div>
+                        <button type="submit" class="btn boton_primario"
+                            [ngClass]="{'boton_deshabilitado': formulario.invalid}" [disabled]="formulario.invalid"
+                            (click)="validarSelecciones()">
+                            <span *ngIf="!ingresando" class="material-symbols-outlined">
+                                arrow_forward
+                            </span>
+                            <div *ngIf="!ingresando">Ingresar</div>
+                            <div class="ingresando" *ngIf="ingresando">
+                                <div>Ingresando</div>
+                                <div class="spinner-border text-light" role="status">
+                                    <span class="visually-hidden">Loading</span>
+                                </div>
+                            </div>
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div *ngIf="cargaExitosa">
+                <div class="bienvenido">BIENVENIDO</div>
+                <div class="mensajeCarga" *ngIf="perfilUsuario !==''">
+                    <p>Cargando registros...</p>
+                    <div class="spinner-border text-dark" role="status">
+                        <span class="visually-hidden">Loading</span>
+                    </div>
+                </div>
+                <div class="error_perfil col-12 col-md-5" *ngIf="perfilUsuario ==''">
+                    <div>
+                        <img src="assets/iconos/advertencia_icono.svg" alt="">
+                        <p>¡Perfil no configurado!</p>
+                        <button type="submit" class="btn boton_primario" (click)="logout()">
+                            <span class="material-symbols-outlined">
+                                arrow_back
+                            </span>
+                            <div>Regresar</div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-5">
+            <div id="formSeleccion" *ngIf="tieneMasPerfiles">
+                <div class="bienvenido">BIENVENIDO</div>
+                <div class="text-center mb-3">Seleccione el acceso por el cual va a trabajar</div>
+                <form *ngIf="!cargaExitosa">
+                    <div class="campo mb-2">
+                        <div id="titulos">
+                            <div class="titulo container-fluid" *ngFor="let titulo of titulos"
+                                [ngClass]="{ 'active': titulo === tituloSeleccionado }" (click)="verificar(titulo)"
+                                (click)="validarCheck()" (click)="filtrarPorTitulo()">
+                                {{titulo | capitalizar}}
+                            </div>
+                        </div>
+                        <div id="titulos_responsive" class="input-group mb-3">
+                            <button class="btn boton_primario dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                {{ opcionSeleccionada ? opcionSeleccionada : tituloSeleccionado }}
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li *ngFor="let opcion of titulos">
+                                    <p class="dropdown-item" (click)="seleccionarOpcion(opcion)"
+                                        (click)="verificar(opcion)" (click)="filtrarPorTitulo()">{{ opcion | capitalizar
+                                        }}</p>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="filas">
+                            <div id="filas_responsive" *ngFor="let registro of registroFiltrado">
+                                <div class="registro" (click)="validarSeleccionRadio(registro)"
+                                    [ngClass]="{'seleccionado': registro === registroSeleccionado}"
+                                    (click)="validarRegistro(registro)">
+                                    Perfil: {{
+                                    registro.perfil.etiqueta |
+                                    mayusculas }} ; Localidad: {{registro.colegio.localidad.nombre | mayusculas}} ;
+                                    Institución:
+                                    {{ registro.colegio.nombre }} ; Sede:
+                                    {{registro.sede.nombre}}
+                                    <p class="escondido">{{registro.jornada.nombre}} {{registro.jornada.id}} 
+                                        {{registro.perfil.etiqueta}} {{registro.perfil.id}} {{registro.colegio.id}} {{registro.sede.id}} {{registro.colegio.localidad.id}}</p>
+                                </div>
+                            </div>
+                            <div id="filas" *ngFor="let registro of registroFiltrado">
+                                <div class="item">
+                                    <input type="radio" name="answer" (change)="validarSeleccionRadio(registro)">
+                                    <label for="radio" class="form-check-label" for="radio1">Perfil: {{
+                                        registro.perfil.etiqueta |
+                                        mayusculas }} ; Localidad: {{registro.colegio.localidad.nombre | mayusculas}} ;
+                                        Institución:
+                                        {{ registro.colegio.nombre }}; Sede:
+                                        {{registro.sede.nombre}}
+                                        <p class="escondido">{{registro.jornada.nombre}} {{registro.jornada.id}} 
+                                            {{registro.perfil.etiqueta}} {{registro.perfil.id}} {{registro.colegio.id}} {{registro.sede.id}} {{registro.colegio.localidad.id}}</p>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-2 mt-4 botones">
+                        <div class="btn boton_secundario" (click)="cerrarSesion()">
+                            <span class="material-symbols-outlined azul">
+                                logout
+                            </span>
+                            <div>Salir</div>
+                        </div>
+                        <button [ngClass]="{'boton_deshabilitado': !radioSeleccionado}" [disabled]="!radioSeleccionado"
+                            type="submit" class="btn boton_primario" (click)="entrar()">
+                            <span *ngIf="!ingresando" class="material-symbols-outlined"
+                                [ngClass]="{'texto_deshabilitado': !radioSeleccionado}">
+                                arrow_forward
+                            </span>
+                            <div *ngIf="!ingresando" [ngClass]="{'texto_deshabilitado': !radioSeleccionado}">Ingresar</div>
+                            <div class="ingresando" *ngIf="ingresando">
+                                <div>Ingresando</div>
+                                <div class="spinner-border text-light" role="status">
+                                    <span class="visually-hidden">Loading</span>
+                                </div>
+                            </div>
+                        </button>
+                    </div>
+                </form>
+                <div *ngIf="cargaExitosa">
+                    <div class="bienvenido">BIENVENIDO</div>
+                    <div class="mensajeCarga">
+                        <p>Cargando registros...</p>
+                        <div class="spinner-border text-dark" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                    <div class="error_perfil col-12 col-md-5" *ngIf="perfilUsuario ==''">
+                        <div class="display-flex justify-content-center">
+                            <img src="assets/iconos/advertencia_icono.svg" alt="">
+                            <p>¡Perfil no configurado!</p>
+                            <button type="submit" class="btn boton_primario" (click)="logout()">
+                                <span class="material-symbols-outlined">
+                                    arrow_back
+                                </span>
+                                <div>Regresar</div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

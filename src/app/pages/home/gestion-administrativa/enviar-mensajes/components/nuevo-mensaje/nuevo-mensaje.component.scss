@@ -1,0 +1,248 @@
+// $fa-font-path:"/assetssss/fonts" !default; 
+
+.col-12.contenedorMensaje {
+    /* display: flex; */
+    margin-top: 2rem;
+    padding: 0rem 2.81rem;
+}
+
+.btnMensajeNuevo{
+    display: flex;
+    padding: 10px 24px 10px 16px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    flex-direction: row;
+    color: #001A42;
+    border-radius: 100px;
+    background: #D8E2FF;
+}
+
+.buttonActualizar{
+    background: var(--alterno);
+    color: white;
+    border-radius: 100px;
+    display: flex;
+    padding: 10px 24px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    width: 173px;
+}
+
+.mensajeObligarorio p {
+    font-family: Raleway;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    /* 142.857% */
+    letter-spacing: 0.25px;
+    color: #3F484A;
+    text-align: center;
+    padding-top: 0.4rem;
+}
+
+span.campo_requerido {
+    color: #3F484A;
+    font-family: Raleway;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 16px;
+    /* 133.333% */
+}
+
+.titulWys {
+    font-family: Raleway;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px;
+    letter-spacing: 0.1px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    color: #3F484A;
+}
+
+.contenedorWys {
+    border-radius: 20px;
+    background: #F8FAFA;
+    padding: 0.1rem 1rem 1rem 1rem;
+    margin-top: 1rem;
+}
+
+.tituloEnviarA {
+    margin-bottom: 1.2rem;
+    color: #000;
+    font-family: Raleway;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 28px;
+}
+
+.buttonAgregar {
+    display: flex;
+    padding: 10px 24px 10px 16px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    flex-direction: row;
+    color: #001A42;
+    border-radius: 100px;
+    background: #D8E2FF;
+}
+
+// .contenedorEnviarA {
+//      justify-content: center;
+//     align-items: center;
+// }
+
+.buttonAgregar span {
+    color: #001A42;
+}
+
+p.perfilesAgref {
+    color: #000;
+    font-family: Raleway;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+}
+
+.eliminarIcon {
+    display: inline-block;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100px;
+    background: var(--m-3-sys-light-secondary-container, #D8E2FF);
+    gap: 10px;
+    padding: 0.41rem;
+    margin-right: 0.5rem;
+    cursor: pointer;
+}
+
+.perfilAgreg,
+.localidadAgreg {
+    display: flex;
+    align-items: center;
+    color: #000;
+    /* M3/body/large */
+    font-family: Raleway;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    /* 150% */
+    letter-spacing: 0.5px;
+}
+
+.perfilesAgreg {
+    color: #000;
+    /* M3/title/medium */
+    font-family: Raleway;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+    /* 150% */
+    letter-spacing: 0.15px;
+}
+
+.titulosInputsAdmin {
+    color: var(--m-3-sys-light-on-surface-variant, #3F484A);
+    /* M3/title/medium */
+    font-family: Raleway;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+    /* 150% */
+    letter-spacing: 0.15px;
+}
+
+.buttonEnviar{
+    background: var(--alterno);
+    color: white;
+    border-radius: 100px;
+    display: flex;
+    padding: 10px 24px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    width: 168px;
+}
+
+.col-12.modoEditor {
+    padding: 0rem 2.8rem;
+}
+
+.input-wrapper .error {
+    border: 1px solid var(--error) !important;
+}
+
+.input-wrapper .sinError {
+    border:initial !important;
+}
+
+.col-12.contenedorWys.error {
+    border: 1px solid var(--error) !important;
+}
+
+.contenedorCargando {
+    margin-left: 36%;
+}
+
+// .errorMensaje > span {
+//     color:  var(--error) !important;
+// }
+
+angular-editor.ng-pristine.ng-invalid.error{
+    border: 1px solid var(--error) !important;
+}
+
+.spinner-border.float-end {
+    width: 18px;
+    height: 18px;
+}
+
+.pt-3.spinner-border{
+    display: flex;
+    justify-content: flex-start;
+    align-items: baseline;
+    margin: 1rem 7rem;
+}
+
+.spinner-border {
+    width: 1.3rem;
+    height: 1.3rem;
+}
+
+.deshabilitarInputSelect {
+    opacity: 0.5;
+}
+
+
+
+@media (max-width: 767.98px) {
+
+    .contenedorEnviarA {
+        margin-left: 0;
+    }
+
+    .contenedorCargando {
+        margin-left: 4%;
+    }
+
+}
+
+@media (max-width: 575.98px) {
+
+    .buttonAgregar {
+        margin-top: 1rem;
+    }
+
+}

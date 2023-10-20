@@ -1,0 +1,28 @@
+.modal-header{
+  padding: 1rem 4rem;
+}
+
+.modal-texto{
+  font-size: 1rem;
+  line-height: 1.6875rem;
+  color: var(--textos);
+}
+
+.informacion{
+  display: flex;
+  justify-content: center;
+  column-gap: 3rem;
+  padding: 1.5rem;
+}
+
+.campo_checkbox{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  column-gap: 0.625rem;
+  line-height: 24px
+}
+
+.hypervinculo{
+  color: var(--alterno);
+}

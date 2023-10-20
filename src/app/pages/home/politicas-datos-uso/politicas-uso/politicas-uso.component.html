@@ -1,0 +1,55 @@
+<div class="cabecera">
+  <div class="titulos">
+    Políticas de uso
+  </div>
+</div>
+<div  id="PoliticasUso">
+  <div class="acciones col-12">
+    <button class="btn boton_primario" type="button" (click)="agregarVersion()">
+      Agregar nueva versión
+    </button>
+  </div>
+  <div class="titulo_tabla mt-3">
+    Lista de versiones política de uso
+  </div>
+  <app-cargando *ngIf="cargandoVersiones"></app-cargando>
+  <div class="contenedor_tabla" *ngIf="!cargandoVersiones">
+    <div class="tabla_lista">
+      <div class="titulos">
+        <div class="col-version">Versión</div>
+        <div class="col-fecha">Fecha</div>
+        <div class="col-estado">Estado</div>
+        <div class="col-acciones">Estado</div>
+      </div>
+      <div class="fila" *ngFor="let version of registroVersiones, let i = index">
+        <div class="titulo_movil">Versión</div>
+        <div class="col-version">{{ version.version}}</div>
+        <div class="titulo_movil">Fecha</div>
+        <div class="col-fecha">{{version.fecha}}</div>
+        <div class="titulo_movil">Estado</div>
+        <div class="col-estado">
+          <div class="estado" [ngClass]="version.estado === true ? 'estado_activo' : 'estado_inactivo'">
+            <span *ngIf="version.estado">Activo</span>
+            <span *ngIf="!version.estado">Inactivo</span>
+          </div>
+        </div>
+        <div class="titulo_movil">Estado</div>
+        <div class="col-acciones">
+          <button type="button" class="contenedor_iconos" (click)="verPolitica(i)">
+            <span class="material-symbols-outlined">
+              visibility
+            </span>
+            <label>Ver</label>
+          </button>
+          <button type="button" class="contenedor_iconos" (click)="eliminarVersion(version)">
+            <span class="material-symbols-outlined">
+              delete
+              </span>
+            <label>Eliminar</label>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-sin-registros *ngIf="sinRegistros && !cargandoVersiones"></app-sin-registros>

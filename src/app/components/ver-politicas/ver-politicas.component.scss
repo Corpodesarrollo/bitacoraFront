@@ -1,0 +1,24 @@
+#PoliticasSistema{
+  padding: 0 4rem 1rem 4rem;
+  .titulo{
+    font-weight: 500;
+    text-align: start;
+  }
+  .parrafo{
+    text-align: justify;
+  }
+  .titulo,
+  .parrafo{
+    margin-bottom: 1rem
+  }
+}
+
+
+@media (max-width: 767.98px) {
+  #PoliticasSistema{
+    padding: 1rem 0rem;
+    .parrafo{
+      text-align: start;
+    }
+  }
+}

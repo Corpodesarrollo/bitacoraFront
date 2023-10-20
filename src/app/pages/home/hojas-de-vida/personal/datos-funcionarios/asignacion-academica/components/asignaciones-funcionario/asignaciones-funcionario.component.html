@@ -1,0 +1,95 @@
+<div id="contendorAsignacionesFuncionarios">
+
+    <div class="titulo">
+        <h1>{{infoAsignacionFuncionario.numeroDocumento}} - {{infoAsignacionFuncionario.funcionario}}</h1>
+    </div>
+
+    <div class="asignacionMaterias" [formGroup]="formulario">
+
+        <!-- [(ngModel)]="infoFuncionario.checked" -->
+        <div class="accordion accordion-flush" id="accordionFlushOne">
+            <div class="accordion-item px-3">
+                <h2 class="accordion-header" id="flush-headingThree">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                        <input type="checkbox" class="checkbox">
+                        <div class="titulo">
+                            <p>{{infoAsignatura.biologia.materia}}</p>
+                        </div>
+                        <div class="input-wrapper">
+                            <input (change)="inputTodos($event)" type="text" formControlName="infoHorasNumeroAula" class="form_input"
+                                [value]="infoAsignatura.biologia.totalHoras">
+                        </div>
+                    </button>
+                </h2>
+                <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne"
+                    data-bs-parent="#accordionFlushOne">
+                    <div class="accordion-body">
+
+                        <div *ngFor="let aula of infoAsignatura.biologia.aulas" class="accordion accordion-flush" id="accordionFlushExample">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="flush-headingThree">
+                                    <button class="accordion-button pe-0 collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+                                        <input type="checkbox" class="checkbox">
+                                        <div class="titulo">
+                                            <p>{{aula.numeroAula}}</p>
+                                        </div>
+                                        <div class="input-wrapper">
+                                            <input type="text" formControlName="infoHorasNumeroAula" class="form_input"
+                                                [value]="aula.horas">
+                                        </div>
+                                    </button>
+                                </h2>
+                                <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingOne"
+                                    data-bs-parent="#accordionFlushExample">
+                                    <div class="accordion-body">
+
+                                        <div *ngFor="let asignatura of aula.asignaturasAulas" class="accordion accordion-flush" id="accordionFlushExample">
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="flush-headingTwo">
+                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                                        data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                                                        <input type="checkbox" class="checkbox">
+                                                        <div class="titulo">
+                                                            <p>{{asignatura.numero}}</p>
+                                                        </div>
+                                                        <div class="input-wrapper">
+                                                            <input type="text" formControlName="infoHorasNumeroAula" class="form_input"
+                                                            [value]="asignatura.horas">
+                                                        </div>
+                                                    </button>
+                                                </h2>
+                                                <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingOne"
+                                                    data-bs-parent="#accordionFlushExample">
+                                                    <!-- <div class="accordion-body">Placeholder content for this accordion</div> -->
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="contenedorHorasTotales">
+        <span class="material-symbols-outlined">donut_large</span> <span class="me-auto"> Horas asignadas </span>  <span>
+            <div class="input-wrapper">
+                <input type="text" formControlName="infoTotalHoras" class="form_input"
+                    [value]="infoAsignatura.biologia.horasDisponibles">
+            </div></span> 
+    </div>
+
+    <div class="acciones">
+        <button (click)="cerrarModal()" class="btn boton_secundario">Cancelar</button>
+        <button class="btn boton_primario">Guardar</button>
+    </div>
+
+</div>

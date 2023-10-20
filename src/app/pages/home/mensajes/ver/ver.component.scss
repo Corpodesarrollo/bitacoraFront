@@ -1,0 +1,78 @@
+.contenedorTitulo{
+    justify-content: space-between;
+    display: flex;
+    margin-top: 1rem;
+    padding: 0rem 2rem;
+}
+
+.contenedorMensaje {
+
+    padding: 1rem 2.7rem 1rem 2.8rem;
+
+    .tituloAsunto p {
+        font-family: Raleway;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 20px;
+        letter-spacing: 0.1px;
+        color: #191C1D;
+        margin-bottom: 4px;
+    }
+
+   .infoAsunto p {
+    font-family: Raleway;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px;
+    letter-spacing: 0.1px;
+    color: #191C1D;
+   }
+
+}
+
+p.enviado, .fecha {
+    width: auto;
+    font-family: Raleway;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px;
+    letter-spacing: 0.1px;
+    color: #191C1D;
+    margin-bottom: 4px;
+    padding-right: 0;
+}
+
+.infoEnviado, .infoFecha {
+    width: auto;
+    font-family: Raleway;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 22px;
+    letter-spacing: 0.1px;
+    color: #191C1D;
+}
+
+.contenedorInfoMensaje {
+    margin: 1rem 1rem 1rem 0.3rem;
+    padding: 2rem 1rem 2rem 1rem;
+    border-radius: 20px;
+    background: #F8FAFA;
+}
+
+
+@media (max-width: 575.98px) { 
+
+    .contenedorMensaje {
+        padding: 1rem 0.7rem 1rem 0.7rem;
+    }
+
+    .contenedorInfoMensaje{
+        margin: 1rem 0rem 1rem 0rem;
+        padding: 2rem 0.3rem 2rem 0.3rem;
+    }
+
+}

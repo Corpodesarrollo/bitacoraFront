@@ -1,0 +1,13 @@
+<div class="contenedor_principal">
+  <app-cabecera></app-cabecera>
+  <div class="container-fluid">
+      <app-menu  (abrirOpcion)="abrirUrl($event)"></app-menu>
+      <div class="contenido_modulo">
+        <app-miga-pan></app-miga-pan>
+        <router-outlet *ngIf="!esIframe"></router-outlet>
+        <app-cargando [mensaje]="mensaje" *ngIf="cargandoIframe && esIframe"></app-cargando>
+        <iframe *ngIf="esIframe && !cargandoIframe" [src]="urlIframe"></iframe>
+      </div>
+  </div>
+  <app-pie-pagina></app-pie-pagina>
+</div>

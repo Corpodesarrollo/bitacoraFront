@@ -1,0 +1,163 @@
+<div class="cabecera" >
+      <div class="titulo">
+        Filtro de búsqueda
+      </div>
+  </div>
+  <div class="contenedor_filtros">
+
+    <form [formGroup]="formFiltros" (ngSubmit)="buscar()" class="row">
+
+      <div  class="col-12 mb-4">
+        <div class="titulo_filtros">
+          Búsqueda por ubicación
+        </div>
+      </div>
+
+      <div  class="campo col_documento col-md-6 col-12 mb-3" [class.invalid]="campoNoValido('sede')">
+        <div class="input-wrapper">
+          <label for="sede" class="etiqueta_select">
+            Sede
+          </label>
+          <ng-select [items]="sedes" bindValue="codigo"
+            bindLabel="nombre"
+            class="select_filtros select"
+            (change)="cargarJornada()"
+            placeholder="Seleccione la sede" name="sede"
+            formControlName="sede">
+          </ng-select>
+        </div>
+      </div>
+
+      <div  class="campo col_documento col-md-6 col-12 mb-3" [class.invalid]="campoNoValido('jornada')">
+        <div class="input-wrapper">
+          <label for="jornada" class="etiqueta_select">
+            Jornada
+          </label>
+          <ng-select [items]="jornadas"
+            bindValue="id" bindLabel="nombre"
+            class="select_filtros select"
+            placeholder="Seleccione la jornada" name="jornada"
+            formControlName="jornada">
+          </ng-select>
+        </div>
+        <div class="contenedor_errores">
+          <span class="campo_requerido jornada_error" *ngIf="formFiltros.get('jornada')?.disabled">Debe seleccionar primero una sede</span>
+        </div>
+      </div>
+
+      <div  class="col-12 mb-4">
+        <div class="titulo_filtros">
+          Búsqueda por identificación
+        </div>
+      </div>
+
+      <div  class="campo col_documento col-md-6 col-12 mb-3" [class.invalid]="campoNoValido('tipo_personal')">
+        <div class="input-wrapper">
+          <label for="tipo_personal" class="etiqueta_select">
+            Tipo de personal
+          </label>
+          <ng-select
+            [items]="tiposIdentificacion"
+            bindValue="codigo"
+            bindLabel="nombre"
+            class="select_filtros select"
+            placeholder="Seleccione el tipo de personal" name="tipo_personal"
+            formControlName="tipo_personal">
+          </ng-select>
+        </div>
+      </div>
+
+      <div  class="campo col_documento col-md-6 col-12 mb-3" [class.invalid]="campoNoValido('numero_identificacion')">
+        <div class="input-wrapper">
+          <label for="numero_identificacion">
+            Número de identificación
+          </label>
+          <input type="text" formControlName="numero_identificacion"
+          placeholder="Digite el Número de identificación" class="form_input">
+        </div>
+        <div class="contenedor_errores">
+          <span class="campo_requerido"
+            *ngIf="formFiltros.controls['numero_identificacion'].hasError('maxlength')">Debe tener la longitud menor a 25 dígitos.</span>
+          <span class="campo_requerido"*ngIf="formFiltros.controls['numero_identificacion'].hasError('pattern')">Debe digitar únicamente números.</span>
+        </div>
+      </div>
+
+      <div  class="campo col_documento col-md-6 col-12 mb-3" [class.invalid]="campoNoValido('primer_nombre')">
+        <div class="input-wrapper">
+          <label for="primer_nombre">
+            Primer nombre
+          </label>
+          <input type="text" formControlName="primer_nombre"
+          placeholder="Escriba el primer nombre" class="form_input">
+        </div>
+        <div class="contenedor_errores">
+          <span class="campo_requerido"
+            *ngIf="formFiltros.controls['primer_nombre'].hasError('maxlength')">Debe tener la longitud menor a 30 dígitos.</span>
+        </div>
+      </div>
+
+      <div  class="campo col_documento col-md-6 col-12 mb-3" [class.invalid]="campoNoValido('segundo_nombre')">
+        <div class="input-wrapper">
+          <label for="segundo_nombre">
+            Segundo nombre
+          </label>
+          <input type="text" formControlName="segundo_nombre"
+          placeholder="Escriba el segundo nombre" class="form_input">
+        </div>
+        <div class="contenedor_errores">
+          <span class="campo_requerido"
+            *ngIf="formFiltros.controls['segundo_nombre'].hasError('maxlength')">Debe tener la longitud menor a 30 dígitos.</span>
+        </div>
+      </div>
+
+      <div  class="campo col_documento col-md-6 col-12 mb-3" [class.invalid]="campoNoValido('primer_apellido')">
+        <div class="input-wrapper">
+          <label for="primer_apellido">
+            Primer apellido
+          </label>
+          <input type="text" formControlName="primer_apellido"
+          placeholder="Escriba el primer apellido" class="form_input">
+        </div>
+        <div class="contenedor_errores">
+          <span class="campo_requerido"
+            *ngIf="formFiltros.controls['primer_apellido'].hasError('maxlength')">Debe tener la longitud menor a 30 dígitos.</span>
+        </div>
+      </div>
+
+      <div  class="campo col_documento col-md-6 col-12 mb-3" [class.invalid]="campoNoValido('segundo_apellido')">
+        <div class="input-wrapper">
+          <label for="segundo_apellido">
+            Segundo apellido
+          </label>
+          <input type="text" formControlName="segundo_apellido"
+          placeholder="Escriba el segundo apellido" class="form_input">
+        </div>
+        <div class="contenedor_errores">
+          <span class="campo_requerido"
+            *ngIf="formFiltros.controls['segundo_apellido'].hasError('maxlength')">Debe tener la longitud menor a 30 dígitos.</span>
+        </div>
+      </div>
+
+      <div class="acciones col-12">
+        <button  type="button" class="btn boton_secundario" *ngIf="validarDatosIngresados()" (click)="limmpiarDatos()">
+          Limpiar datos
+        </button>
+        <button type="submit" class="btn boton_primario">
+          <div *ngIf="!cargandoRegistros">
+            <span class="material-symbols-outlined">
+              search
+            </span>
+            <span>Buscar</span>
+          </div>
+          <div class="d-flex align-items-center gap-2" *ngIf="cargandoRegistros">
+            <div>Buscando</div>
+            <div class="spinner-border float-end" role="status"></div>
+          </div>
+        </button>
+      </div>
+
+    </form>
+
+</div>
+
+

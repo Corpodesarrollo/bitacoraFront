@@ -1,0 +1,71 @@
+<div id="contenedorRecuperar">
+    <div class="imagen">
+        <img src="assets/iconos/usuario_icono.svg" alt="">
+    </div>
+    <div class="titulo">
+        <h1>¿Ha olvidado su contraseña?</h1>
+    </div>
+    <div class="contenedor container-fluid">
+        <div class="texto">
+            <p *ngIf="!hayRespuesta || noExiste">
+                No se preocupe, estamos aquí para ayudarle! Por favor, llene el siguiente formulario para restablecer su
+                contraseña:
+            </p>
+        </div>
+        <form [formGroup]="formulario" *ngIf="!hayRespuesta"
+            [ngClass]="{'error': formulario.controls['numeroUsuario'].touched && formulario.invalid && campoNumericoTocado}">
+            <div class="input-wrapper">
+                <label for="numeroUsuario">Número de Documento*</label>
+                <input type="text" pattern="[0-9]*" placeholder="Escriba el número de documento"
+                    formControlName="numeroUsuario" (blur)="validarTocado()">
+            </div>
+            <div class="contenedor_errores">
+                <span class="campo_requerido" *ngIf="formulario.controls['numeroUsuario'].hasError('maxlength')">Debe tener la
+                    longitud menor a 15 dígitos.</span>
+                <span class="campo_requerido" *ngIf="formulario.controls['numeroUsuario'].hasError('pattern')">Debe digitar
+                    únicamente números.</span>
+            </div>
+            <p class="requerido">Requerido</p>
+        </form>
+        <form [formGroup]="formulario" *ngIf="hayRespuesta && noExiste"
+            [ngClass]="{'error': !formulario.controls['numeroUsuario'].touched  || !formulario.invalid || !campoNumericoTocado}">
+            <div class="input-wrapper">
+                <label for="numeroUsuario">Número de Documento*</label>
+                <input type="text" pattern="[0-9]*" placeholder="Escriba el número de documento"
+                    formControlName="numeroUsuario" (blur)="validarTocado()">
+            </div>
+            <div class="contenedor_errores">
+                <span class="campo_requerido" *ngIf="formulario.controls['numeroUsuario'].hasError('maxlength')">Debe tener la
+                    longitud menor a 15 dígitos.</span>
+                <span class="campo_requerido" *ngIf="formulario.controls['numeroUsuario'].hasError('pattern')">Debe digitar
+                    únicamente números.</span>
+            </div>
+            <p class="requerido">{{ textoError }}</p>
+        </form>
+        <div class="texto mt-3" *ngIf="hayRespuesta && noExiste">
+            <p>Si continúa experimentando dificultades para iniciar sesión, por favor, comuníquese con nosotros a través
+                del siguiente correo electrónico:</p>
+            <p class="email">apoyoescolardexon@educacionbogota.gov.co</p>
+        </div>
+        <div class="texto mt-3" *ngIf="hayRespuesta && !noExiste">
+            <div class="texto enviado">
+                <p [innerHTML]="parrafo1"></p>
+                <p class="parrafo">{{ parrafo2 }}</p>
+            </div>
+            <div class="botones" *ngIf="hayRespuesta">
+                <button type="submit" class="btn boton_primario" (click)="cerrar()">Cerrar</button>
+            </div>
+        </div>
+        <div class="botones" *ngIf="!hayRespuesta || noExiste">
+            <button type="submit" class="btn boton_secundario" (click)="cerrar()" *ngIf="!ingresando">Cancelar</button>
+            <button type="submit" class="btn boton_primario" (click)="recuperarContrasenia()"
+                [disabled]="formulario.invalid">
+                <div *ngIf="!ingresando"> Enviar </div>
+                <div class="d-flex align-items-center gap-2" *ngIf="ingresando">
+                    <div>Enviando</div>
+                    <div class="spinner-border float-end" role="status"></div>
+                </div>
+            </button>
+        </div>
+    </div>
+</div>

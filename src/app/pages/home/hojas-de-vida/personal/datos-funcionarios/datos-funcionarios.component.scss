@@ -1,0 +1,277 @@
+.cabecera{
+  padding: 1rem 0;
+}
+
+.contenedor_botones,
+.filtros{
+  display: flex;
+  column-gap: .5rem;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.titulo{
+  font-weight: 600;
+  font-size: 1.375rem;
+  line-height: 1;
+}
+.filtros{
+  font-size: 0.875rem;
+}
+
+
+.contenedor_tabla{
+  display: flex;
+  flex-direction: column;
+}
+
+.tabla_lista{
+  display: flex;
+  flex-direction: column;
+  font-size: 0.75rem;
+  .titulos_tabla{
+      display: flex;
+      height: 2.75rem;
+      font-size: 0.6875rem;
+      font-weight: 500;
+      padding: 0 1rem;
+      div{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      span{
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #66656D;
+        ;
+      }
+      .no_ordenada span{
+        color:#bec1c2
+      }
+
+  }
+  .fila{
+      display: flex;
+      border-bottom: 1px;
+      text-align: center;
+      height: 4.25rem;
+      border-bottom: 1px solid #BFC8CA;
+      border-top: 1px solid #BFC8CA;
+      padding: 0 1rem;
+      cursor: pointer;
+      column-gap: .5rem;
+      .col_acciones span{
+        font-size: 0.82rem;
+        color: var(--iconos_intermedio)
+      }
+  }
+}
+.tabla_lista .fila:nth-child(odd) {
+  background-color: #F8FAFA;
+}
+
+.col-documento,
+.col-identificacion,
+.col-cargo,
+.col-nombres,
+.col-apellidos,
+.col-n,
+.col-estados,
+.col-acciones{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 1;
+}
+
+.col-n{
+  width: 5%;
+}
+.col-documento,
+.col-identificacion,
+.col-cargo,
+.col-nombres,
+.col-apellidos{
+  width: 12%;
+}
+.col-estados{
+  width: 15%;
+}
+.col-acciones{
+  width: 20%;
+}
+
+
+
+.tooltip{
+  display: inline-flex;
+  padding: 0.25rem 0.5rem;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+
+
+.titulo_movil{
+  display: none;
+}
+
+.no_encontrado{
+  display: flex;
+  padding: 16px;
+  align-items: center;
+  gap: 24px;
+  border-radius: 10px;
+  border: 1px solid #FFE69C;
+  background: #FFF3CD;
+}
+
+.texto_no_encontrado{
+  color:  #664D03;
+  line-height: 1.5rem;
+  letter-spacing: 0.5px;
+}
+
+/* Paginacion */
+.paginacion{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: .5rem 0;
+  .control_paginacion{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 3rem;
+    width: 3rem;
+    cursor: pointer;
+    span{
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+  }
+
+  .pagina_deshabilitada{
+    cursor: unset;
+    color: var(--borde_claro);
+  }
+}
+
+.cargando_datos{
+  height: 50vh !important;
+}
+
+.exportando .spinner-border{
+  color: white;
+  --bs-spinner-width: 1.5rem;
+  --bs-spinner-height: 1.5rem;
+}
+
+
+@media (max-width:575.98px) {
+
+  .contenedor_botones{
+    flex-direction: column;
+    row-gap: 1rem;
+  }
+  .boton_secundario{
+    width: 100%;
+  }
+
+}
+
+@media (max-width: 767.98px) {
+
+  .filtros{
+    justify-content: flex-start;
+  }
+
+  .contenedor_titulo{
+    row-gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  .tabla_lista{
+    width: 100%;
+    .titulos_tabla{
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
+    }
+
+    .fila{
+      height: auto;
+      border: none;
+      flex-wrap      : wrap;
+      align-items    : center;
+      justify-content: space-between;
+      row-gap        : 0.5rem;
+      padding        : 1.2rem;
+      margin-bottom  : 0.75rem;
+      background-color: #F8FAFA;
+      border-radius: 20px;
+      text-align: start;
+    }
+
+    .col-documento,
+    .col-identificacion,
+    .col-cargo,
+    .col-nombres,
+    .col-apellidos,
+    .col-n,
+    .col-estados{
+      width: 50%;
+      justify-content: flex-start;
+    }
+
+    .col-acciones{
+      width: 100%;
+    }
+
+    .col-acciones{
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .col-estados{
+      text-align: center;
+    }
+
+  .titulo_movil {
+      display    : block;
+      font-weight: 600;
+      width: 40%;
+      line-height: 1.2;
+      text-align: start;
+    }
+  }
+}
+
+@media (min-width:767.98px){
+
+  .contenedor_tabla {
+    overflow: hidden;
+    overflow-x: auto;
+  }
+
+  .contenedor_tabla::-webkit-scrollbar {
+      width: 5px !important;
+      height: 5px !important;
+      background: white !important;
+  }
+
+  .contenedor_tabla::-webkit-scrollbar-thumb {
+    background: var(--alterno_claro)!important;
+      width: 5px !important;
+      border-radius: 5px;
+  }
+
+  .tabla_lista,
+  .paginacion{
+    min-width: 900px;
+  }
+
+}
+
+

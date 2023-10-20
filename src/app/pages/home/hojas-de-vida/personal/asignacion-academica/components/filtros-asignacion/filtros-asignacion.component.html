@@ -1,0 +1,100 @@
+<div class="cabecera" >
+      <div class="titulo">
+        Filtro de búsqueda
+      </div>
+  </div>
+  <div class="contenedor_filtros">
+
+    <form [formGroup]="formFiltros" (ngSubmit)="buscar()" class="row">
+
+      <!-- Filtros asignacion -->
+
+      <div class="campo col_documento col-md-6 col-12 mb-3" [class.invalid]="campoNoValido('id_vigencia')">
+        <div class="input-wrapper">
+          <label for="id_vigencia" class="etiqueta_select">
+            Vigencia*
+          </label>
+          <ng-select
+            [items]="vigencias"
+            bindValue="id"
+            bindLabel="vigencia"
+            class="select_filtros select"
+            placeholder="Seleccione la vigencia" name="id_vigencia"
+            formControlName="id_vigencia">
+          </ng-select>
+        </div>
+      </div>
+
+      <div class="campo col_documento col-md-6 col-12 mb-3" [class.invalid]="campoNoValido('id_sede')">
+        <div class="input-wrapper">
+          <label for="id_sede" class="etiqueta_select">
+            Sede*
+          </label>
+          <ng-select 
+            (change)="cargarJornada()"
+            [items]="sedes"
+            bindValue="codigo"
+            bindLabel="nombre"
+            class="select_filtros select"
+            placeholder="Seleccione la sede" name="id_sede"
+            formControlName="id_sede">
+          </ng-select>
+        </div>
+      </div>
+
+      <div class="campo col_documento col-md-6 col-12 mb-3" [class.invalid]="campoNoValido('id_jornada')">
+        <div [class.deshabilitarInputSelect]="desactivarJornadas" class="input-wrapper">
+          <label for="id_jornada" class="etiqueta_select">
+            Jornada*
+          </label>
+          <ng-select
+            [items]="jornadas"
+            bindValue="id"
+            bindLabel="nombre"
+            class="select_filtros select"
+            placeholder="Seleccione la jornada" name="id_jornada"
+            formControlName="id_jornada">
+          </ng-select>
+        </div>
+      </div>
+
+      <div class="campo col_documento col-md-6 col-12 mb-3" [class.invalid]="campoNoValido('id_metodologia')">
+        <div class="input-wrapper">
+          <label for="id_metodologia" class="etiqueta_select">
+            Metodologia*
+          </label>
+          <ng-select
+            [items]="metodologias"
+            bindValue="id"
+            bindLabel="name"
+            class="select_filtros select"
+            placeholder="Seleccione la metodologia" name="id_metodologia"
+            formControlName="id_metodologia">
+          </ng-select>
+        </div>
+      </div>
+
+
+      <div class="acciones col-12">
+        <button  type="button" class="btn boton_secundario" *ngIf="validarDatosIngresados()" (click)="limmpiarDatos()">
+          Limpiar datos
+        </button>
+        <button type="submit" class="btn boton_primario">
+          <div *ngIf="!cargandoRegistros">
+            <span class="material-symbols-outlined">
+              search
+            </span>
+            <span>Buscar</span>
+          </div>
+          <div class="d-flex align-items-center gap-2" *ngIf="cargandoRegistros">
+            <div>Buscando</div>
+            <div class="spinner-border float-end" role="status"></div>
+          </div>
+        </button>
+      </div>
+
+    </form>
+
+</div>
+
+

@@ -1,0 +1,41 @@
+<div class="conteiner-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="contenedorTitulo">
+                <h3 class="tituloMensajes">
+                    Mensaje
+                </h3>
+                <!-- <button class="btn">Enviar mensajes</button> -->
+            </div>
+        </div>
+        <div class="col-12 contenedorMensaje">
+            <div class="row">
+                <div class="col-12">
+                    <div class="tituloAsunto"><p>Asunto:</p></div>
+                    <div class="infoAsunto"><p>{{mensaje.msjAsunto}}
+                    </p></div>
+                </div>
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="row">
+                                <p class="enviado">Enviado por:</p>
+                                <p class="infoEnviado">{{mensaje.msjEnviadoPorNombre}}</p>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="row">
+                                <p class="fecha">Fecha:</p>
+                                <p class="infoFecha"> {{mensaje.msjFecha | date:'dd/MM/yyyy'}} </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="col-6"><p>Mensaje:</p></div>
+                    <div class="row contenedorInfoMensaje" [innerHTML]="mensaje.msjContenido"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

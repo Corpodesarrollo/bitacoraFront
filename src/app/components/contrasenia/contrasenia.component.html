@@ -1,0 +1,121 @@
+<div id="contenedorContrasena" class="container-lg container-fluid">
+  <div class="row">
+    <div class="titulo my-4 container-fluid col-lg-12">Cambiar contraseña</div>
+    <div class="container-fluid formulario">
+      <form [formGroup]="formulario">
+        <div class="contenedor row">
+          <div class="input-wrapper disabled col-12 col-md-6" [class.invalid]="campoNoValido('numeroUsuario')">
+            <label for="documento">Número de Documento*</label>
+            <input type="number" pattern="[0-9]*" formControlName="numeroUsuario">
+          </div>
+          <div class="input-wrapper col-12 col-md-6" [class.invalid]="campoNoValido('contrasenaActual')">
+            <label for="contrasenaActual">Contraseña actual*</label>
+            <input [type]="verContraseniaActual ? 'text' : 'password'" placeholder="Escriba la contraseña actual"
+              formControlName="contrasenaActual" autocomplete="off" autocomplete="new-password"
+              (ngModelChange)="validarContrasena($event)">
+            <div (click)="mostrarContrasenia()" class="input-icon input_icon-password">
+              <span class="material-symbols-outlined" *ngIf="!verContraseniaActual">
+                visibility
+              </span>
+              <span class="material-symbols-outlined" *ngIf="verContraseniaActual">
+                visibility_off
+              </span>
+            </div>
+            <div class="contenedor_errores">
+              <span class="campo_requerido"
+                *ngIf="formulario.controls['contrasenaActual'].hasError('required') && formulario.controls['contrasenaActual'].touched">
+                Debe digitar su contraseña actual.
+              </span>
+              <span class="campo_requerido"
+                *ngIf="formulario.controls['contrasenaActual'].hasError('maxlength') || formulario.controls['contrasenaActual'].hasError('minlength')">
+                Debe tener logitud entre 8 y 12 caracteres.
+              </span>
+            </div>
+          </div>
+          <div class="input-wrapper col-12 col-md-6" [class.invalid]="campoNoValido('contrasenaNueva')">
+            <label for="contrasenaNueva">Contraseña nueva*</label>
+            <input [type]="verContraseniaNueva ? 'text' : 'password'" placeholder="Escriba la contraseña nueva"
+              formControlName="contrasenaNueva" (input)="validarContrasena($event)" (copy)="noCopiarPegar($event)">
+            <div (click)="mostrarContraseniaNueva()" class="input-icon input_icon-password">
+              <span class="material-symbols-outlined" *ngIf="!verContraseniaNueva">
+                visibility
+              </span>
+              <span class="material-symbols-outlined" *ngIf="verContraseniaNueva">
+                visibility_off
+              </span>
+            </div>
+            <div class="contenedor_errores">
+              <span class="campo_requerido"
+                *ngIf="formulario.controls['contrasenaActual'].hasError('required') && formulario.controls['contrasenaNueva'].touched">
+                Debe digitar la contraseña actual.
+              </span>
+              <span class="campo_requerido"
+                *ngIf="formulario.controls['contrasenaNueva'].hasError('required') && formulario.controls['contrasenaNueva'].touched">
+                Debe digitar la nueva contraseña
+              </span>
+              <span class="campo_requerido"
+                *ngIf="formulario.controls['contrasenaNueva'].hasError('maxlength') || formulario.controls['contrasenaNueva'].hasError('minlength')">
+                Debe tener logitud entre 8 y 12 caracteres.
+              </span>
+              <span class="campo_requerido" *ngIf="idEnContrasenia">
+                Debe ser diferente al número de documento.
+              </span>
+              <span class="campo_requerido" *ngIf="contrasenaRepetida">
+                Debe ser diferente a la contraseña anterior.
+              </span>
+            </div>
+          </div>
+          <div class="input-wrapper col-12 col-md-6" [class.invalid]="campoNoValido('contrasenaConfirmada')">
+            <label for="contrasenaConfirmada">Confirmar contraseña*</label>
+            <input [type]="verConfirmarContrasenia ? 'text' : 'password'" placeholder="Confirme la contraseña nueva"
+              formControlName="contrasenaConfirmada" (input)="validarContrasenasIguales($event)"
+              (paste)="noCopiarPegar($event)">
+            <div (click)="mostrarConfirmarContrasenia()" class="input-icon input_icon-password">
+              <span class="material-symbols-outlined" *ngIf="!verConfirmarContrasenia">
+                visibility
+              </span>
+              <span class="material-symbols-outlined" *ngIf="verConfirmarContrasenia">
+                visibility_off
+              </span>
+            </div>
+            <div class="contenedor_errores mb-2">
+              <span class="campo_requerido"
+                *ngIf="formulario.controls['contrasenaNueva'].hasError('required') && formulario.controls['contrasenaConfirmada'].touched">
+                Debe digitar su nueva contraseña.
+              </span>
+              <span class="campo_requerido"
+                *ngIf="formulario.controls['contrasenaConfirmada'].hasError('required') && formulario.controls['contrasenaConfirmada'].touched">
+                Debe confirmar su nueva contraseña
+              </span>
+              <span class="campo_requerido"
+                *ngIf="formulario.controls['contrasenaConfirmada'].hasError('maxlength') || formulario.controls['contrasenaConfirmada'].hasError('minlength')">
+                Debe tener logitud entre 8 y 12 caracteres.
+              </span>
+              <span class="campo_requerido" *ngIf="noCoinciden">
+                Debe ser igual a la contraseña nueva.
+              </span>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="row px-2 mt-4">
+    <div class="contenedor-texto col-lg-12">
+      <p class="subtitulo">Recuerde qué:</p>
+      <p>Características de la contraseña:</p>
+      <p style="padding-left: 0.5rem;"> ∙ Mínimo 8 caracteres y máximo 12</p>
+      <p style="padding-left: 0.5rem;"> ∙ El Número de Documento no puede ser usado como contraseña</p>
+    </div>
+    <div class="boton">
+      <button type="submit" class="btn boton_primario" (click)="cambiarContrasenia()"
+        [disabled]="formulario.invalid || idEnContrasenia || contrasenaRepetida || noCoinciden">
+        <div *ngIf="!actualizando"> Actualizar contraseña </div>
+        <div class="d-flex align-items-center gap-2" *ngIf="actualizando">
+          <div>Actualizando</div>
+          <div class="spinner-border float-end" role="status"></div>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>

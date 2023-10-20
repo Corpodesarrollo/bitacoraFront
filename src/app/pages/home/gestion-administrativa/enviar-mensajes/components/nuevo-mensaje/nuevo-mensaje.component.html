@@ -1,0 +1,746 @@
+<div class="col-12" [ngClass]="{'modoEditor': id_mensajeEditar}">
+
+    <div *ngIf="id_mensajeEditar" class="col-12 mt-4">
+        <div class="contenedorTitulo">
+            <h3 class="tituloMensajes">
+                Editar mensaje
+            </h3>
+            <!-- <button class="btn">Enviar mensajes</button> -->
+        </div>
+    </div>
+
+    <div class="col-12 mensajeObligarorio">
+        <p>Los campos con asterisco (*) son obligatorios</p>
+    </div>
+
+    <div class="row col-12" [formGroup]="formularioMensajes" >
+        <div class="campo mt-2 col-12 col-md-6">
+            <div [class.deshabilitarInputSelect]="deshabilitarFechaInicio" class="input-wrapper">
+                <label for="usuario"> Fecha de inicio:<span class="asterisco">*</span></label>
+                <span class="material-symbols-outlined input-icon"> account_circle </span>
+                <input formControlName="fecha_inicio" type="text" placeholder="Seleccione la fecha de inicio"
+                    ng-reflect-name="fechaInicio" class="" (click)="date.toggle()" [minDate]="minDate" value="05/02/2020" type="datetime"
+                    readonly ngbDatepicker #date="ngbDatepicker"
+                    [ngClass]="{'error':  campoNoValido('fecha_inicio')}" >
+                <span (click)="date.toggle()" class="material-symbols-outlined inputIconDate"> today </span>
+            </div>
+            <div class="contenedor_errores"><span class="campo_requerido">DD/MM/YYYY</span>
+            </div>
+        </div>
+
+
+        <div class="campo mt-2 col-12 col-md-6">
+            <div [class.deshabilitarInputSelect]="deshabilitarFechaFin" class="input-wrapper">
+                <label for="usuario"> Fecha de finalizacion:<span class="asterisco">*</span></label>
+                <span class="material-symbols-outlined input-icon"> account_circle </span>
+                <input formControlName="fecha_final" placeholder="Seleccione la fecha de finalizacion"
+                    class="" (click)="date2.toggle()" [minDate]="minDate" value="05/02/2023" type="datetime" readonly
+                     ngbDatepicker #date2="ngbDatepicker"
+                    [ngClass]="{'error':  campoNoValido('fecha_final')}">
+                <span (click)="date2.toggle()" class="material-symbols-outlined inputIconDate"> today </span>
+            </div>
+            <div class="contenedor_errores"><span class="campo_requerido">DD/MM/YYYY</span>
+            </div>
+<!-- 
+            <input (ngModelChange)="optionFechas($event)" (click)="date.toggle()" value="05/02/2020" type="datetime" readonly [(ngModel)]="datePickerDesde" formControlName="fecha_desde" ngbDatepicker
+            #date="ngbDatepicker"> -->
+        </div>
+        <div class="campo mt-4  col-12 col-md-9">
+            <div class="input-wrapper">
+                <label for="usuario"> Asunto:<span class="asterisco">*</span></label>
+                <span class="material-symbols-outlined input-icon"> account_circle </span>
+                <input formControlName="info_asunto" type="text" placeholder="Ingrese el asunto del mensaje..."
+                    autocomplete="on" ng-reflect-name="usuario" class="ng-dirty ng-valid ng-touched" 
+                    [ngClass]="{'error':  campoNoValido('info_asunto')}">
+                    <!-- campoNoValido(campo: string) -->
+            </div>
+            <div class="contenedor_errores"><span class="campo_requerido">El asunto del mensaje
+                    debe ser claro y conciso, capturando el propósito o tema principal del
+                    mensaje.</span>
+            </div>
+        </div>
+        <div class="col-12">
+
+
+            <!-- {{errorCampoMensajeVacio}} -->
+            <div (change)=" errorCampoMensajeVacio = false "  [ngClass]="{'error':  campoNoValido('mensajeHtml')}" class="col-12 contenedorWys">
+ 
+                <div class="col-12 titulWys">
+                    Mensaje*:
+                </div>
+
+                <angular-editor [placeholder]="'Escriba un mensaje'" formControlName="mensajeHtml" 
+                [config]="editorConfig" ></angular-editor>
+
+                <div [ngClass]="{'errorMensaje':  campoNoValido('mensajeHtml')}"><span class="campo_requerido">El campo de
+                        mensaje no puede estar en blanco, es obligatorio proporcionar un mensaje
+                        válido.</span>
+                </div>
+
+            </div>
+
+            <hr>
+
+        </div>
+
+        <div class="col-12">
+            <div class="col-12 tituloEnviarA">Enviar mensaje a:</div>
+            <!-- [class.invalid]="campoNoValidoFormulario('nombreColegio')" -->
+
+            <div  *ngIf="tipoUsuario == 'modoEditor'" class="col-12 row contenedorEnviarA">
+
+                <div class="col-12 col-md-6">
+
+                    <div class="col-12 row align-items-center">
+                        <div class="campo col-sm-9 col-md-8 pe-0">
+                            <div class="input-wrapper">
+                                <label for="nombreColegio" class="etiqueta_select">
+                                    Perfil:<span class="asterisco">*</span>
+                                </label>
+                                <ng-select [items]="listadoPerfiles" bindValue="id" bindLabel="etiqueta" class="select"
+                                    (change)="perfilSeleccionado($event)" placeholder="Seleccione el perfil" 
+                                    formControlName="perfil_id">
+                                </ng-select>
+                            </div>
+                        </div>
+
+                        <div class="col-3 col-md-4 ps-0 ms-auto">
+                            <button class="btn buttonAgregar" (click)="agregarOpcionSeleccionada('perfil')">
+                                <span class="material-symbols-outlined">
+                                    add
+                                </span> Agregar
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="col-12 pt-3" *ngIf="perfilesGuardados.length > 0">
+                        <p class="perfilesAgreg">Lista de perfiles agregados:</p>
+
+
+                        <div *ngFor="let perfilInfo of perfilesGuardados; index as i"
+                            class="col-12 mb-1 perfilAgreg mb-1">
+                            <span class="material-symbols-outlined eliminarIcon"
+                                (click)="eliminarOpcionListadoSelecionado('perfil', perfilInfo.id)">
+                                delete
+                            </span>
+                            {{perfilInfo.etiqueta}}
+                        </div>
+
+                    </div>
+
+                    <div class="col-12 pt-3" *ngIf="perfilesGuardados.length <= 0 && cargarListadosPerfiles == true">
+                        <p class="perfilesAgreg">Sin perfiles agregadas</p>
+                    </div>
+                   
+                    <div class="col-12 pt-3" *ngIf="cargarListadosPerfiles == false">
+                        <p class="perfilesAgreg">Cargando perfiles</p>
+                        <div class="spinner-border"  role="status"></div>
+                    </div> 
+                    <!-- {{cargarListadosPerfiles | json}} -->
+
+                </div>
+
+                <div class="col-12 col-md-6 mt-4 mt-md-0">
+
+                    <div class="col-12 row align-items-center">
+                        <div class="campo  col-sm-9 col-md-8 pe-0">
+                            <div [class.deshabilitarInputSelect]="deshabilitarInputSelect" class="input-wrapper">
+                                <label for="localidad" class="etiqueta_select">
+                                    Localidad:<span class="asterisco"></span>
+                                </label>
+                                <ng-select [items]="listadoLocalidades" bindValue="id" bindLabel="nombre" class="select"
+                                    (ngModelChange)="localidadSeleccionada($event)"
+                                    placeholder="Seleccione la localidad" name="localidad"
+                                    formControlName="localidad_id">
+                                </ng-select>
+                            </div>
+                        </div>
+
+                        <div class="col-3 col-md-4 ps-0 ms-auto">
+                            <button [disabled]="deshabilitarBotonesAgregar" class="btn buttonAgregar" (click)="agregarOpcionSeleccionada('localidad')">
+                                <span class="material-symbols-outlined">
+                                    add
+                                </span> Agregar
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="col-12 pt-3" *ngIf="localidadesGuardadas.length > 0">
+                        <p class="perfilesAgreg">Lista de localidades agregadas:</p>
+
+                        <div *ngFor="let localidadInfo of localidadesGuardadas; index as i"
+                            class="col-12 perfilAgreg mb-1">
+                            <span class="material-symbols-outlined eliminarIcon"
+                                (click)="eliminarOpcionListadoSelecionado('localidad', localidadInfo.id)">
+                                delete
+                            </span>
+                            {{i + 1}} - {{localidadInfo.nombre}}
+                        </div>
+                    </div>
+
+                    <div class="col-12 pt-3" *ngIf="localidadesGuardadas.length <= 0 && cargarInfoLocalidades == true">
+                        <p class="perfilesAgreg">Sin localidades agregadas</p>
+                    </div>
+                   
+                    <div class="col-12 pt-3" *ngIf="cargarInfoLocalidades == false">
+                        <p class="perfilesAgreg">Cargando localidades</p>
+                        <div class="spinner-border"  role="status"></div>
+                    </div> 
+                    <!-- {{cargarInfoLocalidades | json}} -->
+
+
+                </div>
+
+            </div>
+
+            <div *ngIf="tipoUsuario == 'modoEditor'" class="col-12 mt-4 row contenedorEnviarA">
+
+               
+                <hr>
+
+                <div class="col-12">
+
+                    <p class="titulosInputsAdmin">Seleccione el colegio</p>
+
+                    <div class="col-12 row align-items-center">
+
+                        <div (click)="agregarLocalidades()" class="campo  col-sm-9 col-md-4 pe-0">
+                            <div [class.deshabilitarInputSelect]="deshabilitarInputSelect" class="input-wrapper">
+                                <label for="localidad" class="etiqueta_select">
+                                    Filtrar por localidad:<span class="asterisco"></span>
+                                </label>
+                                <ng-select [items]="listadoFiltroLocalidad" bindValue="id" bindLabel="nombre" class="select"
+                                    (ngModelChange)="localidadSeleccionada($event)"
+                                    placeholder="Seleccione la localidad" name="localidad"
+                                    formControlName="localidad_id">
+                                </ng-select>
+                            </div>
+                        </div>
+
+
+                        <div class="campo col-sm-9 col-md-4 pe-0">
+                            <div [class.deshabilitarInputSelect]="deshabilitarInputSelect" class="input-wrapper">
+                                <label for="colegio_id" class="etiqueta_select">
+                                    Colegios:<span class="asterisco"></span>
+                                </label>
+                                <ng-select [items]="listadoColegios" bindValue="id" bindLabel="nombre" class="select"
+                                    (ngModelChange)="colegioSeleccionado($event)" placeholder="Seleccione el colegio"
+                                    formControlName="colegio_id">
+                                </ng-select>
+                            </div>
+                        </div>
+
+                        <div class="col-3 col-md-4 ps-0 ms-auto">
+                            <button [disabled]="deshabilitarBotonesAgregar" class="btn buttonAgregar" (click)="agregarOpcionSeleccionada('colegio')">
+                                <span class="material-symbols-outlined">
+                                    add
+                                </span> Agregar
+                            </button>
+                        </div>
+
+                    </div>
+
+                    <div class="col-12 pt-3" *ngIf="colegiosGuardados.length > 0">
+
+                        <p class="perfilesAgreg">Lista de colegios agregados:</p>
+
+                        <div *ngFor="let colegioInfo of colegiosGuardados; index as i"
+                            class="col-12 mb-1 perfilAgreg">
+                            <span (click)="eliminarOpcionListadoSelecionado('colegio', colegioInfo.id)"
+                                class="material-symbols-outlined eliminarIcon">
+                                delete
+                            </span>
+                            {{colegioInfo.nombre}}
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-12 pt-3" *ngIf="colegiosGuardados.length <= 0 && cargandoColegiosEditarMensajes == false">
+                        <p class="perfilesAgreg">Sin colegios agregadas</p>
+                    </div>
+                   
+                    <div class="col-12 pt-3" *ngIf="cargandoColegiosEditarMensajes == true">
+                        <p class="perfilesAgreg">Cargando colegios</p>
+                        <div class="spinner-border"  role="status"></div>
+                    </div>
+                    
+
+
+                </div>
+
+                <hr>
+
+                <div class="col-12">
+
+                    <p class="titulosInputsAdmin">Seleccione la sede</p>
+
+
+                    <div class="col-12 row align-items-center">
+
+                        <div (click)="agregarColegios()" class="campo col-sm-9 col-md-4 pe-0">
+                            <div [class.deshabilitarInputSelect]="deshabilitarInputSelect" class="input-wrapper">
+                                <label for="colegio_id" class="etiqueta_select">
+                                    Filtrar por colegio:<span class="asterisco"></span>
+                                </label>
+                                <ng-select [items]="listadoFiltroColegio" bindValue="id" bindLabel="nombre" class="select"
+                                    (ngModelChange)="colegioSeleccionado($event,true)" placeholder="Seleccione el colegio"
+                                    formControlName="colegio_id">
+                                </ng-select>
+                            </div>
+                        </div>
+
+                        <div class="campo col-sm-9 col-md-4 pe-0">
+                            <div class="input-wrapper">
+                                <label for="sede_id" class="etiqueta_select">
+                                    Sede:<span class="asterisco"></span>
+                                </label>
+                                <ng-select [items]="listadoSedes" bindValue="id" bindLabel="nombre" class="select"
+                                    (ngModelChange)="sedeSeleccionada($event)" placeholder="Seleccione la sede"
+                                    formControlName="sede_id">
+                                </ng-select>
+                            </div>
+                        </div>
+
+                        <div class="col-3 col-md-4 ps-0 ms-auto">
+                            <button class="btn buttonAgregar" (click)="agregarOpcionSeleccionada('sede')">
+                                <span class="material-symbols-outlined">
+                                    add
+                                </span> Agregar
+                            </button>
+                        </div>
+
+
+                    </div>
+
+                    <div class="col-12 pt-3" *ngIf="sedesGuardados.length > 0">
+
+                        <p class="perfilesAgreg">Lista de sedes agregadas:</p>
+
+                        <div *ngFor="let sedeInfo of sedesGuardados; index as i" class="col-12 perfilAgreg mb-1">
+                            <span (click)="eliminarOpcionListadoSelecionado('sede', sedeInfo.id)"
+                                class="material-symbols-outlined eliminarIcon">
+                                delete
+                            </span>
+                            {{i + 1}} - {{sedeInfo.nombre}}
+                        </div>
+
+                    </div>
+
+                    <div class="col-12 pt-3" *ngIf="sedesGuardados.length <= 0 && cargandoInfoSedesEditar == false">
+                        <p class="perfilesAgreg">Sin sedes agregadas</p>
+                    </div>
+                   
+                    <div class="col-12 pt-3" *ngIf="cargandoInfoSedesEditar == true">
+                        <p class="perfilesAgreg">Cargando sedes</p>
+                        <div class="spinner-border"  role="status"></div>
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <div class="col-12">
+
+                    <div class="col-12 row align-items-center">
+
+
+                        <div class="campo col-sm-9 col-md-4 pe-0">
+                            <div [class.deshabilitarInputSelect]="desHabilitarJornada" class="input-wrapper">
+                                <label for="jornada_id" class="etiqueta_select">
+                                    Jornada:<span class="asterisco"></span>
+                                </label>
+                                <ng-select [items]="listadoJornadas" bindValue="id" bindLabel="nombre" class="select"
+                                    (ngModelChange)="jornadaSeleccionada($event)" placeholder="Seleccione la jornada"
+                                    formControlName="jornada_id">
+                                </ng-select>
+                            </div>
+                        </div>
+
+                        <div class="col-3 col-md-4 ps-0">
+                            <button class="btn buttonAgregar" (click)="agregarOpcionSeleccionada('jornada')">
+                                <span class="material-symbols-outlined">
+                                    add
+                                </span> Agregar
+                            </button>
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="col-12 pt-3" *ngIf="jornadasGuardados.length > 0">
+
+                        <p class="perfilesAgreg">Lista de jornadas agregados:</p>
+
+                        <div *ngFor="let jornadaInfo of jornadasGuardados; index as i"
+                            class="col-12 mb-1 perfilAgreg mb-1">
+                            <span (click)="eliminarOpcionListadoSelecionado('jornada', jornadaInfo.id)"
+                                class="material-symbols-outlined eliminarIcon">
+                                delete
+                            </span>
+                            {{jornadaInfo.nombre}}
+                        </div>
+
+                    </div>
+
+                    <div class="col-12 pt-3" *ngIf="jornadasGuardados.length <= 0 && cargarInfoJornadas == false">
+                        <p class="perfilesAgreg">Sin jornadas agregadas</p>
+                    </div>
+                   
+                    <div class="col-12 pt-3" *ngIf="cargarInfoJornadas == true">
+                        <p class="perfilesAgreg">Cargando jornadas</p>
+                        <div class="spinner-border"  role="status"></div>
+                    </div>
+
+                </div>
+
+
+
+            </div>
+
+            
+            <div *ngIf="tipoUsuario == 'modoEditor'" class="col-12 col-md-5 ps-0 d-flex ms-auto justify-content-end justify-content-md-center">
+                <button  type="submit" class="btn btnMensajeNuevo mt-3" [routerLink]="['/home/gestion-administrativa/enviar-mensajes']" [queryParams]="{nuevo: true}">
+                    Mensaje nuevo
+                </button>
+                <button *ngIf="tipoUsuario == 'modoEditor'" type="submit" class="btn buttonActualizar mt-3" (click)="actualizarMensaje()">
+                    <span *ngIf="actualizando == false"> Actualizar mensaje</span>
+                   
+                    <div class="d-flex align-items-center gap-2" *ngIf="actualizando == true">
+                        <div>Actualizando</div>
+                        <div class="spinner-border float-end" role="status"></div>
+                    </div>
+                </button>
+            </div> 
+
+            <div  *ngIf="tipoUsuario == 'Admin'" class="col-12 row contenedorEnviarA">
+
+                <div class="col-12 col-md-6">
+
+                    <div class="col-12 row align-items-center">
+                        <div class="campo col-sm-9 col-md-8 pe-0">
+                            <div class="input-wrapper">
+                                <label for="nombreColegio" class="etiqueta_select">
+                                    Perfil:<span class="asterisco">*</span>
+                                </label>
+                                <ng-select [items]="listadoPerfiles" bindValue="id" bindLabel="etiqueta" class="select"
+                                    (change)="perfilSeleccionado($event)" placeholder="Seleccione el perfil" 
+                                    formControlName="perfil_id">
+                                </ng-select>
+                            </div>
+                        </div>
+
+                        <div class="col-3 col-md-4 ps-0 ms-auto">
+                            <button class="btn buttonAgregar" (click)="agregarOpcionSeleccionada('perfil')">
+                                <span class="material-symbols-outlined">
+                                    add
+                                </span> Agregar
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="col-12 pt-3" *ngIf="perfilesGuardados.length > 0">
+                        <p class="perfilesAgreg">Lista de perfiles agregados:</p>
+
+
+                        <div *ngFor="let perfilInfo of perfilesGuardados; index as i"
+                            class="col-12 mb-1 perfilAgreg mb-1">
+                            <span class="material-symbols-outlined eliminarIcon"
+                                (click)="eliminarOpcionListadoSelecionado('perfil', perfilInfo.id)">
+                                delete
+                            </span>
+                            {{perfilInfo.etiqueta}}
+                        </div>
+
+                    </div>
+
+                    <div class="col-12 pt-3" *ngIf="perfilesGuardados.length <= 0">
+                        <p class="perfilesAgreg">Sin perfiles agregadas</p>
+                    </div>
+
+                </div>
+
+                <div class="col-12 col-md-6 mt-4 mt-md-0">
+
+                    <div class="col-12 row align-items-center">
+                        <div class="campo  col-sm-9 col-md-8 pe-0">
+                            <div [class.deshabilitarInputSelect]="deshabilitarInputSelect" class="input-wrapper">
+                                <label for="localidad" class="etiqueta_select">
+                                    Localidad:<span class="asterisco"></span>
+                                </label>
+                                <ng-select [items]="listadoLocalidades"  bindValue="id" bindLabel="nombre" class="select localidadSelec"
+                                    (ngModelChange)="localidadSeleccionada($event)"
+                                    placeholder="Seleccione la localidad" name="localidad"
+                                    formControlName="localidad_id">
+                                </ng-select>
+                            </div>
+                        </div>
+
+                        <div class="col-3 col-md-4 ps-0 ms-auto">
+                            <button [disabled]="deshabilitarBotonesAgregar" class="btn buttonAgregar" (click)="agregarOpcionSeleccionada('localidad')">
+                                <span class="material-symbols-outlined">
+                                    add
+                                </span> Agregar
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="col-12 pt-3" *ngIf="localidadesGuardadas.length > 0">
+                        <p class="perfilesAgreg">Lista de localidades agregadas:</p>
+
+                        <div *ngFor="let localidadInfo of localidadesGuardadas; index as i"
+                            class="col-12 perfilAgreg mb-1">
+                            <span class="material-symbols-outlined eliminarIcon"
+                                (click)="eliminarOpcionListadoSelecionado('localidad', localidadInfo.id)">
+                                delete
+                            </span>
+                            {{i + 1}} - {{localidadInfo.nombre}}
+                        </div>
+                    </div>
+
+                    <div class="col-12 pt-3" *ngIf="localidadesGuardadas.length <= 0 && cargandoLocalidadesNuevoMensaje != true">
+                        <p class="perfilesAgreg">Sin localidades agregadas</p>
+                    </div>
+
+                    <div class="col-12 pt-3" *ngIf="cargandoLocalidadesNuevoMensaje == true">
+                        <p class="perfilesAgreg">Cargando localidad</p>
+                        <div class="spinner-border"  role="status"></div>
+                    </div>
+ 
+                    
+
+                </div>
+
+            </div>
+
+            <div *ngIf="tipoUsuario == 'Admin'" class="col-12 row contenedorEnviarA justify-content-start">
+
+                <hr>
+
+                <div class="col-12">
+
+                    <p class="titulosInputsAdmin">Seleccione el colegio</p>
+
+                    <div class="col-12 row align-items-center">
+
+                        <div (click)="agregarLocalidades()" class="campo  col-sm-9 col-md-4 pe-0">
+                            <div [class.deshabilitarInputSelect]="deshabilitarInputSelect"  
+                            [class.deshabilitarInputSelect]="deshabilitarLocalidadesFiltrar" class="input-wrapper">
+                                <label for="localidad" class="etiqueta_select">
+                                    Filtrar por localidad:<span class="asterisco"></span>
+                                </label>
+                                <ng-select [items]="listadoFiltroLocalidad" bindValue="id" bindLabel="nombre" class="select"
+                                    (ngModelChange)="localidadSeleccionada($event, true)"
+                                    placeholder="Seleccione la localidad" name="localidad"
+                                    formControlName="localidadFiltrar_id">
+                                </ng-select>
+                                
+                            </div>
+                        </div>
+
+
+                        <div class="campo col-sm-9 col-md-4 pe-0">
+                            <div [class.deshabilitarInputSelect]="deshabilitarInputSelect"
+                            [class.deshabilitarInputSelect]="desHabilitarColegios"
+                            class="input-wrapper">
+                                <label for="colegio_id" class="etiqueta_select">
+                                    Colegios:<span class="asterisco"></span>
+                                </label>
+                                <ng-select [items]="listadoColegios" bindValue="id" bindLabel="nombre" class="select"
+                                    (ngModelChange)="colegioSeleccionado($event)" [loading]="cargandoColegiosSelect"  placeholder="Seleccione el colegio"
+                                    formControlName="colegio_id">
+                                </ng-select>
+                            </div>
+                        </div>
+
+                        <div class="col-3 col-md-4 ps-0 ms-auto">
+                            <button [disabled]="deshabilitarBotonesAgregar" class="btn buttonAgregar" (click)="agregarOpcionSeleccionada('colegio')">
+                                <span class="material-symbols-outlined">
+                                    add
+                                </span> Agregar
+                            </button>
+                        </div>
+
+                    </div>
+
+                    <!-- <div *ngIf="cargandoColegiosSelect == true" class="col-12 spinerLoaderContenedorSelect">
+                        <div class="contenedorCargando">
+                            <p class="perfilesAgreg">cargando opciones</p>
+                            <div  class="spinner-border spinerLoaderSelect"  role="status"></div>
+                        </div>
+                    </div> -->
+
+                    <div class="col-12 pt-3" *ngIf="colegiosGuardados.length > 0">
+
+                        <p class="perfilesAgreg">Lista de colegios agregados:</p>
+
+                        <div *ngFor="let colegioInfo of colegiosGuardados; index as i"
+                            class="col-12 mb-1 perfilAgreg">
+                            <span (click)="eliminarOpcionListadoSelecionado('colegio', colegioInfo.id)"
+                                class="material-symbols-outlined eliminarIcon">
+                                delete
+                            </span>
+                            {{colegioInfo.nombre}}
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-12 pt-3" *ngIf="colegiosGuardados.length <= 0 && cargandoColegiosNuevoMensaje == false">
+                        <p class="perfilesAgreg">Sin colegios agregadas</p>
+                    </div>
+
+                    <div class="col-12 pt-3" *ngIf="cargandoColegiosNuevoMensaje == true">
+                        <p class="perfilesAgreg">Cargando colegio</p>
+                        <div class="spinner-border"  role="status"></div>
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <div class="col-12">
+
+                    <p class="titulosInputsAdmin">Seleccione la sede</p>
+
+
+                    <div class="col-12 row align-items-center">
+
+                        <div (click)="agregarColegios()" class="campo col-sm-9 col-md-4 pe-0">
+                            <div [class.deshabilitarInputSelect]="deshabilitarInputSelect" 
+                                 [class.deshabilitarInputSelect]="desHabilitarColegiosFiltrar"
+                                 class="input-wrapper">
+                                <label for="colegio_id" class="etiqueta_select">
+                                    Filtrar por colegio:<span class="asterisco"></span>
+                                </label>
+                                <ng-select [items]="listadoFiltroColegio" bindValue="id" bindLabel="nombre" class="select"
+                                    (ngModelChange)="colegioSeleccionado($event,true)" placeholder="Seleccione el colegio"
+                                    formControlName="colegioFiltrar_id">
+                                </ng-select>
+                            </div>
+                        </div>
+
+                        <div class="campo col-sm-9 col-md-4 pe-0">
+                            <div  [class.deshabilitarInputSelect]="desHabilitarSede" class="input-wrapper">
+                                <label for="sede_id" class="etiqueta_select">
+                                    Sede:<span class="asterisco"></span>
+                                </label>
+                                <ng-select [items]="listadoSedes" bindValue="id" bindLabel="nombre" class="select"
+                                    (ngModelChange)="sedeSeleccionada($event)" [loading]="cargandoSedesSelect" placeholder="Seleccione la sede"
+                                    formControlName="sede_id">
+                                </ng-select>
+                            </div>
+                        </div>
+
+                        <div class="col-3 col-md-4 ps-0 ms-auto">
+                            <button class="btn buttonAgregar" (click)="agregarOpcionSeleccionada('sede')">
+                                <span class="material-symbols-outlined">
+                                    add
+                                </span> Agregar
+                            </button>
+                        </div>
+
+
+                    </div>
+
+                    <!-- <div *ngIf="cargandoSedesSelect == true" class="col-12 spinerLoaderContenedorSelect">
+                        <div class="contenedorCargando">
+                            <p class="perfilesAgreg">cargando opciones</p>
+                            <div  class="spinner-border spinerLoaderSelect"  role="status"></div>
+                        </div>
+                    </div> -->
+                    
+                    <div class="col-12 pt-3" *ngIf="sedesGuardados.length > 0">
+
+                        <p class="perfilesAgreg">Lista de sedes agregadas:</p>
+
+                        <div *ngFor="let sedeInfo of sedesGuardados; index as i" class="col-12 perfilAgreg mb-1">
+                            <span (click)="eliminarOpcionListadoSelecionado('sede', sedeInfo.id)"
+                                class="material-symbols-outlined eliminarIcon">
+                                delete
+                            </span>
+                            {{i + 1}} - {{sedeInfo.nombre}}
+                        </div>
+
+                    </div>
+
+                    <div class="col-12 pt-3" *ngIf="sedesGuardados.length <= 0">
+                        <p class="perfilesAgreg">Sin sedes agregadas</p>
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <div class="col-12">
+
+                    <div class="col-12 row align-items-center">
+
+
+                        <div class="campo col-sm-9 col-md-4 pe-0">
+                            <div [class.deshabilitarInputSelect]="desHabilitarJornada" class="input-wrapper">
+                                <label for="jornada_id" class="etiqueta_select">
+                                    Jornada:<span class="asterisco"></span>
+                                </label>
+                                <ng-select [items]="listadoJornadas" bindValue="id" bindLabel="nombre" class="select"
+                                    (ngModelChange)="jornadaSeleccionada($event)" placeholder="Seleccione la jornada"
+                                    formControlName="jornada_id">
+                                </ng-select>
+                            </div>
+                        </div>
+
+                        <div class="col-3 col-md-4 ps-0">
+                            <button class="btn buttonAgregar" (click)="agregarOpcionSeleccionada('jornada')">
+                                <span class="material-symbols-outlined">
+                                    add
+                                </span> Agregar
+                            </button>
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="col-12 pt-3" *ngIf="jornadasGuardados.length > 0">
+
+                        <p class="perfilesAgreg">Lista de jornadas agregados:</p>
+
+                        <div *ngFor="let jornadaInfo of jornadasGuardados; index as i"
+                            class="col-12 mb-1 perfilAgreg mb-1">
+                            <span (click)="eliminarOpcionListadoSelecionado('jornada', jornadaInfo.id)"
+                                class="material-symbols-outlined eliminarIcon">
+                                delete
+                            </span>
+                            {{jornadaInfo.nombre}}
+                        </div>
+
+                    </div>
+
+                    <div class="col-12 pt-3" *ngIf="jornadasGuardados.length <= 0">
+                        <p class="perfilesAgreg">Sin jornadas agregadas</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <hr>
+
+            <div *ngIf="tipoUsuario == 'Admin'" class="col-12 col-md-2 ps-0 d-flex ms-auto justify-content-end justify-content-md-center">
+                <button  type="submit" class="btn buttonEnviar mt-3" (click)="crearMensaje()">
+                    <span *ngIf="enviarMensaje == false">  Enviar mensaje</span>
+                   
+                    <div class="d-flex align-items-center gap-2" *ngIf="enviarMensaje == true">
+                        <div>Enviando</div>
+                        <div class="spinner-border float-end" role="status"></div>
+                    </div>
+                </button>
+            </div> 
+
+
+        </div>
+
+    </div>
+
+</div>

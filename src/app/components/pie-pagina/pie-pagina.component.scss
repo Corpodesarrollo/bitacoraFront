@@ -1,0 +1,339 @@
+/* Contenedores */
+#footer {
+    padding: 0;
+    margin: 0;
+}
+
+#pie_pagina {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    background-color: var(--fondo_oscuro);
+}
+
+#derechos {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    background-color: var(--negro);
+}
+
+.principal {
+    padding: 0;
+    order: 1;
+    background-color: var(--fondo_oscuro);
+    display: flex;
+    min-width: 100%;
+}
+
+.logos_institucionales,
+.logos_gobierno,
+.informacion {
+    width: 33.33%;
+}
+
+.contenedor_derechos {
+    order: 2;
+    background-color: var(--negro);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 7px;
+    padding-bottom: 7px;
+
+    p {
+        color: var(--blanco);
+        margin: 0;
+        font-family: "Raleway";
+        font-size: 0.75rem;
+        text-align: center;
+    }
+}
+
+.logos_gobierno {
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    margin-bottom: 3.5%;
+    margin-top: auto;
+    gap: 22px;
+}
+
+.informacion {
+    padding: 0;
+    display: flex;
+    align-items: center;
+    font-family: "Raleway";
+    color: var(--blanco);
+
+    .info {
+        margin: auto;
+        column-gap: 1rem;
+
+        h1 {
+            margin: 0;
+            font-size: 1.375rem;
+            font-weight: normal;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            margin: 0;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        span {
+            margin: 0;
+            text-decoration: underline;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-align: center;
+            justify-self: center;
+            display: flex;
+            flex-direction: column;
+            text-overflow: ellipsis;
+        }
+    }
+}
+
+/* Imágenes */
+.logos_institucionales {
+    display: flex;
+    flex-direction: column;
+    margin-left: 67px;
+    margin-top: 25px;
+    margin-bottom: 34px;
+    margin-right: auto;
+    justify-content: flex-start;
+
+    .linea {
+        max-width: 1px;
+        padding: 0;
+        margin-top: 0.375rem;
+        padding-top: 0.375rem;
+    }
+
+    .logos_proyecto {
+        width: 85%;
+        max-width: 100%;
+        display: flex;
+        flex-direction: row;
+    }
+
+    .logo_alcaldia {
+        padding-top: 15px;
+        padding-left: 9px;
+        padding-right: 9px;
+
+        img {
+            height: 2.3125rem;
+            width: 2.3125rem;
+        }
+    }
+
+    .logo_sed {
+        padding-top: 20px;
+        padding-left: 10px;
+        padding-right: 0;
+
+        img {
+            height: 20px;
+            width: 60px;
+            margin-right: 10px;
+        }
+    }
+
+    .logo_sae {
+        padding: 0;
+        display: flex;
+        align-items: center;
+        padding-left: 0.5625rem;
+
+        img {
+            max-height: 45%;
+        }
+    }
+
+    .logo_alcaldia,
+    .linea,
+    .logo_sed {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+}
+
+.contenedor_pie_pagina {
+    width: 100%;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+
+    img {
+        user-select: none;
+        pointer-events: none;
+    }
+}
+
+.marca_pais {
+    padding: 0;
+
+    img {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+}
+
+.logo_gov {
+    padding: 0;
+
+    img {
+        width: 7.5rem;
+        height: 1.6875rem;
+    }
+}
+
+@media (min-width: 1400px) {
+    .logo_sae {
+        img {
+            max-height: 35% !important;
+        }
+    }
+}
+
+@media (max-width: 991.98px) {
+    .principal {
+        flex-direction: column;
+    }
+
+    .logo_sae {
+        width: 100%;
+        height: 6.25rem;
+        padding: 0;
+        img {
+          object-fit: cover;
+        }
+    }
+
+    .logo_alcaldia,
+    .linea,
+    .logo_sed {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+
+    .logos_institucionales,
+    .logos_gobierno,
+    .informacion {
+        width: 100%;
+    }
+
+    .logos_institucionales {
+        margin-right: 0;
+        margin-left: 0;
+        padding: 0;
+        align-items: center;
+        justify-items: center;
+        margin-bottom: 2rem;
+        .logos_proyecto,
+        .logo_sae {
+            align-items: center;
+            justify-content: center;
+        }
+    }
+
+    .informacion {
+        .info {
+            margin: 0;
+            margin: auto;
+            align-items: center;
+            justify-content: center;
+
+            h1,
+            span,
+            p {
+                text-align: center;
+                margin-bottom: 1rem;
+            }
+        }
+    }
+
+    .logos_gobierno {
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .logo_sae {
+
+        img {
+            min-height: 55%;
+        }
+    }
+}
+
+@media (max-width: 767.98px) and (min-width: 576px) {
+    .logos_gobierno {
+        min-width: 100%;
+    }
+    .logos_proyecto {
+      width: 100%;
+  }
+    .logo_sae {
+        padding: 0;
+    }
+
+    .informacion {
+        h1 {
+            margin-top: 2rem;
+        }
+    }
+    .logo_sae {
+
+        img {
+            min-height: 55%;
+        }
+    }
+}
+
+@media (max-width: 575.98px) and (min-width: 280px) {
+    .informacion {
+        max-width: 100%;
+        .info {
+            max-width: 100%;
+            margin: 0;
+            margin: auto;
+            align-items: center;
+            justify-content: center;
+            padding-left: 10%;
+            padding-right: 10%;
+
+            span {
+                text-align: center;
+                text-decoration: none;
+                word-wrap: break-word;
+            }
+
+            p {
+                margin-bottom: 0.25rem;
+            }
+
+            .telefono {
+                margin-bottom: 1rem;
+            }
+        }
+    }
+
+    .logos_gobierno {
+        margin-top: 1rem;
+    }
+
+    .logo_sae {
+
+        img {
+            min-height: 55%;
+        }
+    }
+}

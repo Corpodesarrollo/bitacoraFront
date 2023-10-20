@@ -1,0 +1,51 @@
+.camera{
+  color: #000 !important;
+  span{
+    color: #000;
+  }
+}
+
+.contenedor_imagen{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.contenedor_datos{
+  padding: 2rem 0;
+}
+
+.input-wrapper input{
+  padding-left: 1.5rem;
+}
+
+.imagen{
+  height: 11.875rem;
+  width: 11.875rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  span{
+    font-size: 9.5rem;
+    color: var(--borde_claro);
+  }
+}
+
+
+.modal_editar{
+    padding: 2rem;
+
+
+
+}
+.perfiles{
+  padding: 1.5rem;
+  background-color: var(--fondo_claro);
+  border-radius: 1.25rem;
+  .titulo{
+    font-weight: 600;
+    font-size: 1rem;
+  }
+}

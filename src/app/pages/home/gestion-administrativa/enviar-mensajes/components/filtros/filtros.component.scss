@@ -1,0 +1,23 @@
+.buttonBuscar {
+    background: var(--alterno);
+    color: white;
+    border-radius: 100px;
+    display: flex;
+    padding: 10px 24px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    width: 168px;
+}
+
+.input-wrapper .error {
+    border: 1px solid var(--error) !important;
+}
+
+.contenedor_errores{
+    color:var(--error) ;
+}
+
+.deshabilitarInputSelect {
+    opacity: 0.5;
+}

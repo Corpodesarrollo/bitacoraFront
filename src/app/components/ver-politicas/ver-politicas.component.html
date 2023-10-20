@@ -1,0 +1,60 @@
+<div class="cabecera">
+  <div class="titulos">
+    <div *ngIf="politica">
+      {{ politica.tipoPolitica }}<br>
+    </div>
+    "Sistema de Apoyo Escolar"
+  </div>
+</div>
+<app-cargando *ngIf="cargandoVersion"></app-cargando>
+<div id="PoliticasSistema" *ngIf="!cargandoVersion && politica">
+  <div class="titulo">Fecha de entrada en vigencia: {{politica.fecha}}</div>
+  <div class="parrafo">
+    {{ politica.contenido }}
+  </div>
+<!--   <div class="parrafo">
+    Bienvenido(a) a "Sistema de apoyo escolar", una aplicación ficticia diseñada para estimular la creatividad y la
+    imaginación. Antes de utilizar nuestra aplicación, te pedimos que leas detenidamente nuestra política de uso para
+    garantizar una experiencia positiva y segura para todos nuestros usuarios.
+  </div>
+  <div class="titulo">1. Aceptación de los Términos:</div>
+  <div class="parrafo">
+    Al utilizar la aplicación "Sistema de apoyo escolar", aceptas cumplir con los términos y condiciones establecidos en esta política de uso. Si no estás de acuerdo con estos términos, te recomendamos que no utilices la aplicación.
+  </div>
+  <div class="titulo">2. Uso Apropiado:</div>
+  <div class="parrafo">
+    La aplicación "Sistema de apoyo escolar" está destinada únicamente a fines de entretenimiento y creatividad. No se permite su uso para actividades ilegales, difamatorias, obscenas, discriminatorias o cualquier otra forma de contenido inapropiado
+  </div>
+  <div class="titulo">3. Propiedad Intelectual:</div>
+  <div class="parrafo">
+    Todo el contenido creado, compartido o generado dentro de la aplicación sigue siendo propiedad de los respectivos usuarios. Sin embargo, al utilizar la aplicación, nos otorgas una licencia no exclusiva para usar, mostrar y distribuir dicho contenido con el propósito de promocionar la aplicación.
+  </div>
+  <div class="titulo">4. Privacidad:</div>
+  <div class="parrafo">
+    Respetamos tu privacidad y recopilamos información solo en la medida en que sea necesario para mejorar la experiencia de usuario. Consulta nuestra Política de Privacidad para obtener más detalles sobre cómo manejamos los datos personales.
+  </div>
+  <div class="titulo">5. Comunicación Respetuosa:</div>
+  <div class="parrafo">
+    Cualquier forma de comunicación dentro de la aplicación, ya sea en comentarios, chats o interacciones sociales, debe ser respetuosa y libre de contenido ofensivo, abusivo o amenazante.
+  </div>
+  <div class="titulo">6. Seguridad:</div>
+  <div class="parrafo">
+    No intentes acceder a cuentas de otros usuarios ni comprometer la seguridad de la aplicación. Si identificas una vulnerabilidad en la aplicación, te instamos a informarnos de manera responsable
+  </div>
+  <div class="titulo">7. Actualizaciones y Cambios:</div>
+  <div class="parrafo">
+    Nos reservamos el derecho de realizar cambios en la aplicación y en esta política de uso en cualquier momento. Te notificaremos sobre cambios significativos y tu continuo uso de la aplicación estará sujeto a los términos actualizados.
+  </div>
+  <div class="titulo">7. Actualizaciones y Cambios:</div>
+  <div class="parrafo">
+    Nos reservamos el derecho de suspender o terminar tu acceso a la aplicación si incumples con los términos establecidos en esta política de uso.
+  </div>
+  <div class="parrafo">
+    Al utilizar la aplicación "Sistema de apoyo escolar", reconoces que has leído y comprendido esta política de uso, y aceptas cumplir con sus términos y condiciones. Si tienes alguna pregunta o inquietud, no dudes en ponerte en contacto con nuestro equipo de soporte.
+  </div>
+  <div class="parrafo">
+    ¡Gracias por elegir "Sistema de apoyo escolar" para estimular tu creatividad y explorar mundos imaginarios!
+  </div> -->
+</div>
+
+

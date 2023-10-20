@@ -1,0 +1,15 @@
+.migaPan{
+  padding-top: 2rem;
+  padding-left: 2rem;
+  font-size: 0.875rem;
+}
+.breadcrumb{
+  margin: 0;
+}
+
+
+@media (max-width: 767.98px) {
+  .migaPan{
+    padding-left: 0 !important;
+  }
+}

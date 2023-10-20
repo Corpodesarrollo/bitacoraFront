@@ -1,0 +1,195 @@
+.contenedorTablas {
+    padding: 2rem 0rem 0rem 0rem;
+}
+
+.tablasDocentes {
+    padding: 1rem 1rem;
+}
+
+.contenedorTablas .contenidoTabla:nth-child(odd) {
+    background-color: #F8FAFA;
+}
+
+.contenedorTablas .titulo {
+    color: #000;
+    font-size: 11px;
+    font-family: Raleway;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 16px;
+    letter-spacing: 0.5px;
+}
+
+.contenedorTablas .contenidoTabla {
+    margin: auto;
+    display: flex;
+    align-items: center;
+    padding: 1rem 0rem;
+    border-bottom: 1px solid gainsboro;
+    // margin-bottom: 17px;
+    width: 100%;
+}
+
+.titulos {
+    margin: auto;
+    padding: 0.5rem 0rem;
+    border-bottom: 1px solid gainsboro;
+    border-top: 1px solid gainsboro;
+    // margin-bottom: 13px;
+    // margin-top: 13px;
+}
+
+.infoTabla {
+    font-size: 13px;
+    //styleName: M3/body/medium;
+    font-family: Raleway;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0.25px;
+    text-align: center;
+
+}
+
+.contenedorTablas .titulo {
+    color: #000;
+    font-size: 11px;
+    font-family: Raleway;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 16px;
+    letter-spacing: 0.5px;
+}
+
+.apellidoNombre {
+    width: 16%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.tipoDocumento {
+    width: 16%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.numeroDocumento {
+    width: 17%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.asignatura {
+    width: 13%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.grado {
+    width: 13%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.grupo {
+    width: 8%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.numeroHoras {
+    width: 17%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.tituloMobile {
+    display: none;
+}
+
+.nombre h1 {
+    //styleName: material-theme/headline/small;
+    font-family: Raleway;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 32px;
+    letter-spacing: 0em;
+    text-align: left;
+    padding-bottom: 0.5rem;
+
+}
+
+.contenedorHorasTotales {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 1rem 0rem 0rem 1.39rem;
+}
+
+@media (max-width: 991.98px) {
+    .acciones.accionesInfo {
+        justify-content: space-between;
+    }
+
+    .funcionario {
+        width: 42%;
+    }
+
+    .acciones {
+        width: 16%;
+    }
+
+    .nomenclatura {
+        width: 11%;
+    }
+
+}
+
+
+@media (max-width: 767.98px) {
+
+    .contenedorTablas .contenidoTabla {
+        margin: auto;
+        align-items: flex-start;
+    }
+
+
+    .tituloMobile {
+        display: initial;
+        width: 50%;
+        padding-bottom: 9px;
+        font-weight: 500;
+    }
+
+    .infoTabla {
+        width: 50%;
+        justify-content: flex-end;
+        align-items: flex-end;
+        padding-bottom: 9px;
+    }
+
+    .titulo {
+        display: none;
+    }
+
+    .infoTabla {
+        text-align: right;
+    }
+
+
+}
+
+@media (max-width: 575.98px) {}

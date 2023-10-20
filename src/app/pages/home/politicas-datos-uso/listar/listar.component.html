@@ -1,0 +1,57 @@
+<div class="cabecera">
+  <div class="titulos">
+    Política de datos y de uso
+  </div>
+</div>
+<div id="ListaUsuarios">
+  <div class="titulo_tabla">
+    Lista de Verificación: Usuarios que Han Aceptado Nuestras Políticas
+  </div>
+  <div class="contenedor_tabla" *ngIf="!cargandoListado && !sinRegistros && listadoPersonas">
+    <div class="tabla_lista">
+      <div class="titulos">
+        <div class="col-nombres">Nombres</div>
+        <div class="col-apellidos">Apellidos</div>
+        <div class="col-politicas-datos">Politica de datos personales</div>
+        <div class="col-politicas-uso">Politica de uso</div>
+      </div>
+      <div class="fila" *ngFor="let registro of listadoPersonas">
+        <div class="titulo_movil">Nombres</div>
+        <div class="col-nombres">{{ registro.nombres}}</div>
+        <div class="titulo_movil">Apellidos</div>
+        <div class="col-apellidos">{{registro.apellidos}}</div>
+        <div class="titulo_movil">Politica de datos personales</div>
+        <div class="col-politicas-datos">
+          <div class="estado" [ngClass]="registro.politicas_datos ? 'aceptado' : 'no_aceptado'">
+            <span *ngIf="registro.politicas_datos">Aceptado</span>
+            <span *ngIf="!registro.politicas_datos">No aceptado</span>
+          </div>
+        </div>
+        <div class="titulo_movil">Politica de uso</div>
+        <div class="col-politicas-uso">
+          <div class="estado" [ngClass]="registro.politicas_uso ? 'aceptado' : 'no_aceptado'">
+            <span *ngIf="registro.politicas_uso">Aceptado</span>
+            <span *ngIf="!registro.politicas_uso">No aceptado</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-sin-registros *ngIf="sinRegistros && !cargandoListado"></app-sin-registros>
+  <div class="acciones col-12">
+    <button type="submit" class="btn boton_secundario" *ngIf="!sinRegistros">
+      <div *ngIf="!reenviando">
+        <span>Reenviar mensaje de políticas</span>
+      </div>
+      <div class="d-flex align-items-center gap-2" *ngIf="reenviando">
+        <div>Reenviando</div>
+        <div class="spinner-border float-end" role="status"></div>
+      </div>
+    </button>
+    <div class="btn boton_primario" type="button" routerLink="politicas-uso">
+      Cambiar políticas de uso
+    </div>
+  </div>
+</div>
+
+<app-cargando *ngIf="cargandoListado"></app-cargando>

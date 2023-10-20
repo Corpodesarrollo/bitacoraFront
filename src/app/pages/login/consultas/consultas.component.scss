@@ -1,0 +1,165 @@
+#consultas{
+    width: 100%;
+    padding: 2rem 1rem;
+    display: flex;
+    justify-content: center;
+    column-gap: 4rem;
+}
+
+.contenedor_imagenes {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  column-gap: 0.625rem;
+  width: 50%;
+  max-width: 50%;
+  .imagen{
+      width: 100%;
+      height: 34.7938rem;
+      object-fit: contain;
+  }
+}
+
+.container_forms{
+  padding: 1rem 2rem;
+}
+
+#boletines{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 50%;
+  max-width: 50%;
+}
+
+#formBoletines,
+#formPines,
+#formCertificado{
+  display: flex;
+  flex-direction: column;
+  row-gap: 1rem;
+  padding-bottom: 1rem;
+}
+
+#formCertificado{
+  border-top: 1px solid var(--borde_claro);
+  padding-top: 2rem;
+
+  .etiqueta_select{
+    min-width: auto;
+  }
+  .contenedor_inputs{
+    display: flex;
+  }
+
+  .contenedor_inputs .campo{
+    width: 50%;
+    min-width: 50%;
+  }
+
+  .contenedor_inputs .campo.deshabilitado input{
+    background-color: #f9f9f9;
+  }
+
+  .contenedor_inputs .campo.deshabilitado .etiqueta_select,
+  .contenedor_inputs .campo.deshabilitado label{
+    background-color: #f9f9f9;
+  }
+}
+
+.accordion{
+  width: 100%;
+  --bs-accordion-bg: transparent;
+  --bs-accordion-active-bg: var(--alterno_claro);
+  --bs-accordion-border-color: none;
+}
+.accordion-item{
+  border-radius: 2rem;
+  border:  .5px solid var(--borde);
+  margin-bottom: .5rem;
+  margin-top: 1rem;
+}
+
+.accordion-button{
+  padding: 1rem;
+  border-radius: 2rem !important;
+  margin-top: -2px;
+}
+.accordion-button:not(.collapsed){
+  border: 1px solid var(--borde);
+}
+.accordion-button:focus{
+  box-shadow: initial;
+}
+.accordion-button::after {
+  background-size: 0.75rem;
+  background-position: center;
+  color: var(--textos_claro);
+}
+
+.contenedor_inputs{
+  display: flex;
+  gap: 1rem;
+}
+
+.col_documento,
+.col_numero{
+  width: 35%;
+}
+.col_numero{
+  width: 65%;
+}
+
+.input-wrapper .form_input{
+  padding: 1rem;
+}
+
+.etiqueta{
+  z-index: 1;
+  text-align: center;
+  line-height: 1.2;
+  font-size: 0.875rem;
+}
+
+.etiqueta_error{
+  color: var(--error);
+}
+
+@media (max-width: 575.98px) {
+  .container_forms {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 767.87px) {
+  .contenedor_imagenes {
+      display: none;
+  }
+  #boletines{
+    width: 100%;
+  }
+}
+
+@media (max-width: 991.98px){
+
+  #boletines{
+    width: 100%;
+    max-width: 100%;
+  }
+  .contenedor_inputs{
+    width: 100%;
+    flex-direction: column;
+    .campo{
+      width: 100%;
+    }
+  }
+
+  #formCertificado{
+    .contenedor_inputs{
+      .campo{
+        width: 100%;
+      }
+    }
+  }
+}

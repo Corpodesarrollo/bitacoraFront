@@ -1,0 +1,37 @@
+<div id="contenedorInactivar">
+    <div class="modal-header">
+        <span class="material-symbols-outlined modal-icon"> feedback </span>
+        <div class="modal-title" id="modal-basic-title">
+            <span>¿Estás seguro de que deseas
+              <span *ngIf="estaActivo">inactivar</span>
+              <span *ngIf="!estaActivo">activar</span>
+            este usuario?</span>
+        </div>
+    </div>
+    <div class="modal-body">
+        <div class="modal-texto text-center">
+            Esta acción
+            <span *ngIf="estaActivo">desactivará</span>
+            <span *ngIf="!estaActivo">activará</span>
+            la cuenta y todas las funcionalidades asociadas a ella.
+            Si tienes alguna duda o necesitas asistencia, no dudes en contactar a nuestro equipo de soporte.
+        </div>
+    </div>
+    <div class="modal-footer">
+      <div class="acciones col-12">
+        <button type="button" class="btn boton_secundario" (click)="cerrar()">
+          Cancelar
+        </button>
+        <button type="button" class="btn boton_primario" (click)="inactivarFuncionario()">
+          <div *ngIf="!inactivando">
+            <span>Sí, continuar</span>
+          </div>
+          <div class="d-flex align-items-center gap-2" *ngIf="inactivando">
+            <div *ngIf="estaActivo">Desactivando</div>
+            <div *ngIf="!estaActivo">Activando</div>
+            <div class="spinner-border float-end"></div>
+          </div>
+        </button>
+      </div>
+    </div>
+</div>

@@ -1,0 +1,22 @@
+.campo_estado{
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+#politicaHTML{
+  width: 100%;
+}
+.modal-body{
+  padding: 0 1rem;
+}
+.campo_estado{
+  align-self: flex-start;
+}
+@media (max-width: 575.98px) {
+  .acciones{
+    .btn{
+      width: 100%;
+    }
+  }
+}
