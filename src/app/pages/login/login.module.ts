@@ -17,6 +17,7 @@ import { ConsultasComponent } from './consultas/consultas.component';
 import { CapitalizarPipe } from 'src/app/pipes/capitalizar/capitalizar.pipe';
 import { CambiarContraseniaComponentLogin } from './cambiar-contrasenia/cambiar-contrasenia.component';
 import { PoliticaDatosComponent } from './politica-datos/politica-datos.component';
+import { BitacoraModule } from '../bitacora/bitacora.module';
 
 
 
@@ -43,7 +44,8 @@ import { PoliticaDatosComponent } from './politica-datos/politica-datos.componen
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
-    NgSelectModule
+    NgSelectModule,
+    BitacoraModule
   ]
 })
 export class LoginModule { }
