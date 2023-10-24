@@ -1,31 +1,33 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CargandoComponent } from './cargando/cargando.component';
-import { CabeceraComponent } from './cabecera/cabecera.component';
-import { PiePaginaComponent } from './pie-pagina/pie-pagina.component';
+import { HttpClientModule } from '@angular/common/http';
+import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { HttpClientModule } from '@angular/common/http';
-import { PrimeraPalabraPipe } from '../pipes/primeraPalabra/primera-palabra.pipe';
-import { MenuComponent } from './menu/menu.component';
+import { AngularCropperjsModule } from 'angular-cropperjs';
+import { WebcamModule } from 'ngx-webcam';
 import { InicialesPipe } from '../pipes/iniciales/iniciales.pipe';
 import { MinusculasPipe } from '../pipes/minusculas/minusculas.pipe';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { MensajesComponent } from './mensajes/mensajes.component';
-import { MigaPanComponent } from './miga-pan/miga-pan.component';
-import { PaginadorComponent } from './paginador/paginador.component';
+import { PrimeraPalabraPipe } from '../pipes/primeraPalabra/primera-palabra.pipe';
+import { CabeceraComponent } from './cabecera/cabecera.component';
+import { CamaraComponent } from './camara/camara.component';
+import { CargandoComponent } from './cargando/cargando.component';
+import { CargarFotografiaComponent } from './cargar-fotografia/cargar-fotografia.component';
+import { ConfirmarCerrarSesionComponent } from './confirmar-cerrar-sesion/confirmar-cerrar-sesion.component';
 import { ContraseniaComponent } from './contrasenia/contrasenia.component';
 import { ErrorCambioComponentC } from './error-cambio/error-cambio.component';
 import { ExitoCambioComponentC } from './exito-cambio/exito-cambio.component';
-import { CargarFotografiaComponent } from './cargar-fotografia/cargar-fotografia.component';
-import { CamaraComponent } from './camara/camara.component';
-import { AngularCropperjsModule } from 'angular-cropperjs';
-import { WebcamModule } from 'ngx-webcam';
-import { ConfirmarCerrarSesionComponent } from './confirmar-cerrar-sesion/confirmar-cerrar-sesion.component';
+import { FilaDinamicaTablaComponent } from './fila-dinamica-tabla/fila-dinamica-tabla.component';
+import { MensajesComponent } from './mensajes/mensajes.component';
+import { MenuComponent } from './menu/menu.component';
+import { MigaPanComponent } from './miga-pan/miga-pan.component';
 import { ModalInformacionComponent } from './modal-informacion/modal-informacion.component';
-import { VerPoliticasComponent } from './ver-politicas/ver-politicas.component';
+import { PaginadorComponent } from './paginador/paginador.component';
+import { PiePaginaComponent } from './pie-pagina/pie-pagina.component';
 import { SinRegistrosComponent } from './sin-registros/sin-registros.component';
+import { TablaRegistroDetalleComponent } from './tabla-registro-detalle/tabla-registro-detalle.component';
+import { VerPoliticasComponent } from './ver-politicas/ver-politicas.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +49,9 @@ import { SinRegistrosComponent } from './sin-registros/sin-registros.component';
     ConfirmarCerrarSesionComponent,
     ModalInformacionComponent,
     VerPoliticasComponent,
-    SinRegistrosComponent
+    SinRegistrosComponent,
+    FilaDinamicaTablaComponent,
+    TablaRegistroDetalleComponent
   ],
   exports:[
     CamaraComponent,
@@ -65,7 +69,9 @@ import { SinRegistrosComponent } from './sin-registros/sin-registros.component';
     ConfirmarCerrarSesionComponent,
     ModalInformacionComponent,
     VerPoliticasComponent,
-    SinRegistrosComponent
+    SinRegistrosComponent,
+    FilaDinamicaTablaComponent,
+    TablaRegistroDetalleComponent,
   ],
   imports: [
     CommonModule,
