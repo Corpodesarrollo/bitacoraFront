@@ -4,19 +4,21 @@ import { CommonModule } from '@angular/common';
 import { BitacoraRoutingModule } from './bitacora-routing.module';
 import { BitacoraComponent } from './bitacora.component';
 import { FiltrosConsultaComponent } from './components/filtros-consulta/filtros-consulta.component';
-
+import { NgSelectModule } from '@ng-select/ng-select';
+import { ComponentsModule } from 'src/app/components/components.module';
+import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [
-    BitacoraComponent,
-    FiltrosConsultaComponent
-  ],
+  declarations: [BitacoraComponent, FiltrosConsultaComponent],
   imports: [
     CommonModule,
-    BitacoraRoutingModule
+    ReactiveFormsModule,
+    BitacoraRoutingModule,
+    NgSelectModule,
+    NgbDatepickerModule,
+    ComponentsModule,
   ],
-  exports: [
-    BitacoraComponent
-  ]
+  exports: [BitacoraComponent],
 })
-export class BitacoraModule { }
+export class BitacoraModule {}

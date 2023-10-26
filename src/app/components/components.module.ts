@@ -76,7 +76,7 @@ import { SinRegistrosComponent } from './sin-registros/sin-registros.component';
     HttpClientModule,
     NgbModule,
     WebcamModule,
-    AngularCropperjsModule,
+    AngularCropperjsModule
   ]
 })
 export class ComponentsModule { }
