@@ -34,5 +34,6 @@ export class BitacoraComponent implements OnInit {
     } else {
       //consumo exportar individual
     }
+    console.log(datos);
   }
 }

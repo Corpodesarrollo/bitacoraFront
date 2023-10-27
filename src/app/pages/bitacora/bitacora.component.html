@@ -1,2 +1,2 @@
 <app-filtros-consulta></app-filtros-consulta>
-<app-tabla-registro-detalle [datos]="datosBitacora" [columnasTabla]="columnasTablaBitacora" titulo="Log de acciones" subtitulo="Decargar logs:"></app-tabla-registro-detalle>
+<app-tabla-registro-detalle (exportarDatos)="exportar($event)" [datos]="datosBitacora" [columnasTabla]="columnasTablaBitacora" titulo="Log de acciones" subtitulo="Decargar logs:"></app-tabla-registro-detalle>

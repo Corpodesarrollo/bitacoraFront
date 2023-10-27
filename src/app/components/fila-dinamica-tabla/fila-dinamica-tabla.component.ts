@@ -10,7 +10,7 @@ export class FilaDinamicaTablaComponent implements OnInit {
   @Input() fila: DatosTablaRegistroDetalle;
   @Input() columnasTabla: ColumnaTabla[];
   @Input() descripcionBotonesDescarga: string = 'descripcion botones descarga';
-  @Output() exportarDatos: EventEmitter<any>;
+  @Output() exportarDatos: EventEmitter<any> = new EventEmitter<any>();
 
   columnasDetalle: ColumnaTabla[] = [];
   filaDetalle: any;

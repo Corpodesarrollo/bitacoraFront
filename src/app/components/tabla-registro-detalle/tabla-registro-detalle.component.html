@@ -8,18 +8,18 @@
     </div>
     <div class="iconos-tabla d-flex flex-row">
       <div class="botones-decarga d-flex flex-column">
-        <img class="icono" src="assets//iconos/excel_icono.svg" (onclick)="exportar('excel')"/>
+        <img class="icono" src="assets//iconos/excel_icono.svg" (click)="exportar('excel')"/>
         <span>Excel</span>
       </div>
       <div class="botones-decarga d-flex flex-column">
-        <img class="icono" src="assets//iconos/pdf_icono.svg" (onclick)="exportar('pdf')"/>
+        <img class="icono" src="assets//iconos/pdf_icono.svg" (click)="exportar('pdf')"/>
         <span>Pdf</span>
       </div>
     </div>
     <div class="input-busqueda-tabla">
       <div class="input-wrapper">
         <span class="input-icon material-symbols-outlined">search</span>
-        <input type="text" formControlName="infoHoras" class="form_input" placeholder="buscar">
+        <input type="text" class="form_input" placeholder="buscar" (change)="buscarDatos($event)">
       </div>
     </div>
   </div>

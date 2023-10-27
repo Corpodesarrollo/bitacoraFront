@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ColumnaTabla } from 'src/app/classes/columna_tabla.interface';
-import { DatosBitacora } from 'src/app/classes/datos_bitacora.interface';
 import { DatosTablaRegistroDetalle } from 'src/app/classes/datos_tabla_registro_detalle.interface';
 
 @Component({
@@ -9,17 +8,24 @@ import { DatosTablaRegistroDetalle } from 'src/app/classes/datos_tabla_registro_
   styleUrls: ['./tabla-registro-detalle.component.scss'],
 })
 export class TablaRegistroDetalleComponent {
-  @Input() titulo: string = 'titulo'; //test
+  @Input() titulo: string = 'titulo';
   @Input() subtitulo: string = 'subtitulo';
   @Input() datos: DatosTablaRegistroDetalle[] = [];
   @Input() columnasTabla: ColumnaTabla[] = [];
-  @Output() exportarDatos: EventEmitter<any>;
+  @Output() exportarDatos: EventEmitter<any> = new EventEmitter<any>();
+  @Output() buscar: EventEmitter<string> = new EventEmitter<string>();
 
-  exportar(datos:any): void {
-    let datosExportar:any;
-    if(datos=='excel' || datos=='pdf'){
-      datosExportar={tipo:datos};
+  exportar(datos: any): void {
+    let datosExportar: any;
+    if (datos == 'excel' || datos == 'pdf') {
+      datosExportar = { tipo: datos };
+    } else {
+      datosExportar = datos;
     }
     this.exportarDatos.emit(datosExportar);
+  }
+  buscarDatos(datos: any): void {
+    console.log(datos.target.value);
+    this.buscar.emit(datos.target.value);
   }
 }
