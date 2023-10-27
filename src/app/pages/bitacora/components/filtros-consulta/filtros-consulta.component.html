@@ -1,1 +1,149 @@
-<p>filtros-consulta works!</p>
+<div class="filter-container">
+  <p>Seleccione un rango de fecha de acuerdo a lo que busca</p>
+  <form [formGroup]="filtrosFormGroup">
+    <div class="main-filters">
+      <div class="row">
+        <div class="campo mt-2 col-4 col-md-5">
+          <div class="input-wrapper">
+            <label for="usuario">
+              Fecha de inicio:<span class="asterisco">*</span>
+            </label>
+            <span class="material-symbols-outlined input-icon">
+              account_circle
+            </span>
+            <input
+              formControlName="fechaDesde"
+              type="text"
+              placeholder="Seleccione la fecha de inicio"
+              ng-reflect-name="fechaInicio"
+              class=""
+              (click)="date.toggle()"
+              [maxDate]="maxDate"
+              type="datetime"
+              readonly
+              ngbDatepicker
+              #date="ngbDatepicker"
+            />
+            <span
+              (click)="date.toggle()"
+              class="material-symbols-outlined inputIconDate"
+            >
+              today
+            </span>
+          </div>
+          <div class="contenedor_errores">
+            <span class="campo_requerido">DD/MM/YYYY</span>
+          </div>
+        </div>
+        <div class="campo mt-2 col-5">
+          <div class="input-wrapper">
+            <label for="usuario">
+              Fecha de finalizacion:<span class="asterisco">*</span>
+            </label>
+            <span class="material-symbols-outlined input-icon">
+              account_circle
+            </span>
+            <input
+              formControlName="fechaHasta"
+              placeholder="Seleccione la fecha de finalizacion"
+              class=""
+              (click)="date2.toggle()"
+              [minDate]="minDate"
+              type="datetime"
+              readonly
+              ngbDatepicker
+              #date2="ngbDatepicker"
+            />
+            <span
+              (click)="date2.toggle()"
+              class="material-symbols-outlined inputIconDate"
+            >
+              today
+            </span>
+          </div>
+          <div class="contenedor_errores">
+            <span class="campo_requerido">DD/MM/YYYY</span>
+          </div>
+        </div>
+        <div class="mb-2 mt-3 col-2">
+          <button
+            type="submit"
+            class="btn boton_secundario"
+            (click)="mostrarFiltrosAvanzados = !mostrarFiltrosAvanzados"
+          >
+            Filtro avanzado
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="row advanced-filters" *ngIf="mostrarFiltrosAvanzados">
+      <h6>Filtros avanzados</h6>
+      <div class="col-4">
+        <div class="input-wrapper">
+          <label for="usuario" class="etiqueta_select"> Usuario:</label>
+          <ng-select
+            bindValue="id"
+            bindLabel="nombre"
+            class="select"
+            placeholder="Seleccione un Usuario"
+            formControlName="usuario"
+          >
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="input-wrapper">
+          <label for="usuario" class="etiqueta_select"> Colegio:</label>
+          <ng-select
+            class="select"
+            placeholder="Seleccione un colegio"
+            formControlName="colegio"
+          >
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="input-wrapper">
+          <label for="usuario" class="etiqueta_select"> Sede: </label>
+          <ng-select
+            class="select"
+            placeholder="Seleccione la sede"
+            formControlName="sede"
+          >
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="input-wrapper">
+          <label for="usuario" class="etiqueta_select"> Jornada: </label>
+          <ng-select
+            class="select"
+            placeholder="Seleccione la jornada"
+            formControlName="jornada"
+          >
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="input-wrapper">
+          <label for="usuario" class="etiqueta_select"> Tipo de log: </label>
+          <ng-select
+            class="select"
+            placeholder="Seleccione el tipo de log"
+            formControlName="tipoLog"
+          >
+          </ng-select>
+        </div>
+      </div>
+      <div class="mb-2 mt-3 col-4 submit-button">
+        <button
+          type="submit"
+          class="btn boton_primario"
+          (click)="mostrarFiltrosAvanzados = !mostrarFiltrosAvanzados"
+        >
+          Filtrar
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

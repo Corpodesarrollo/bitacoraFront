@@ -82,7 +82,7 @@ import { VerPoliticasComponent } from './ver-politicas/ver-politicas.component';
     HttpClientModule,
     NgbModule,
     WebcamModule,
-    AngularCropperjsModule,
+    AngularCropperjsModule
   ]
 })
 export class ComponentsModule { }

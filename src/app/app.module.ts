@@ -11,6 +11,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from 'src/environments/environment';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 import { AuthInterceptorService } from './services/interceptors/auth-interceptor.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 const isIE = window.navigator.userAgent.indexOf("MSIE ") > -1 || window.navigator.userAgent.indexOf("Trident/") > -1; // Remove this line to use Angular Universal
@@ -60,7 +61,8 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
     AppRoutingModule,
     ComponentsModule,
     MsalModule,
-    NgbModule
+    NgbModule,
+    BrowserAnimationsModule
   ],
   providers: [
     {
