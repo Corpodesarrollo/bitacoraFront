@@ -1,0 +1,35 @@
+<div [ngClass]="{'active': isSelected}" class="contenedor-minitabla-general d-flex flex-column">
+  <div [ngClass]="{'active': isSelected}" class="contenedor-minitabla d-flex flex-row justify-content-between">
+    <div class="d-flex flex-column" *ngFor="let columna of columnasTabla">
+      <div>{{columna.titulo}}</div>
+      <div>{{fila[columna.campo]}}</div>
+    </div>
+
+    <div class="d-flex flex-column justify-content-center align-items-center">
+      <div><span class="material-symbols-outlined" (click)="isSelected=!isSelected">expand_more</span></div>
+    </div>
+  </div>
+  <div [ngClass]="{'show': isSelected}" class="contenedor-minitabla-detalle">
+    <div class="general-detalle">
+      <div class="datos-detalle">
+        <label class="titulo-detalle"><strong>Descripcion</strong></label>
+        <div class="items-datos-detalle" *ngFor="let columna of columnasDetalle">
+          <div class="item"><strong>{{columna.titulo}}</strong>:{{filaDetalle[columna.campo]}}</div>
+        </div>
+      </div>
+      <div class="opciones-exportacion d-flex flex-column">
+        <span>{{descripcionBotonesDescarga}}</span>
+        <div class="contenedor-botones-decarga d-flex flex-row ">
+          <div class="botones-decarga d-flex flex-column">
+            <img class="icono" src="assets//iconos/excel_icono.svg" (click)="exportar('excel',fila)" />
+            <span>Excel</span>
+          </div>
+          <div class="botones-decarga d-flex flex-column">
+            <img class="icono" src="assets//iconos/pdf_icono.svg" (click)="exportar('pdf',fila)">
+            <span>Pdf</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
