@@ -16,6 +16,13 @@
     background-color: #d7e3ff;
     border: none;
   }
+
+  .expand-icon {
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+    cursor: pointer;
+  }
 }
 
 .contenedor-minitabla-detalle {
@@ -51,6 +58,7 @@
       .contenedor-botones-decarga {
         justify-content: center;
         .botones-decarga {
+          cursor: pointer;
           padding-left: 10px;
           padding-right: 10px;
           > img {

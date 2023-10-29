@@ -1,12 +1,13 @@
 <div class="filter-container">
+  <h3>Bitacora</h3>
   <p>Seleccione un rango de fecha de acuerdo a lo que busca</p>
   <form [formGroup]="filtrosFormGroup">
     <div class="main-filters">
       <div class="row">
-        <div class="campo mt-2 col-4 col-md-5">
+        <div class="campo mt-2 col-4">
           <div class="input-wrapper">
             <label for="usuario">
-              Fecha de inicio:<span class="asterisco">*</span>
+              Fecha de inicio: <span class="asterisco">*</span>
             </label>
             <span class="material-symbols-outlined input-icon">
               account_circle
@@ -16,18 +17,16 @@
               type="text"
               placeholder="Seleccione la fecha de inicio"
               ng-reflect-name="fechaInicio"
-              class=""
+              class
               (click)="date.toggle()"
               [maxDate]="maxDate"
               type="datetime"
               readonly
               ngbDatepicker
-              #date="ngbDatepicker"
-            />
+              #date="ngbDatepicker" />
             <span
               (click)="date.toggle()"
-              class="material-symbols-outlined inputIconDate"
-            >
+              class="material-symbols-outlined inputIconDate">
               today
             </span>
           </div>
@@ -35,10 +34,10 @@
             <span class="campo_requerido">DD/MM/YYYY</span>
           </div>
         </div>
-        <div class="campo mt-2 col-5">
+        <div class="campo mt-2 col-4">
           <div class="input-wrapper">
             <label for="usuario">
-              Fecha de finalizacion:<span class="asterisco">*</span>
+              Fecha de finalizacion: <span class="asterisco">*</span>
             </label>
             <span class="material-symbols-outlined input-icon">
               account_circle
@@ -46,18 +45,16 @@
             <input
               formControlName="fechaHasta"
               placeholder="Seleccione la fecha de finalizacion"
-              class=""
+              class
               (click)="date2.toggle()"
               [minDate]="minDate"
               type="datetime"
               readonly
               ngbDatepicker
-              #date2="ngbDatepicker"
-            />
+              #date2="ngbDatepicker" />
             <span
               (click)="date2.toggle()"
-              class="material-symbols-outlined inputIconDate"
-            >
+              class="material-symbols-outlined inputIconDate">
               today
             </span>
           </div>
@@ -65,12 +62,11 @@
             <span class="campo_requerido">DD/MM/YYYY</span>
           </div>
         </div>
-        <div class="mb-2 mt-3 col-2">
+        <div class="mb-2 mt-3 col-3">
           <button
             type="submit"
             class="btn boton_secundario"
-            (click)="mostrarFiltrosAvanzados = !mostrarFiltrosAvanzados"
-          >
+            (click)="mostrarFiltrosAvanzados = !mostrarFiltrosAvanzados">
             Filtro avanzado
           </button>
         </div>
@@ -82,12 +78,12 @@
         <div class="input-wrapper">
           <label for="usuario" class="etiqueta_select"> Usuario:</label>
           <ng-select
-            bindValue="id"
-            bindLabel="nombre"
+            [items]="listaUsuarios"
+            bindValue="percodjerar"
+            bindLabel="pernombre1"
             class="select"
             placeholder="Seleccione un Usuario"
-            formControlName="usuario"
-          >
+            formControlName="usuario">
           </ng-select>
         </div>
       </div>
@@ -95,10 +91,12 @@
         <div class="input-wrapper">
           <label for="usuario" class="etiqueta_select"> Colegio:</label>
           <ng-select
+            [items]="listaColegios"
+            bindValue="codigo"
+            bindLabel="nombre"
             class="select"
             placeholder="Seleccione un colegio"
-            formControlName="colegio"
-          >
+            formControlName="colegio">
           </ng-select>
         </div>
       </div>
@@ -106,10 +104,12 @@
         <div class="input-wrapper">
           <label for="usuario" class="etiqueta_select"> Sede: </label>
           <ng-select
+            [items]="listaSedes"
+            bindValue="codigo"
+            bindLabel="nombre"
             class="select"
             placeholder="Seleccione la sede"
-            formControlName="sede"
-          >
+            formControlName="sede">
           </ng-select>
         </div>
       </div>
@@ -117,10 +117,12 @@
         <div class="input-wrapper">
           <label for="usuario" class="etiqueta_select"> Jornada: </label>
           <ng-select
+            [items]="listaJornadas"
+            bindValue="id"
+            bindLabel="nombre"
             class="select"
             placeholder="Seleccione la jornada"
-            formControlName="jornada"
-          >
+            formControlName="jornada">
           </ng-select>
         </div>
       </div>
@@ -128,10 +130,12 @@
         <div class="input-wrapper">
           <label for="usuario" class="etiqueta_select"> Tipo de log: </label>
           <ng-select
+            [items]="listaTiposLog"
+            bindValue="id"
+            bindLabel="nombre"
             class="select"
             placeholder="Seleccione el tipo de log"
-            formControlName="tipoLog"
-          >
+            formControlName="tipoLog">
           </ng-select>
         </div>
       </div>
@@ -139,11 +143,17 @@
         <button
           type="submit"
           class="btn boton_primario"
-          (click)="mostrarFiltrosAvanzados = !mostrarFiltrosAvanzados"
-        >
+          (click)="mostrarFiltrosAvanzados = !mostrarFiltrosAvanzados">
           Filtrar
         </button>
       </div>
     </div>
   </form>
 </div>
+
+<app-tabla-registro-detalle
+  (exportarDatos)="exportar($event)"
+  [datos]="datosBitacora"
+  [columnasTabla]="columnasTablaBitacora"
+  titulo="Log de acciones"
+  subtitulo="Decargar logs:"></app-tabla-registro-detalle>

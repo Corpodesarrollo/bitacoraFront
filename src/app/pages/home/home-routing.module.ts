@@ -35,6 +35,10 @@ const routes: Routes = [
           path: 'politicas-datos-uso',
           loadChildren: () => import('./politicas-datos-uso/politicas-datos-uso.module').then(m => m.PoliticasDatosUsoModule),
         },
+        {
+          path: 'bitacoras',
+          loadChildren: () => import('../bitacora/bitacora.module').then(m => m.BitacoraModule),
+        },
       ]
     },
     {

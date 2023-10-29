@@ -5,6 +5,7 @@ export const environment = {
   URL_DEV: "https://web-laf.s3-website-us-east-1.amazonaws.com",
   URL_API: "https://apoyopruebas.educacionbogota.edu.co/apoyo-api/api",
   URL_API_PERSONAL: "https://apoyopruebas.educacionbogota.edu.co/personal/api",
+  URL_BITACORAS: "http://20.237.244.76:8080",
   CONTENT_TYPE: 'application/json',
   CONTENT_TYPE_PDF: 'application/pdf',
   VERSION: '5.12.0',

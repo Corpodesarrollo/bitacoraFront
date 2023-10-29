@@ -5,13 +5,13 @@ import { ComponentsModule } from 'src/app/components/components.module';
 import { GestionAdministrativaModule } from '../home/gestion-administrativa/gestion-administrativa.module';
 import { BitacoraRoutingModule } from './bitacora-routing.module';
 import { BitacoraComponent } from './bitacora.component';
-import { FiltrosConsultaComponent } from './components/filtros-consulta/filtros-consulta.component';
 import { BitacoraService } from './services/bitacora/bitacora.service';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [BitacoraComponent, FiltrosConsultaComponent],
+  declarations: [BitacoraComponent],
   imports: [
     CommonModule,
     BitacoraRoutingModule,
@@ -20,6 +20,7 @@ import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
     NgSelectModule,
     NgbDatepickerModule,
     ComponentsModule,
+    ReactiveFormsModule
   ],
   exports: [BitacoraComponent],
   providers: [BitacoraService],

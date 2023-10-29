@@ -1,7 +1,7 @@
+
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ColumnaTabla } from 'src/app/classes/columna_tabla.interface';
 import { DatosBitacora } from 'src/app/classes/datos_bitacora.interface';
-import { BitacoraService } from './services/bitacora/bitacora.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { JornadaService } from 'src/app/services/api/jornada/jornada.service';
@@ -9,13 +9,14 @@ import { ColegioService } from 'src/app/services/api/colegio/colegio.service';
 import { SedeService } from 'src/app/services/api/sede/sede.service';
 import { UsuarioFiltrosService } from 'src/app/services/api/usuario-filtros/usuario-filtros.service';
 import { TipoLogService } from 'src/app/services/api/tipoLog/tipo-log.service';
+import { IndicadoresService } from './services/indicadores/indicadores.service';
 
 @Component({
-  selector: 'app-bitacora',
-  templateUrl: './bitacora.component.html',
-  styleUrls: ['./bitacora.component.scss'],
+  selector: 'app-indicadores',
+  templateUrl: './indicadores.component.html',
+  styleUrls: ['./indicadores.component.scss']
 })
-export class BitacoraComponent implements OnInit {
+export class IndicadoresComponent implements OnInit {
   public minDate: NgbDate;
   public maxDate: NgbDate;
   public mostrarFiltrosAvanzados: boolean = false;
@@ -38,13 +39,12 @@ export class BitacoraComponent implements OnInit {
   datosBitacora: DatosBitacora[] = [];
 
   public constructor(
-    private bitacoraService: BitacoraService,
+    private indicadoresService: IndicadoresService,
     private formBuilder: FormBuilder,
     private usuarioFiltrosService: UsuarioFiltrosService,
     private colegioService: ColegioService,
     private sedeService: SedeService,
-    private jornadaService: JornadaService,
-    private tipoLogService: TipoLogService
+    private jornadaService: JornadaService
   ) {
     this.filtrosFormGroup = this.formBuilder.group({
       fechaDesde: ['', [Validators.required]],
@@ -102,13 +102,13 @@ export class BitacoraComponent implements OnInit {
     });
 
 
-    this.tipoLogService.obtenerTiposLog().subscribe((response: any) => {
-      this.listaTiposLog = response?.data;
-    });
+    // this.tipoLogService.obtenerTiposLog().subscribe((response: any) => {
+    //   this.listaTiposLog = response?.data;
+    // });
   }
 
   private consultarBitacora(): void {
-    this.datosBitacora = this.bitacoraService.consultaBitacoras();
+    this.datosBitacora = this.indicadoresService.consultaBitacoras();
   }
 
   exportar(datos: any): void {

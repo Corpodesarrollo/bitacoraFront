@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { VerRoutingModule } from './inico-routing.module';
 import { InicioComponent } from './inico.component';
 import { ComponentsModule } from 'src/app/components/components.module';
+import { BitacoraModule } from '../../bitacora/bitacora.module';
 
 @NgModule({
   declarations: [
@@ -12,7 +13,8 @@ import { ComponentsModule } from 'src/app/components/components.module';
   imports: [
     CommonModule,
     VerRoutingModule,
-    ComponentsModule
+    ComponentsModule,
+    BitacoraModule
   ]
 })
 export class InicioModule { }
