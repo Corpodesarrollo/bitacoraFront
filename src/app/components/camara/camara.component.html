@@ -4,7 +4,11 @@
   <div id="actions">
       <button id="takePhoto" (click)="triggerSnapshot()">
       </button>
-      <span>Tomar Foto</span>
+  </div>
+  <div id="cancelarCaptura">
+    <button class="btn boton_secundario" (click)="cancelar()">
+      Cerrar
+    </button>
   </div>
 </div>
 <div class="snapshot" *ngIf="webcamImage">

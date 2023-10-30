@@ -6,25 +6,27 @@
   </div>
   <nav class="navegacion_menu">
 
-   <app-cargando [mensaje]="'Cargando menú'" *ngIf="cargandoMenu"></app-cargando>
+    <app-cargando [mensaje]="'Cargando menú'" *ngIf="cargandoMenu"></app-cargando>
     <ul class="opciones" *ngIf="!cargandoMenu">
       <div ngbAccordion [closeOthers]="true">
         <ng-container *ngFor="let opcion of opcionesMenu; let i">
-          <li ngbAccordionItem *ngIf="opcion.opciones.length === 0" tabindex="0" routerLinkActive="opcion_activa"
-            [routerLinkActiveOptions]="{ exact: true }" [routerLink]="'/home/' + opcion.url">
+          <li ngbAccordionItem *ngIf="opcion.opciones.length === 0" tabindex="0"    routerLinkActive="opcion_activa"
+          [class.opcion_activa]="opcionActiva === i"
+          [routerLink]="'/home/' + opcion.url"
+            [routerLinkActiveOptions]="{ exact: true }">
             <button ngbAccordionButton class="opcion opcion_url" (click)="abrirUrl(opcion)" tabindex="1">
-              <img class="icono" [src]="opcion.icono" [alt]="opcion.serTarget" />
+              <img class="icono" [src]="opcion.icono" [alt]="opcion.v" />
               <div class="etiqueta">
-                {{ opcion.serTarget }}
+                {{ opcion.catNombre }}
               </div>
             </button>
           </li>
 
           <li ngbAccordionItem *ngIf="opcion.opciones && opcion.opciones.length > 0" tabindex="0">
             <button ngbAccordionButton class="opcion" tabindex="1">
-              <img class="icono" [src]="opcion.icono" [alt]="opcion.serTarget" />
+              <img class="icono" [src]="opcion.icono" [alt]="opcion.catNombre" />
               <div class="etiqueta">
-                {{ opcion?.serTarget }}
+                {{ opcion?.catNombre }}
               </div>
             </button>
             <div ngbAccordionCollapse>
@@ -32,7 +34,7 @@
                 <ng-container *ngFor="let submenu of opcion?.opciones; let j">
                   <li class="submenu_opcion" [class.submenu_activo]="opcionActiva === j"
                     routerLinkActive="submenu_activo" [routerLinkActiveOptions]="{ exact: true }"
-                    [routerLink]="'/home/'+ opcion.url + submenu.url" (click)="abrirUrl(submenu)">
+                    (click)="abrirUrl(submenu)">
                     <div>
                       <span class="etiqueta"> {{ submenu.serNombre}}</span>
                       <span class="iniciales">
@@ -46,51 +48,27 @@
             </div>
           </li>
         </ng-container>
-        <li   routerLink="/home/mensajes" tabindex="0" routerLinkActive="opcion_activa"  >
-          <button  class="opcion opcion_unica" tabindex="1">
-            <img class="icono" src="assets/iconos/menu/mensajes.svg" />
-            <div>
-              <span class="etiqueta">Mensajes</span>
-            </div>
-          </button>
-        </li>
-        <li   routerLink="/home/manuales-sistema" tabindex="0" routerLinkActive="opcion_activa"  >
-          <button  class="opcion opcion_unica" tabindex="1">
-            <img class="icono" src="assets/iconos/menu/manualesdelsistema.svg" />
-            <div>
-              <span class="etiqueta">Manuales del sistema</span>
-            </div>
-          </button>
-        </li>
-        <li   routerLink="/home/politicas-datos-uso" tabindex="0" routerLinkActive="opcion_activa"  >
-          <button  class="opcion opcion_unica" tabindex="1">
-            <img class="icono" src="assets/iconos/menu/politicasdedatosyuso.svg" />
-            <div>
-              <span class="etiqueta">Politicas de datos y uso</span>
-            </div>
-          </button>
-        </li>
-        <!-- <ng-container *ngFor="let menu of menuGeneral">
-          <li ngbAccordionItem tabindex="0"
-          routerLinkActive="opcion_activa" [routerLinkActiveOptions]="{ exact: true }" [routerLink]="'/home/' + menu">
-          <button ngbAccordionButton class="opcion opcion_url"
-          (click)="abrirUrl(menu)" tabindex="1">
-              <img class="icono" [src]="menu.icono" [alt]="menu.catImagen" />
-              <div class="etiqueta" >
-                {{ menu.catImagen }}
+
+        <ng-container *ngFor="let menu of menuGeneral; let a = index">
+          <li ngbAccordionItem tabindex="0" routerLinkActive="opcion_activa"     [routerLinkActiveOptions]="{ exact: true }"
+          [class.opcion_activa]="opcionActiva === a">
+            <button ngbAccordionButton class="opcion opcion_url" (click)="abrirUrl(menu)" tabindex="1">
+              <img class="icono" [src]="menu.icono" [alt]="menu.serNombre" />
+              <div class="etiqueta">
+                {{ menu.serNombre }}
               </div>
-          </button>
-          <div ngbAccordionCollapse>
-          </div>
-        </ng-container> -->
-        <li   (click)="cerrarSesion()" tabindex="0">
+            </button>
+            <div ngbAccordionCollapse>
+            </div>
+        </ng-container>
+        <!--  <li   (click)="cerrarSesion()" tabindex="0">
           <button  class="opcion opcion_unica" tabindex="1">
             <img class="icono" src="assets//iconos/menu/cerrarsesion.svg" />
             <div>
               <span class="etiqueta">Cerrar sesion</span>
             </div>
           </button>
-        </li>
+        </li> -->
       </div>
     </ul>
   </nav>

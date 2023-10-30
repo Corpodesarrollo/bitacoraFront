@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { PoliticasService } from 'src/app/services/api/politicas/politicas.service';
 import { UsuarioService } from 'src/app/services/api/usuario/usuario.service';
 import { ModalInformacionComponent } from 'src/app/components/modal-informacion/modal-informacion.component';
+import { PermisosUsuarios } from 'src/app/enums/usuario-permisos';
 
 @Component({
   selector: 'app-politicas-uso',
@@ -15,8 +16,9 @@ export class PoliticasUsoComponent {
 
   sinRegistros: boolean = false;
   cargandoVersiones: boolean = false;
-  registroVersiones: any
-  idUsuario: number
+  registroVersiones: any;
+  idUsuario: number;
+  puedeEliminar:boolean;
 
   constructor(
     private servicioModal: NgbModal,
@@ -25,6 +27,7 @@ export class PoliticasUsoComponent {
     private serviciosPoliticas: PoliticasService
   ) {
     this.idUsuario = parseInt(this.serviciosUsuarios.obtenerUsuario().id);
+    this.puedeEliminar = this.serviciosUsuarios.obtetenerPermisosPerfil(PermisosUsuarios.ELIMINAR_POLITICA_USO)
     this.obtenerPoliticas()
   }
 
@@ -47,7 +50,7 @@ export class PoliticasUsoComponent {
             error: true,
             esExitoso: 'error',
             titulo: 'Error',
-            mensaje: 'No se pudo obtener las politicas'
+            mensaje: 'No se pudo obtener las políticas'
           }
         }
       },
@@ -58,46 +61,58 @@ export class PoliticasUsoComponent {
   }
 
   eliminarVersion(version: any) {
-    this.cargandoVersiones = true;
-    let parametros = {
-      id_usuario: this.idUsuario,
-      id_politica: version.id
+
+    if(version.estado == true){
+      const modalInformacion = this.servicioModal.open(ModalInformacionComponent, { size: 'md', centered: true, animation: false, backdrop: 'static' })
+      modalInformacion.componentInstance.informacion = {
+        error: false,
+        esExitoso: 'warning',
+        titulo: 'Advertencia',
+        mensaje: 'No se puede eliminar la Política activa'
+      }
     }
-    this.serviciosPoliticas.eliminarPolitica(parametros).subscribe({
-      next: (respuesta: any) => {
-        if (respuesta.code === 200) {
-          const modalInformacion = this.servicioModal.open(ModalInformacionComponent, { size: 'md', centered: true, animation: false, backdrop: 'static' })
-          modalInformacion.componentInstance.informacion = {
-            error: false,
-            esExitoso: 'done',
-            titulo: 'Exito',
-            mensaje: 'Politica eliminada correctamente'
+    else{
+      this.cargandoVersiones = true;
+      let parametros = {
+        id_usuario: this.idUsuario,
+        id_politica: version.id
+      }
+      this.serviciosPoliticas.eliminarPolitica(parametros).subscribe({
+        next: (respuesta: any) => {
+          if (respuesta.status === 200) {
+            const modalInformacion = this.servicioModal.open(ModalInformacionComponent, { size: 'md', centered: true, animation: false, backdrop: 'static' })
+            modalInformacion.componentInstance.informacion = {
+              error: false,
+              esExitoso: 'done',
+              titulo: 'Exito',
+              mensaje: 'Política eliminada correctamente'
+            }
+            this.obtenerPoliticas();
+            this.cargandoVersiones = false
           }
-          this.obtenerPoliticas();
-          this.cargandoVersiones = false
-        }
-        else {
+          else {
+            const modalInformacion = this.servicioModal.open(ModalInformacionComponent, { size: 'md', centered: true, animation: false, backdrop: 'static' })
+            modalInformacion.componentInstance.informacion = {
+              error: true,
+              esExitoso: 'error',
+              titulo: 'Error al eliminar',
+              mensaje: respuesta.message
+            }
+            this.cargandoVersiones = false
+          }
+        },
+        error: (error) => {
           const modalInformacion = this.servicioModal.open(ModalInformacionComponent, { size: 'md', centered: true, animation: false, backdrop: 'static' })
           modalInformacion.componentInstance.informacion = {
             error: true,
             esExitoso: 'error',
             titulo: 'Error al eliminar',
-            mensaje: respuesta.message
+            mensaje: error.error
           }
           this.cargandoVersiones = false
         }
-      },
-      error: (error) => {
-        const modalInformacion = this.servicioModal.open(ModalInformacionComponent, { size: 'md', centered: true, animation: false, backdrop: 'static' })
-        modalInformacion.componentInstance.informacion = {
-          error: true,
-          esExitoso: 'error',
-          titulo: 'Error al eliminar',
-          mensaje: error.error
-        }
-        this.cargandoVersiones = false
-      }
-    })
+      })
+    }
   }
 
   agregarVersion() {
@@ -111,6 +126,10 @@ export class PoliticasUsoComponent {
 
   verPolitica(id: number) {
     this.router.navigate(['/home/politicas-datos-uso/politicas-uso', id])
+  }
+
+  volver(){
+    history.back()
   }
 
 }

@@ -1,0 +1,78 @@
+<section id="formSeleccion">
+  <div class="campo mb-2">
+    <div id="titulos">
+      <div class="titulo container-fluid" *ngFor="let jornada of jornadas"
+        [ngClass]="{ 'active': jornada === pestanaSeleccionada }" (click)="filtrarPorJornada(jornada)">
+        {{jornada | capitalizar}}
+      </div>
+    </div>
+    <div id="titulos_responsive" class="input-group mb-3">
+      <button class="btn boton_primario dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        {{ opcionSeleccionada ? opcionSeleccionada : pestanaSeleccionada }}
+      </button>
+      <ul class="dropdown-menu">
+        <li *ngFor="let opcion of jornadas">
+          <p class="dropdown-item" (click)="filtrarPorJornada(opcion)">{{ opcion | capitalizar
+            }}</p>
+        </li>
+      </ul>
+    </div>
+    <div class="filas">
+      <div id="filas_responsive" *ngFor="let registro of registroFiltrado">
+        <div class="registro"
+        [ngClass]="{'seleccionado': registro === perfilSeleccionado}"
+          (click)="seleccionarDatos(registro)">
+          <span>
+            Perfil: {{
+            registro.perfil.etiqueta |
+            mayusculas }}
+          </span>
+          ;
+          <span>
+            Localidad: {{registro.colegio.localidad.nombre | mayusculas}} ;
+          </span>
+          <span>
+            Institución:
+            {{ registro.colegio.nombre }}
+          </span>
+          <span>
+            ; Sede:
+            {{registro.sede.nombre}}
+          </span>
+        </div>
+      </div>
+      <div id="filas" *ngFor="let registro of registroFiltrado">
+        <div class="item">
+          <input type="radio" name="answer" (change)="seleccionarDatos(registro)">
+          <label for="radio" class="form-check-label" for="radio1">Perfil: {{
+            registro.perfil.etiqueta |
+            mayusculas }} ; Localidad: {{registro.colegio.localidad.nombre | mayusculas}} ;
+            Institución:
+            {{ registro.colegio.nombre }}; Sede:
+            {{registro.sede.nombre}}
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mb-2 mt-4 acciones">
+    <div class="btn boton_secundario" (click)="cerrarSesion()">
+      <span class="material-symbols-outlined azul">
+        logout
+      </span>
+      <div>Salir</div>
+    </div>
+    <button [disabled]="!radioSeleccionado" type="submit" class="btn boton_primario" (click)="ingresar()">
+      <span *ngIf="!ingresando" class="material-symbols-outlined">
+        arrow_forward
+      </span>
+      <div *ngIf="!ingresando">Ingresar</div>
+      <div class="ingresando" *ngIf="ingresando">
+        <div>Ingresando</div>
+        <div class="spinner-border text-light" role="status">
+          <span class="visually-hidden">Loading</span>
+        </div>
+      </div>
+    </button>
+  </div>
+</section>

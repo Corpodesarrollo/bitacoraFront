@@ -1,33 +1,47 @@
 <div id="contenedorMensajeError">
 
-    <div class="icono">
-        <span class="material-symbols-outlined">
-            feedback
-        </span>
-    </div>
+  <div class="icono">
+    <span class="material-symbols-outlined">
+      feedback
+    </span>
+  </div>
 
-    <div class="titulo">
-        <h1>{{infoMensaje.titulo}}</h1>
-    </div>
+  <div class="titulo">
+    <h1>{{infoMensaje.titulo}}</h1>
+  </div>
 
-    <div class="infoMensaje">
-        <p>{{infoMensaje.mensaje}}</p>
-    </div>
+  <div class="infoMensaje">
+    <p>{{infoMensaje.mensaje}}</p>
+  </div>
 
-    <div class="acciones" *ngIf="infoMensaje.ventanaEnviado == false">
-        <button type="button" class="btn boton_primario" (click)="confirmarEliminarModal()">
-            Si
-          </button>
-          <button type="button" class="btn boton_secundario" (click)="cerrarModal()">
-            No
-          </button>
-    </div>
+  <div class="acciones" *ngIf="infoMensaje.ventanaEnviado == false">
+    <button type="button" class="btn boton_primario" (click)="confirmarEliminarModal()">
+      Si
+    </button>
+    <button type="button" class="btn boton_secundario" (click)="cerrarModal()">
+      No
+    </button>
+  </div>
 
-    <div class="acciones" *ngIf="infoMensaje.ventanaEnviado == true">
-          <button type="button" class="btn boton_secundario" (click)="cerrarModal()">
-            Aceptar
-          </button>
-    </div>
+  <div class="acciones" *ngIf="infoMensaje.ventanaEnviado == true">
+    <button type="button" class="btn boton_secundario" (click)="cerrarModal()">
+      Aceptar
+    </button>
+  </div>
 
+  <div class="acciones" *ngIf="infoMensaje.eliminarFuncionario === true">
+    <!-- boton_secundario -->
+    <button *ngIf="!eliminandoRegistro" type="button" class="btn boton_primario"
+      (click)="confirmarEliminacionFuncionarios()">
+      Si, continuar
+    </button>
+    <button *ngIf="eliminandoRegistro" class="btn boton_primario d-flex align-items-center gap-2">
+      <div>eliminando</div>
+      <div class="spinner-border float-end" role="status"></div>
+    </button>
+    <button *ngIf="!eliminandoRegistro" type="button" class="btn boton_secundario" (click)="cerrarModal()">
+      Cancelar
+    </button>
+  </div>
 
 </div>

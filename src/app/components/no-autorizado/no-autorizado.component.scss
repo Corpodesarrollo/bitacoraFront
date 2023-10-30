@@ -1,0 +1,13 @@
+.no_autorizado{
+  align-items: center;
+  height: calc(100vh - 320px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+@media (max-width:991px) {
+  .no_autorizado{
+    height: calc(100vh - 540px);
+  }
+}

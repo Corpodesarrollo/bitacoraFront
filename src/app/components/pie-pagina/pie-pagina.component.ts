@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-pie-pagina',
@@ -6,4 +7,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./pie-pagina.component.scss']
 })
 export class PiePaginaComponent {
+
+  urlPolitcas:string = environment.URL_POLITICA_DATOS;
 }

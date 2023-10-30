@@ -21,7 +21,7 @@ export class VerComponent {
   respuesta: any;
   registros: any;
   manual: any;
-  usuarioPerfil: any;
+  nivelUsuario: any;
   tiposManuales: any;
   idManual: any;
   manualEliminado: boolean = false;
@@ -39,23 +39,18 @@ export class VerComponent {
     private router: Router,
     private manualService: ManualesService,
     private UsuarioService: UsuarioService) {
-    this.usuarioPerfil = this.UsuarioService.obtenerPerfilUsuario().perfil.rol_usuario
+    this.nivelUsuario = this.UsuarioService.obtenerAccesoSeleccionado().perfil.idPerfilNivel
     this.obtenerCategoriasConManuales()
   };
 
   ngOnInit() {
     this.obtenerTiposManuales();
-    this.esUsuarioAdmin(this.usuarioPerfil)
-  };
-
-  esUsuarioAdmin(rol: string) {
-    const usuariosAdmin = "adminsec";
-    if (usuariosAdmin == rol) {
+    if ( this.nivelUsuario == 1) {
       this.esAdmin = true
     } else {
       this.esAdmin = false
     }
-  }
+  };
 
   subirManual() {
     this.router.navigateByUrl("/home/manuales-sistema/subir-manual")

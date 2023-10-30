@@ -17,10 +17,12 @@ import { ConsultasComponent } from './consultas/consultas.component';
 import { CapitalizarPipe } from 'src/app/pipes/capitalizar/capitalizar.pipe';
 import { CambiarContraseniaComponentLogin } from './cambiar-contrasenia/cambiar-contrasenia.component';
 import { PoliticaDatosComponent } from './politica-datos/politica-datos.component';
-import { BitacoraModule } from '../bitacora/bitacora.module';
-
-
-
+import { SinPerfilComponent } from './seleccionar-perfil/components/sin-perfil/sin-perfil.component';
+import { BienvenidaComponent } from './seleccionar-perfil/components/bienvenida/bienvenida.component';
+import { VistaInstitucionComponent } from './seleccionar-perfil/components/vista-institucion/vista-institucion.component';
+import { VistaInstSedeJornadaComponent } from './seleccionar-perfil/components/vista-inst-sede-jornada/vista-inst-sede-jornada.component';
+import { VistaNoInstitucionComponent } from './seleccionar-perfil/components/vista-no-institucion/vista-no-institucion.component';
+import { ModalVerPoliticaComponent } from './politica-datos/modal-ver-politica/modal-ver-politica.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +36,12 @@ import { BitacoraModule } from '../bitacora/bitacora.module';
     CapitalizarPipe,
     CambiarContraseniaComponentLogin,
     PoliticaDatosComponent,
+    SinPerfilComponent,
+    VistaInstitucionComponent,
+    BienvenidaComponent,
+    VistaInstSedeJornadaComponent,
+    VistaNoInstitucionComponent,
+    ModalVerPoliticaComponent,
   ],
   imports: [
     CommonModule,
@@ -44,8 +52,7 @@ import { BitacoraModule } from '../bitacora/bitacora.module';
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
-    NgSelectModule,
-    BitacoraModule
+    NgSelectModule
   ]
 })
 export class LoginModule { }

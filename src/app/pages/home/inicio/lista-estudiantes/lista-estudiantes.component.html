@@ -1,0 +1,35 @@
+<div class="contenedor-tabla mb-4" >
+  <div class="titulo_estudiantes mb-4">Lista de estudiantes de la institución</div>
+  <app-cargando *ngIf="cargandoEstudiantes"></app-cargando>
+  <app-sin-registros *ngIf="!cargandoEstudiantes && estudiantes.length == 0"></app-sin-registros>
+  <div class="lista_tabla" *ngIf="!cargandoEstudiantes && estudiantes.length > 0">
+      <div id="titulos">
+          <div class="item_1">Grupo</div>
+          <div class="item_2">Jornada</div>
+          <div class="item_3">Nombres</div>
+          <div class="item_4">Apellidos</div>
+      </div>
+      <div id="filas" *ngFor="let estudiante of estudiantes">
+          <div class="registro">
+              <div class="item_1">{{estudiante.grupo}}</div>
+              <div class="item_2">{{estudiante.jornadaNombre}}</div>
+              <div class="item_3">{{estudiante.nombres}}</div>
+              <div class="item_4">{{estudiante.apellidos}}</div>
+          </div>
+      </div>
+  </div>
+  <app-paginador
+      [totalRegistros]="totalColegios"
+      *ngIf="totalPaginas > 1"
+      [contadorPagina]="totalPaginas"
+      [paginaActual]="paginaActual"
+      (cambioPagina)="cambiarPagina($event)"
+      [showPreviousButton]="paginaActual > 1"
+      [showNextButton]="paginaActual < totalPaginas">
+  </app-paginador>
+  <div class="mb-2 mt-4 contenedor_botones" *ngIf="estudiantes.length > 0">
+      <button type="submit" class="btn boton_primario" (click)="abrirOpcion()">
+          <div>Ver todos los estudiantes</div>
+      </button>
+  </div>
+</div>

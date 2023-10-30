@@ -1,0 +1,72 @@
+<form [formGroup]="formNivelCuatro" (ngSubmit)="ingresar()" id="formSeleccion">
+  <div class="campo" [class.invalid]="campoNoValidoFormulario('id_colegio')">
+    <div class="input-wrapper">
+      <label for="nombreColegio" class="etiqueta_select"> Colegio <span class="asterisco">* </span></label>
+      <ng-select #selectCol
+        [items]="listaInstituciones"
+        bindValue="id"
+        bindLabel="nombre" class="select"
+        placeholder="Seleccione el colegio"
+        name="colegios"
+        formControlName="id_colegio"
+        [clearable]="!deshabilitarColegio"
+        (change)="obtenerSedes($event)">
+      </ng-select>
+    </div>
+  </div>
+  <div class="campo" [class.invalid]="campoNoValidoFormulario('id_sede')" *ngIf="tieneSede">
+    <div class="input-wrapper">
+      <label for="nombreSede" class="etiqueta_select">Sede<span class="asterisco">* </span></label>
+      <ng-select #selectSede [items]="listaSedes"
+        bindValue="id" bindLabel="nombre"
+        class="select"
+        placeholder="Seleccione la sede"
+        name="sedes"
+        formControlName="id_sede"
+        (change)="obtenerJornadas($event)">
+      </ng-select>
+      <div class="contenedor_errores">
+        <span class="campo_requerido jornada_error" *ngIf="formNivelCuatro.get('id_sede')?.disabled">Debe seleccionar primero un colegio</span>
+      </div>
+    </div>
+  </div>
+  <div class="campo mb-3" [class.invalid]="campoNoValidoFormulario('id_jornada')" *ngIf="tieneJornada">
+    <div class="input-wrapper">
+      <label for="nombreJornada" class="etiqueta_select"> Jornada <span class="asterisco">* </span></label>
+      <ng-select
+        class="select"
+        [items]="listaJornadas" bindValue="id"
+        bindLabel="nombre" class="select"
+        placeholder="Seleccione la jornada" name="jornadas"
+        formControlName="id_jornada"
+        (change)="seleccionarJornada($event)"
+        >
+      </ng-select>
+      <div class="contenedor_errores ">
+        <span class="campo_requerido jornada_error" *ngIf="formNivelCuatro.get('id_jornada')?.disabled">Debe seleccionar primero una sede</span>
+      </div>
+    </div>
+  </div>
+  <div class="mb-2 mt-2 botones">
+    <div class="btn boton_secundario" (click)="cerrarSesion()">
+      <span class="material-symbols-outlined azul">
+        logout
+      </span>
+      <div>Salir</div>
+    </div>
+    <button type="submit" class="btn boton_primario"
+      [ngClass]="{'boton_deshabilitado': formNivelCuatro.invalid}"
+      [disabled]="formNivelCuatro.invalid">
+      <span *ngIf="!ingresando" class="material-symbols-outlined">
+        arrow_forward
+      </span>
+      <div *ngIf="!ingresando">Ingresar</div>
+      <div class="ingresando" *ngIf="ingresando">
+        <div>Ingresando</div>
+        <div class="spinner-border text-light" role="status">
+          <span class="visually-hidden">Loading</span>
+        </div>
+      </div>
+    </button>
+  </div>
+</form>

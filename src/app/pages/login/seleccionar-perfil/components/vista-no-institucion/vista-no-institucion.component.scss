@@ -1,0 +1,23 @@
+.input-wrapper {
+    margin-bottom: 0.8rem;
+    margin-top: 0.8rem;
+    position: relative !important;
+
+    .disabled {
+        pointer-events: none;
+        opacity: 0.5;
+        z-index: 0;
+    }
+
+    label.disabled {
+        opacity: 0.5;
+        z-index: 1;
+        color: var(--borde_claro);
+    }
+}
+
+.botones {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}

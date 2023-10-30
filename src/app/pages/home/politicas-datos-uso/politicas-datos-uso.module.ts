@@ -11,6 +11,7 @@ import { ComponentsModule } from 'src/app/components/components.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ListarComponent } from './listar/listar.component';
 import { AngularEditorModule } from '@kolkov/angular-editor';
+import { VerPoliticasComponent } from './ver-politicas/ver-politicas.component';
 
 
 
@@ -20,13 +21,12 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
     AgregarComponent,
     PoliticasDatosUsoComponent,
     ListarComponent,
+    VerPoliticasComponent,
   ],
   imports: [
     CommonModule,
     ComponentsModule,
     PoliticasDatosUsoRoutingModule,
-    // CKEditorModule,
-    // EditorModule,
     FormsModule,
     ReactiveFormsModule,
     AngularEditorModule

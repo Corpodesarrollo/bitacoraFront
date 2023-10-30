@@ -1,7 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModalInformacionComponent } from 'src/app/components/modal-informacion/modal-informacion.component';
+import { AccesoPerfil } from 'src/app/interfaces/acceso_perfil.interface';
 import { PersonalService } from 'src/app/services/api/personal/personal.service';
+import { UsuarioService } from 'src/app/services/api/usuario/usuario.service';
 
 @Component({
   selector: 'app-inactivar-usuario',
@@ -19,11 +21,12 @@ export class InactivarUsuarioComponent {
   activeModal = inject(NgbActiveModal);
   modalService = inject(NgbModal)
   personalServices = inject(PersonalService)
+  usarioService = inject(UsuarioService)
 
 
   ngOnInit() {
-    let datos_usuario = JSON.parse(sessionStorage.getItem('sap_sec_percol')!)
-    this.idColegio = datos_usuario.colegio.idColegio;
+    let datos_usuario:AccesoPerfil  = this.usarioService.obtenerAccesoSeleccionado();
+    this.idColegio = datos_usuario.colegio.id;
     if(this.registro.estado === "ACTIVO"){
       this.estaActivo = true;
     }

@@ -7,6 +7,7 @@
   <div class="titulo_tabla">
     Lista de Verificación: Usuarios que Han Aceptado Nuestras Políticas
   </div>
+  <app-cargando *ngIf="cargandoListado"></app-cargando>
   <div class="contenedor_tabla" *ngIf="!cargandoListado && !sinRegistros && listadoPersonas">
     <div class="tabla_lista">
       <div class="titulos">
@@ -39,19 +40,28 @@
   </div>
   <app-sin-registros *ngIf="sinRegistros && !cargandoListado"></app-sin-registros>
   <div class="acciones col-12">
-    <button type="submit" class="btn boton_secundario" *ngIf="!sinRegistros">
+    <button type="submit" class="btn boton_secundario" [disabled]="sinRegistros" (click)="$event.stopPropagation();reenviarPoliticasUso()">
+      <div *ngIf="!reenviandoUso">
+        <span>Reenviar mensaje de políticas de uso</span>
+      </div>
+      <div class="d-flex align-items-center gap-2" *ngIf="reenviandoUso">
+        <div>Reenviando</div>
+        <div class="spinner-border float-end" role="status"></div>
+      </div>
+    </button>
+    <button type="submit" class="btn boton_secundario" [disabled]="sinRegistros" (click)="$event.stopPropagation();reenviarPoliticasDatos()">
       <div *ngIf="!reenviando">
-        <span>Reenviar mensaje de políticas</span>
+        <span>Reenviar mensaje de políticas de datos</span>
       </div>
       <div class="d-flex align-items-center gap-2" *ngIf="reenviando">
         <div>Reenviando</div>
         <div class="spinner-border float-end" role="status"></div>
       </div>
     </button>
-    <div class="btn boton_primario" type="button" routerLink="politicas-uso">
+    <button class="btn boton_primario" type="button" routerLink="politicas-uso">
       Cambiar políticas de uso
-    </div>
+    </button>
   </div>
 </div>
 
-<app-cargando *ngIf="cargandoListado"></app-cargando>
+

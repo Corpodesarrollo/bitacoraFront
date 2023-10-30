@@ -1,6 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home.component';
+import { NoAutorizadoComponent } from 'src/app/components/no-autorizado/no-autorizado.component';
+import { AsignacionDocenteComponent } from 'src/app/components/asignacion-docente/asignacion-docente.component';
+import { VerComponent } from './ver/ver.component';
 
 const routes: Routes = [
     {
@@ -10,6 +13,10 @@ const routes: Routes = [
         {
           path: '',
           loadChildren: () => import('./inicio/inico.module'  ).then(m => m.InicioModule),
+        },
+        {
+          path:'ver/:ruta',
+          component: VerComponent
         },
         {
           path: 'mensajes',
@@ -36,8 +43,8 @@ const routes: Routes = [
           loadChildren: () => import('./politicas-datos-uso/politicas-datos-uso.module').then(m => m.PoliticasDatosUsoModule),
         },
         {
-          path: 'bitacoras',
-          loadChildren: () => import('../bitacora/bitacora.module').then(m => m.BitacoraModule),
+          path:'no-autorizado',
+          component: NoAutorizadoComponent
         },
       ]
     },

@@ -18,6 +18,7 @@ export class ConsultasComponent {
   formCertificado!: FormGroup;
   formPin!: FormGroup;
   mostrarErrorPin:boolean = false;
+  datosDescarga: any;
 
   /**
    * Variables para las listas de los select;
@@ -34,7 +35,7 @@ export class ConsultasComponent {
   estudianteEncontrado:boolean = false;
   generandoCertificado:boolean = false;
   generandoConsultaExterna:boolean = false;
-
+  alfanumerica = /([A-Za-z0-9ñÑ_ ])+$/;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -45,6 +46,7 @@ export class ConsultasComponent {
   ){
     this.cargarListas();
     this.construirFormularios();
+    this.formBuscar.reset();
   }
 
 
@@ -76,9 +78,9 @@ export class ConsultasComponent {
    */
   construirFormularios(){
     this.formBuscar = this.formBuilder.group({
-      tipo_documento: [null, Validators.required],
+      tipo_documento: [null,Validators.required],
       numero_documento: ['', [
-        Validators.required,  Validators.pattern('^[0-9]+$')]],
+        Validators.required,  Validators.pattern(this.alfanumerica)]],
       codigo_estudiante: ['', [
         Validators.required,  Validators.pattern('^[0-9]+$')
       ]]
@@ -158,31 +160,43 @@ export class ConsultasComponent {
       this.serviciosConsulta.obtenerEstudiante(parametros).subscribe({
         next: (respuesta: any) => {
           if (respuesta.code === 200){
-            this.formBuscar.reset();
-            this.buscandoEstudiante = false;
-            this.estudianteEncontrado = true;
-            let estudiante = respuesta.data
-            this.sedeEstudiante = [estudiante.sede];
-            this.colegioEstudiante = [estudiante.institucion];
-            this.jornadaEstudiante = [estudiante.jornada];
-            this.metodologiasEstudiante = [estudiante.metodologia];
-            this.gradoEstudiante = [estudiante.grado];
-            this.grupoEstudiante = [estudiante.grupo];
-            this.periodoEstudiante = estudiante.periodos;
-            this.formCertificado.patchValue({
-              nombre_estudiante: estudiante.nombreEstudiante,
-              colegio: estudiante.institucion.id,
-              sede: estudiante.sede.id,
-              jornada: estudiante.jornada.id,
-              metodologia: estudiante.metodologia.id,
-              grado: estudiante.grado.id,
-              grupo: estudiante.grupo.id,
-            })
+            
+            let validaciones = this.validarDatosEstudiante(respuesta.data);
+              if(validaciones.length > 0){
+                this.buscandoEstudiante = false
+                const modalRef = this.servicioModal.open(ModalErroresCamposComponent,{ size: 'md', centered: true,  animation: false, backdrop: 'static'});
+              
+                modalRef.componentInstance.lista_errores = validaciones;
+                modalRef.componentInstance.titulo = 'Los siguientes datos no han sido encontrados en la información del estudiante:'
+                modalRef.componentInstance.candidatoNoEncontrado = true
+              }else{
+                this.datosDescarga = respuesta;
+                this.formBuscar.reset();
+                this.buscandoEstudiante = false;
+                this.estudianteEncontrado = true;
+                let estudiante = respuesta.data
+              this.sedeEstudiante = [estudiante.sede];
+              this.colegioEstudiante = [estudiante.institucion];
+              this.jornadaEstudiante = [estudiante.jornada];
+              this.metodologiasEstudiante = [estudiante.metodologia];
+              this.gradoEstudiante = [estudiante.grado];
+              this.grupoEstudiante = [estudiante.grupo];
+              this.periodoEstudiante = estudiante.periodos;
+              this.formCertificado.patchValue({
+                nombre_estudiante: estudiante.nombreEstudiante,
+                colegio: estudiante.institucion.id,
+                sede: estudiante.sede.id,
+                jornada: estudiante.jornada.id,
+                metodologia: estudiante.metodologia.id,
+                grado: estudiante.grado.id,
+                grupo: estudiante.grupo.id,
+              })
+            }
           }
           else{
             this.buscandoEstudiante = false
             const modalRef = this.servicioModal.open(ModalErroresCamposComponent,{ size: 'md', centered: true,  animation: false, backdrop: 'static'});
-            console.log(respuesta.message);
+          
             modalRef.componentInstance.lista_errores = [respuesta.message];
             modalRef.componentInstance.titulo = 'Error en la busqueda.'
             modalRef.componentInstance.candidatoNoEncontrado = true
@@ -197,6 +211,36 @@ export class ConsultasComponent {
       });
     }
   }
+  validarDatosEstudiante(estudiante:any){
+    let camposFaltantes: any[] = [];
+    if(estudiante.sede == null){
+      camposFaltantes.push("sede");
+    }
+    if(estudiante.institucion == null){
+      camposFaltantes.push("institucion");
+    }
+
+    if(estudiante.jornada == null){
+      camposFaltantes.push("jornada");
+    }
+
+    if(estudiante.metodologia == null){
+      camposFaltantes.push("metodologia");
+    }
+
+    if(estudiante.grado == null){
+      camposFaltantes.push("grado");
+    }
+
+    if(estudiante.grupo == null){
+      camposFaltantes.push("grupo");
+    }
+
+    if(estudiante.periodos == null){
+      camposFaltantes.push("periodos");
+    }
+    return camposFaltantes;
+  }
 
   /**
    * Metodo para generar el certificado del estudiante
@@ -208,31 +252,72 @@ export class ConsultasComponent {
       });
     }else{
       this.generandoCertificado = true;
-      setTimeout(()=>{
-        this.estudianteEncontrado = false;
-        this.generandoCertificado = false;
-        this.formBuscar.reset();
-        this.formCertificado.reset();
-        alert('Certificamdo simulado generado');
-      }, 2000)
-   /*    this.serviciosConsulta.generarBoletin(this.estudianteId).subscribe({
-        next:(respuesta:any) =>{
-          if(respuesta.exito){
-            this.generandoCertificado = false;
-          }
-          else{
-            this.generandoCertificado = false
-            const modalRef = this.servicioModal.open(ErrorComponent,{ size: 'lg', centered: true,  animation: false, backdrop: 'static'});
-            modalRef.componentInstance.campo_error = respuesta.error;
-          }
-        },
-        error: (error: Error) => {
-          this.generandoCertificado = false
-          const modalRef = this.servicioModal.open(ErrorComponent,{ size: 'lg', centered: true,  animation: false, backdrop: 'static'});
-        },
-      }) */
+      this.GenerarBoletin();
     }
   }
+  GenerarBoletin() {
+    let periodos: any[] = [];
+    let idPeriodo: String = this.formCertificado.get('periodos')
+          ?.value;
+    let nombrePeriodo:String ="";
+
+          periodos = this.periodoEstudiante;
+    periodos.map(periodo => {
+      if(periodo.id == idPeriodo){
+          nombrePeriodo = periodo.nombre;
+      }
+    });
+
+    const dtoData = {
+      tipoDocumento: this.datosDescarga.data.tipoDocumento,
+      numeroDocumento: this.datosDescarga.data.numeroDocumento,
+      codigoEstudiante: this.datosDescarga.data.codigoEstudiante,
+      nombreEstudiante: this.datosDescarga.data.nombreEstudiante,
+      vigencia: this.datosDescarga.data.vigencia,
+      institucion: this.datosDescarga.data.institucion,
+      sede: this.datosDescarga.data.sede,
+      jornada: this.datosDescarga.data.jornada,
+      metodologia: this.datosDescarga.data.metodologia,
+      grado: this.datosDescarga.data.grado,
+      grupo: this.datosDescarga.data.grupo,
+      periodo: {id : idPeriodo, nombre: nombrePeriodo}
+
+    }
+    let fecha:Date = new Date();
+    let fechaFormat:String = this.formatearFecha(new Date(fecha.getFullYear(), fecha.getMonth(), fecha.getDate(), 
+    fecha.getHours(), fecha.getMinutes(), fecha.getSeconds(),fecha.getMilliseconds()));
+    this.datosDescarga.data = dtoData;
+      this.serviciosConsulta.generarBoletinEstudiante(JSON.stringify(this.datosDescarga)).subscribe((data: Blob) => {
+        if(data){
+          const blob = new Blob([data], { type: 'application/pdf' });
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = "Boletin__Periodo_" + idPeriodo + "_" + this.datosDescarga.data.numeroDocumento + "_Fecha_" + fechaFormat;
+          link.click();
+          window.URL.revokeObjectURL(url);
+        }else{
+          const modalRef =this.servicioModal.open(ModalErroresCamposComponent, {size: 'md', centered: true, animation: false, backdrop: 'static'})
+          modalRef.componentInstance.titulo = 'Error al generar boletín'
+          modalRef.componentInstance.lista_errores = ['No se encontró datos para la consulta']
+        }
+       
+      },
+        (error: any) => {
+          const modalRef =this.servicioModal.open(ModalErroresCamposComponent, {size: 'md', centered: true, animation: false, backdrop: 'static'})
+          modalRef.componentInstance.titulo = 'Error al generar boletín'
+          modalRef.componentInstance.lista_errores = ['Error al consultar servicio de reportes']
+         
+        });
+        this.generandoCertificado = false;
+  }
+
+  formatearFecha(fecha) {
+    // year: 2023, month: 4, day: 1
+    const mes = fecha.getMonth() + 1;
+    const dia = fecha.getDate();
+    return `${fecha.getFullYear()}-${(mes < 10 ? '0' : '').concat(mes)}-${(dia < 10 ? '0' : '').concat(dia)}_${fecha.getHours()}-${fecha.getMinutes()}-${fecha.getSeconds()}-${fecha.getMilliseconds()}`;
+  };
 
   /**
    * Generar consulta exter

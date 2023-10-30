@@ -7,6 +7,7 @@ import { MensajeModal } from '../mensaje-modal/mensaje-modal';
 import { NgbDate, NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { last, lastValueFrom } from 'rxjs';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
+import { AccesoPerfil } from 'src/app/interfaces/acceso_perfil.interface';
 
 @Component({
   selector: 'app-nuevo-mensaje',
@@ -31,7 +32,7 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
     defaultParagraphSeparator: 'p',
     defaultFontName: 'Arial',
     toolbarHiddenButtons: [
-      ['bold']
+      ['bold','backgroundColor']
     ],
     customClasses: []
   };
@@ -82,7 +83,7 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
   perfilesGuardados: any[] = [];
 
   infoUsuariologueado: any;
-  datosUsuario: any;
+  datosUsuario: AccesoPerfil;
   deshabilitarBotonesAgregar: boolean = false;
   deshabilitarInputSelect: boolean = false;
   cargandoDatosRector: boolean;
@@ -107,7 +108,8 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
     private activatedRoute: ActivatedRoute,
     private servicioModal: NgbModal,
     private router: Router) {
-    this.datosUsuario = JSON.parse(sessionStorage.getItem('sap_sec_percol')!);
+    this.datosUsuario  = this.usuarioService.obtenerAccesoSeleccionado();
+
     const today = new Date();
     this.minDate = new NgbDate(today.getFullYear(), today.getMonth() + 1, today.getDate())
 
@@ -123,6 +125,7 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
     await this.cargarListados();
 
     this.infoUsuariologueado = this.usuarioService.obtenerUsuarioPerCol();
+    console.log( this.infoUsuariologueado )
     this.usuarioLogueado = this.usuarioService.obtenerUsuario();
 
 
@@ -136,11 +139,11 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
 
 
 
-    if (this.datosUsuario.perfil.idPerfil == 410 || this.datosUsuario.perfil.idPerfil == 460 || this.datosUsuario.perfil.idPerfil == 423 || this.datosUsuario.perfil.idPerfil == 421 || this.datosUsuario.perfil.idPerfil == 422 || this.datosUsuario.perfil.idPerfil == 420 || this.datosUsuario.perfil.idPerfil == 424) {
+    if (this.datosUsuario.perfil.id == 410 || this.datosUsuario.perfil.id == 460 || this.datosUsuario.perfil.id == 423 || this.datosUsuario.perfil.id == 421 || this.datosUsuario.perfil.id == 422 || this.datosUsuario.perfil.id == 420 || this.datosUsuario.perfil.id == 424) {
       this.cargarInfoRector()
     }
 
-    if (this.datosUsuario.perfil.idPerfil == 110 && this.tipoUsuario == 'Admin') {
+    if (this.datosUsuario.perfil.id == 110 && this.tipoUsuario == 'Admin') {
       // this.cargarInfoRector()
       this.deshabilitarLocalidadesFiltrar = true;
       this.desHabilitarColegios = true;
@@ -154,7 +157,7 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
       this.formularioMensajes.controls['jornada_id'].disable();
 
     }
-    if (this.datosUsuario.perfil.idPerfil == 110 && this.tipoUsuario == 'modoEditor') {
+    if (this.datosUsuario.perfil.id == 110 && this.tipoUsuario == 'modoEditor') {
       this.deshabilitarLocalidadesFiltrar = false;
       this.desHabilitarColegios = false;
       this.desHabilitarColegiosFiltrar = false;
@@ -213,15 +216,15 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
       if (this.tipoUsuario === 'Admin') {
 
         this.formularioMensajes.patchValue({
-          localidad_id: this.infoUsuariologueado.localidad.idLocalidad,
-          localidadFiltrar_id: this.infoUsuariologueado.localidad.idLocalidad,
-          colegio_id: this.infoUsuariologueado.colegio.idColegio,
-          colegioFiltrar_id: this.infoUsuariologueado.colegio.idColegio
+          localidad_id: this.infoUsuariologueado.localidad.id,
+          localidadFiltrar_id: this.infoUsuariologueado.localidad.id,
+          colegio_id: this.infoUsuariologueado.colegio.id,
+          colegioFiltrar_id: this.infoUsuariologueado.colegio.id
         });
 
         if (this.listadoLocalidades) {
           const localidadPromise = this.listadoLocalidades.map(async (localidad: any) => {
-            if (this.infoUsuariologueado.localidad.idLocalidad === localidad.id) {
+            if (this.infoUsuariologueado.localidad.id === localidad.id) {
               this.localidadesGuardadas.push(localidad);
               this.cargandoLocalidadesNuevoMensaje = false;
             }
@@ -231,9 +234,9 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
         }
 
 
-        const listaColegios$ = this.mensajesService.obtenerColegios(this.infoUsuariologueado.localidad.idLocalidad);
+        const listaColegios$ = this.mensajesService.obtenerColegios(this.infoUsuariologueado.localidad.id);
         const colegios: any = await lastValueFrom(listaColegios$);
-        this.colegiosXLocalidad[this.infoUsuariologueado.localidad.idLocalidad] = colegios.data;
+        this.colegiosXLocalidad[this.infoUsuariologueado.localidad.id] = colegios.data;
         if (colegios.length == 0) {
           this.listadoColegios = [{
             id: -1, nombre: 'SIN INFORMACION'
@@ -243,7 +246,7 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
         }
 
         const colegiosPromises = this.listadoColegios.map(async (colegio: any) => {
-          if (this.infoUsuariologueado.colegio.idColegio === colegio.id) {
+          if (this.infoUsuariologueado.colegio.id === colegio.id) {
             this.colegiosGuardados.push(colegio);
           }
         });
@@ -276,7 +279,7 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
 
       await this.cargarLocalidadesColegios(resp.data.localidades, resp.data.colegios);
 
-      if (this.datosUsuario.perfil.idPerfil == 110 && this.tipoUsuario == 'modoEditor') {
+      if (this.datosUsuario.perfil.id == 110 && this.tipoUsuario == 'modoEditor') {
         this.formularioMensajes.controls['colegio_id'].enable();
       }
 
@@ -587,7 +590,7 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
     this.desHabilitarColegios = true;
     if (agregarListadoColegio) {
       if (this.tipoUsuario == 'Admin') {
-        if (this.datosUsuario.perfil.idPerfil == 110) {
+        if (this.datosUsuario.perfil.id == 110) {
           this.cargandoColegiosSelect = true;
           if (localidad_id != null) {
             await this.obtenerColegios(localidad_id);
@@ -604,7 +607,7 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
     }
     // if (this.tipoUsuario == 'Admin') {
 
-    //   if (this.datosUsuario.perfil.idPerfil == 410) {
+    //   if (this.datosUsuario.perfil.id == 410) {
     //     // this.cargarInfoRector()
     //   }
     // }
@@ -707,7 +710,7 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
             }
           }
         });
-        if (this.datosUsuario.perfil.idPerfil) {
+        if (this.datosUsuario.perfil.id) {
           this.obtenerPerfiles();
         }
 
@@ -746,7 +749,7 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
             }
           }
         });
-        if (this.datosUsuario.perfil.idPerfil) {
+        if (this.datosUsuario.perfil.id) {
           this.obtenerLocalidades();
         }
 
@@ -773,7 +776,7 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
                 this.formularioMensajes.get('colegio_id').reset()
 
                 if (this.tipoUsuario == 'Admin') {
-                  if (this.datosUsuario.perfil.idPerfil == 110) {
+                  if (this.datosUsuario.perfil.id == 110) {
                     this.desHabilitarColegiosFiltrar = false;
                     this.formularioMensajes.controls['colegioFiltrar_id'].enable();
                   }
@@ -785,7 +788,7 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
 
 
                 if (this.tipoUsuario == 'Admin') {
-                  if (this.datosUsuario.perfil.idPerfil == 110) {
+                  if (this.datosUsuario.perfil.id == 110) {
                     this.desHabilitarColegiosFiltrar = false;
                     this.formularioMensajes.controls['colegioFiltrar_id'].enable();
                   }
@@ -794,12 +797,12 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
             }
           }
         });
-        if (this.datosUsuario.perfil.idPerfil) {
+        if (this.datosUsuario.perfil.id) {
           // this.obtenerColegios();
           this.obtenerColegios(this.localidad_id);
         }
 
-        if (this.datosUsuario.perfil.idPerfil != 110 && this.datosUsuario.perfil.idPerfil != 424) {
+        if (this.datosUsuario.perfil.id != 110 && this.datosUsuario.perfil.id != 424) {
           // this.formularioMensajes.get('colegio_id').reset()
         }
 
@@ -822,7 +825,7 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
                 this.sedesGuardados = this.listadoSedes;
                 this.formularioMensajes.get('sede_id').reset()
                 if (this.tipoUsuario == 'Admin') {
-                  if (this.datosUsuario.perfil.idPerfil == 110) {
+                  if (this.datosUsuario.perfil.id == 110) {
                     this.desHabilitarJornada = false;
                     this.formularioMensajes.controls['jornada_id'].enable();
                   }
@@ -832,7 +835,7 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
                 this.sedesGuardados.push(sede)
                 this.formularioMensajes.get('sede_id').reset();
                 if (this.tipoUsuario == 'Admin') {
-                  if (this.datosUsuario.perfil.idPerfil == 110) {
+                  if (this.datosUsuario.perfil.id == 110) {
                     this.desHabilitarJornada = false;
                     this.formularioMensajes.controls['jornada_id'].enable();
                   }
@@ -850,14 +853,14 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
           this.desHabilitarJornada = false;
         }
 
-        if (this.datosUsuario.perfil.idPerfil) {
+        if (this.datosUsuario.perfil.id) {
           // this.obtenerColegios();
           this.obtenerListadoSedes(this.colegio_id);
         }
 
         this.obtenerJornada(this.sedesGuardados);
 
-        if (this.datosUsuario.perfil.idPerfil != 110 && this.datosUsuario.perfil.idPerfil != 424) {
+        if (this.datosUsuario.perfil.id != 110 && this.datosUsuario.perfil.id != 424) {
           // this.formularioMensajes.get('sede_id').reset()
         }
 
@@ -946,7 +949,7 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
           this.localidadesGuardadas.splice(indexLocalidad, 1);
           this.localidadesGuardadas = this.localidadesGuardadas;
 
-          if (this.datosUsuario.perfil.idPerfil == 110) {
+          if (this.datosUsuario.perfil.id == 110) {
             // this.cargarInfoRector()
             if (this.localidadesGuardadas.length <= 0) {
               this.deshabilitarLocalidadesFiltrar = true;
@@ -970,7 +973,7 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
           this.listadoFiltroColegio = this.colegiosGuardados;
 
           if (this.tipoUsuario == 'Admin') {
-            if (this.datosUsuario.perfil.idPerfil == 110) {
+            if (this.datosUsuario.perfil.id == 110) {
               if (this.colegiosGuardados.length <= 0) {
                 this.desHabilitarColegiosFiltrar = true;
                 this.formularioMensajes.controls['colegioFiltrar_id'].disable();
@@ -991,7 +994,7 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
         this.sedesGuardados.splice(indexSede, 1);
 
         if (this.tipoUsuario == 'Admin') {
-          if (this.datosUsuario.perfil.idPerfil == 110) {
+          if (this.datosUsuario.perfil.id == 110) {
             if (this.sedesGuardados.length <= 0) {
               this.desHabilitarJornada = true;
               this.formularioMensajes.controls['jornada_id'].disable();
@@ -1097,7 +1100,7 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
 
       this.enviarMensaje = true;
 
-      let datosUsuario = JSON.parse(sessionStorage.getItem('sap_sec_percol')!)
+      let datosUsuario:AccesoPerfil  = this.usuarioService.obtenerAccesoSeleccionado();
 
       const inicio = this.formularioMensajes.get('fecha_inicio')?.value;
       const final = this.formularioMensajes.get('fecha_final')?.value;
@@ -1131,7 +1134,7 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
           if (this.formularioMensajes.status == 'VALID') {
 
             this.errorCampoMensajeVacio = false;
-            this.mensajesService.crearMensaje(this.usuarioLogueado.id, datosUsuario.perfil.idPerfil, informacionMensaje).subscribe((resp: any) => {
+            this.mensajesService.crearMensaje(this.usuarioLogueado.id, datosUsuario.perfil.id, informacionMensaje).subscribe((resp: any) => {
 
               let infoMensaje: any = {}
               console.log(resp)
@@ -1234,7 +1237,7 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
 
     this.actualizando = true;
 
-    let datosUsuario = JSON.parse(sessionStorage.getItem('sap_sec_percol')!)
+    let datosUsuario:AccesoPerfil  = this.usuarioService.obtenerAccesoSeleccionado();
     const inicio = this.formularioMensajes.get('fecha_inicio')?.value;
     const final = this.formularioMensajes.get('fecha_final')?.value;
 
@@ -1269,7 +1272,7 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
         if (this.formularioMensajes.status == 'VALID') {
 
           this.errorCampoMensajeVacio = false;
-          this.mensajesService.editarMensaje(this.id_mensajeEditar, this.usuarioLogueado.id, datosUsuario.perfil.idPerfil, informacionMensaje).subscribe((resp: any) => {
+          this.mensajesService.editarMensaje(this.id_mensajeEditar, this.usuarioLogueado.id, datosUsuario.perfil.id, informacionMensaje).subscribe((resp: any) => {
             let infoMensaje: any = {}
 
             if (resp.body.code == "200") {

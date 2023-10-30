@@ -1,4 +1,6 @@
 import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { PermisosUsuarios } from 'src/app/enums/usuario-permisos';
 import { UsuarioService } from 'src/app/services/api/usuario/usuario.service';
 
 @Component({
@@ -8,23 +10,23 @@ import { UsuarioService } from 'src/app/services/api/usuario/usuario.service';
 })
 export class PersonalComponent {
 
-  rolUsuario:any;
-  mostrarFiltros!:boolean;
+  perfilUsuario:any;
+  rolDiferente!:boolean;
   noEsPerfil!:boolean;
   serviciosUsuario = inject(UsuarioService)
+  router = inject(Router)
+  permisosEditar:boolean = false;
+  permisosListar:boolean = false;
 
-
+  //Todo Ajustar esto al router
   ngOnInit() {
-    this.rolUsuario = this.serviciosUsuario.obtenerRolUsuario();
-    if(this.rolUsuario === 'rector' || this.rolUsuario ==='coordinador'){
-      this.mostrarFiltros = true
-    }
-    else if(this.rolUsuario === 'docente' ){
-      this.mostrarFiltros = false;
+    this.perfilUsuario = this.serviciosUsuario.obtenerPerfilUsuario().nombre;
+    if(this.perfilUsuario === 'rector' || this.perfilUsuario ==='coordinador'){
+      this.router.navigate(['home/hojas-de-vida/personal'])
     }
     else{
-      this.noEsPerfil = true;
-      this.mostrarFiltros = false;
+      this.router.navigate(['home/hojas-de-vida/personal/editar-datos-funcionario'])
     }
   }
+
 }

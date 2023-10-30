@@ -1,33 +1,47 @@
-<div id="contenedorCopiaAsignacionAcademica">
-
-    <!-- <div class="icono">
-        <span class="material-symbols-outlined">
-            feedback
-        </span>
-    </div> -->
-
-    <div class="titulo">
-        <h1>Copiar asignación académica</h1>
-    </div>
-
-    <div class="infoMensaje">
-        <p>Desea copiar la asignación académica de <span class="fw-bold">{{infoMensaje.funcionarioSeleccionado.funcionario}}</span> a los siguientes perfiles:</p>
-    </div>
-
-    <div class="listadoDocentes mb-2 mt-2 d-flex justify-content-center">
-        
-        <div class="infoTabla" *ngFor="let funcionario of infoMensaje.listadosFuncionarios">
-            <input type="checkbox" class="checkboxInfo">
-            <div class="funcionario infoTabla">
-                {{funcionario.funcionario}}
-             </div>
+<app-cargando *ngIf="cargandoRegistros || cargandoAsignacion"></app-cargando>
+<div id="contenedorCopiaAsignacionAcademica" *ngIf="!cargandoRegistros && !cargandoAsignacion">
+  <div class="titulo">
+    <h1>Copiar asignación académica</h1>
+  </div>
+  <div class="infoMensaje">
+    <p>Desea copiar la asignación académica de <span class="fw-bold">{{docenteSeleccionado.primerApellido}}
+        {{docenteSeleccionado.primerNombre}}</span> a los siguientes perfiles:</p>
+  </div>
+  <form [formGroup]="formFuncionarios" class="form_docentes">
+    <div class="listadoDocentes mb-2 mt-2 d-flex justify-content-center" formArrayName="lista_funcionarios">
+      <ng-container  *ngFor="let funcionario of listaFuncionarios.controls; let a = index">
+        <div class="infoTabla" [formGroupName]="a">
+          <input type="checkbox" class="checkboxInfo" formControlName="seleccionado">
+          <div class="funcionario infoTabla">
+            <span>{{ funcionario.get('primer_nombre').value + ' ' + funcionario.get('segundo_nombre').value + ' ' +
+              funcionario.get('primer_apellido').value + ' ' + funcionario.get('segundo_apellido').value}}</span>
+          </div>
         </div>
-
+      </ng-container>
     </div>
-
-    <div class="acciones">
-        <button (click)="cerrarModal()" class="btn boton_secundario">Cancelar</button>
-        <button class="btn boton_primario">Copiar</button>
-    </div>
-
+  </form>
+  <div class="acciones">
+    <button (click)="cerrarModal()" class="btn boton_secundario">Cancelar</button>
+    <button class="btn boton_primario" (click)="copiarAsignacion()">
+      <div *ngIf="!copiandoRegistros">
+        <span>Copiar</span>
+      </div>
+      <div class="d-flex align-items-center gap-2" *ngIf="copiandoRegistros">
+        <div>Copiando</div>
+        <div class="spinner-border float-end" role="status"></div>
+      </div>
+    </button>
+  </div>
+  <div *ngIf="errorEncontrado" class="error_funcionario">
+    <span class="material-symbols-outlined">
+      info
+      </span>
+    <span>
+      La copia de la asignación no fue exitosa. Por favor, asegúrese de que el funcionario de destino no tenga una asignación académica ya cargada.
+    </span>
+    <span class="material-symbols-outlined">
+      close
+      </span>
+  </div>
 </div>
+

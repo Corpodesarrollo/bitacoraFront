@@ -1,0 +1,20 @@
+<div class="cabecera">
+  <div class="titulos">
+    <div class="volver">
+      <span class="material-symbols-outlined" (click)="volver()">
+        arrow_back_ios
+      </span>
+    </div>
+    <div *ngIf="politica">
+      {{ politica.tipoPolitica }}<br>
+    </div>
+  </div>
+</div>
+<app-cargando *ngIf="cargandoVersion"></app-cargando>
+<div id="PoliticasSistema" *ngIf="!cargandoVersion && politica">
+  <div class="titulo">Fecha de entrada en vigencia: {{politica.fecha}}</div>
+  <div class="parrafo" [innerHTML]="contenido">
+  </div>
+</div>
+
+

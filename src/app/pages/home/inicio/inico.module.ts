@@ -4,17 +4,21 @@ import { CommonModule } from '@angular/common';
 import { VerRoutingModule } from './inico-routing.module';
 import { InicioComponent } from './inico.component';
 import { ComponentsModule } from 'src/app/components/components.module';
-import { BitacoraModule } from '../../bitacora/bitacora.module';
+import { AccesosDirectosComponent } from './accesos-directos/accesos-directos.component';
+import { ListaEstudiantesComponent } from './lista-estudiantes/lista-estudiantes.component';
+import { ListaColegiosComponent } from './lista-colegios/lista-colegios.component';
 
 @NgModule({
   declarations: [
-    InicioComponent
+    InicioComponent,
+    AccesosDirectosComponent,
+    ListaEstudiantesComponent,
+    ListaColegiosComponent
   ],
   imports: [
     CommonModule,
     VerRoutingModule,
-    ComponentsModule,
-    BitacoraModule
+    ComponentsModule
   ]
 })
 export class InicioModule { }

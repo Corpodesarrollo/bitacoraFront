@@ -1,6 +1,6 @@
 import { Component, ViewChild, inject } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { DatosFuncionarios } from 'src/app/classes/datos_funcionarios.interface';
+import { DatosFuncionarios } from 'src/app/interfaces/datos_funcionarios.interface';
 import { PersonalService } from 'src/app/services/api/personal/personal.service';
 
 @Component({

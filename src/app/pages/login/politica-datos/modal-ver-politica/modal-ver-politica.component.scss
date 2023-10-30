@@ -1,0 +1,17 @@
+.ver-politicas-modal {
+
+  .modal-content{
+    padding: 0 !important;
+  }
+}
+
+#PoliticasSistema{
+  height: calc(100vh - 320px);
+  padding: 2rem 0;
+}
+
+@media (max-width:991px) {
+  #PoliticasSistema{
+    height: calc(100vh - 540px);
+  }
+}

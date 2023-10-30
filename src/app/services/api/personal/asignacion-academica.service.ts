@@ -35,7 +35,7 @@ export class AsignacionAcademicaService {
     // {{URL}}personal/api/asignacionAcademica/metodologias/629
   }
 
-  obtenerDocentes(institucion_id, cede_id, jornada_id, parametros:any){
+  obtenerDocentes(institucion_id, sede_id, jornada_id, parametros:any){
     let queryString= "";
     if(parametros){
       queryString="?";
@@ -51,26 +51,65 @@ export class AsignacionAcademicaService {
         if(queryString!="?") queryString+="&";
         queryString+="page="+parametros.page
       }
-      if(parametros.id_vigencia  != null){
-        if(queryString!="?") queryString+="&";
-        queryString+="Vigencia="+parametros.id_vigencia
-      }
-      if(parametros.id_sede  != null){
-        if(queryString!="?") queryString+="&";
-        queryString+="sedeId="+parametros.id_sede
-      }
-      if(parametros.id_jornada  != null){
-        if(queryString!="?") queryString+="&";
-        queryString+="JornadaI="+parametros.id_jornada
-      }
-      if(parametros.id_metodologia  != null){
-        if(queryString!="?") queryString+="&";
-        queryString+="Metodologia="+parametros.id_metodologia
-      }
-  
+
     }
     this.setearCabeceras();
-    return this.http.get(`${this.URL}/asignacionAcademica/personal/docente/${institucion_id}/${cede_id}/${jornada_id}${queryString}`, this.httpOptions)
+    return this.http.get(`${this.URL}/asignacionAcademica/personal/docente/${institucion_id}/${sede_id}/${jornada_id}${queryString}`, this.httpOptions)
+  }
+
+  obtenerDocentesSinAsignacion(institucion_id, sede_id, jornada_id, metodologId, vigencia,  parametros:any){
+    let queryString= "";
+    if(parametros){
+      queryString="?";
+      if(parametros.sort  != null){
+        if(queryString!="?") queryString +="&";
+        queryString +="sort="+parametros.sort;
+      }
+      if(parametros.size != null){
+        if(queryString!="?") queryString+="&";
+        queryString+="size="+parametros.size
+      }
+      if(parametros.page  != null){
+        if(queryString!="?") queryString+="&";
+        queryString+="page="+parametros.page
+      }
+
+    }
+    this.setearCabeceras();
+    return this.http.get(`${this.URL}/asignacionAcademica/personal/docente/sinasignacion/${institucion_id}/${sede_id}/${jornada_id}/${metodologId}/${vigencia}${queryString}`, this.httpOptions)
+  }
+
+  obtenerintensidadHoraria(parametros?){
+    this.setearCabeceras();
+    return this.http.get(`${this.URL}/asignacionAcademica/obtener/intensidad/horaria/${parametros.institucion_id}/${parametros.metodologia_id}/${parametros.vigencia}/${parametros.sede_id}/${parametros.jornada_id}/${parametros.documento_docente}`, this.httpOptions)
+  }
+
+
+  eliminarAsignacionAcademica(body:any){
+    this.setearCabeceras();
+
+    console.log(body)
+
+    const options = {
+      headers: new HttpHeaders({
+        'Content-Type': `${environment.CONTENT_TYPE}`,
+        "Authorization": (this.tokenService.getToken().token)?`Bearer ${this.tokenService.getToken().token}`:''
+      }),
+      body: body
+    };
+    
+    return this.http.delete(`${this.URL}/asignacionAcademica/delete/asignacion/academica`, options);
+    
+  }
+
+  actualizarIntensidadHorario(body:any){
+    this.setearCabeceras();
+    return this.http.post(`${this.URL}/asignacionAcademica/update/intensidad/docente`,body , this.httpOptions)
+  }
+
+  guardarAsignacionAcademica(body:any){
+    this.setearCabeceras();
+    return this.http.post(`${this.URL}/asignacionAcademica/guardar/asignacion/academica`,body , this.httpOptions)
   }
 
 }

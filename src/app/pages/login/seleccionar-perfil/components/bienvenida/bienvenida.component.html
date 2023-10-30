@@ -1,0 +1,12 @@
+<div id="cabecera">
+    <div class="bienvenido">BIENVENIDO</div>
+    <div class="text-center mb-3" *ngIf="vistaSeleccion=='defecto'">Seleccione el acceso por el cual va a trabajar</div>
+    <div *ngIf="vistaSeleccion=='institucion'">
+      <div class="text-center">Seleccione el colegio, la sede y la jornada en la cual va a trabajar</div>
+      <span class="recordatorio">Los campos con asterisco (*) son obligatorios</span>
+    </div>
+    <div *ngIf="vistaSeleccion=='no_institucion'">
+      <div class="text-center">Seleccione el pefil, la dependencia o la localidad en la cual va a trabajar</div>
+      <span class="recordatorio">Los campos con asterisco (*) son obligatorios</span>
+    </div>
+  </div>

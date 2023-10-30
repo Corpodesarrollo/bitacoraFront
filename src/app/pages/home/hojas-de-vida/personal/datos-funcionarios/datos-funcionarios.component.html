@@ -1,16 +1,19 @@
+<div class="col-12 mt-4 mb-3">
+  <h3 class="titulo_personal">
+      Personal
+  </h3>
+</div>
 <div *ngIf="mostrarFiltros">
   <app-filtros (filtros)="filtrar($event)" [cargandoRegistros]="cargandoRegistros"></app-filtros>
 </div>
-
 <app-cargando *ngIf="cargandoRegistros && !mostrarFiltros" class="cargando"></app-cargando>
-
 <div id="listaFiltros" *ngIf="!cargandoRegistros && !mostrarFiltros">
   <div class="cabecera row">
     <div class="col-12 d-flex justify-content-start align-items-center mb-3 mb-md-0">
       <button class="btn boton_secundario" (click)="abrirFiltros()">Nueva Busqueda</button>
     </div>
     <div class="contenedor_botones col-12">
-      <button class="btn boton_secundario" (click)="exportarDatos()">
+      <button class="btn boton_secundario" (click)="exportarDatos()" *ngIf="permisosExportar">
         <div *ngIf="!exportandoDatos">
           <span>Exportar</span>
         </div>
@@ -19,8 +22,8 @@
           <div class="spinner-border float-end" role="status"></div>
         </div>
       </button>
-      <button class="btn boton_secundario" (click)="abrirAnuario()">Anuario</button>
-      <button class="btn boton_secundario" routerLink="./asignacion-academica">Asignación académica</button>
+      <button class="btn boton_secundario" (click)="abrirAnuario()" *ngIf="permisosAnuario">Anuario</button>
+      <button class="btn boton_secundario" routerLink="./asignacion-academica" *ngIf="permisosAsignacion">Asignación académica</button>
     </div>
   </div>
   <div class="contenedor_titulo col-12 row mt-3">
@@ -110,24 +113,24 @@
           </div>
           <div class="titulo_movil">Acciones</div>
           <div class="col-acciones">
-            <div class="btn_acciones" (click)="editarUsuario(registro)">
+            <div class="btn_acciones" (click)="editarUsuario(registro)" *ngIf="permisosEditar">
               <span class="material-symbols-outlined">
                 edit
               </span>
               <span class="etiqueta_hover">Editar</span>
             </div>
-            <div class="btn_acciones" (click)="editarFotografia(registro)">
+            <div class="btn_acciones" (click)="editarFotografia(registro)" *ngIf="permisosFotografia">
               <span class="material-symbols-outlined">
                 add_a_photo
               </span>
               <span class="etiqueta_hover">Capturar fotografía</span>
             </div>
-            <div class="form-check form-switch">
+            <div class="form-check form-switch" *ngIf="permisosInactivar">
               <input (click)="abrirInactivar($event, registro)" class="btn-swtich form-check-input" type="checkbox" role="switch" id="flexSwitchCheck{{i}}"
               [checked]="registro.estado === 'ACTIVO'">
               <span class="etiqueta_hover">Activar/Inactivar</span>
             </div>
-            <div class="btn_acciones mx-2" (click)="abrirDesasociar(registro)">
+            <div class="btn_acciones mx-2" (click)="abrirDesasociar(registro)" *ngIf="permisosDesasociar">
               <span class="material-symbols-outlined">
                 person_remove
               </span>

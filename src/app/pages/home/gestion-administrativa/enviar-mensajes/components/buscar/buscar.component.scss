@@ -203,6 +203,16 @@
 
 @media (max-width: 991.98px) {
 
+    .contenedorTablas .contenidoTabla .fecha {
+        text-align: right;
+        margin-left: 0%;
+    }
+
+    .contenedorTablas .contenidoTabla .infoAsunto {
+        margin-bottom: 0;
+        text-align: left;
+    }
+
     .tituloMobile {
         display: initial;
     }

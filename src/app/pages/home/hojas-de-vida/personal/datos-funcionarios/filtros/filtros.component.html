@@ -21,6 +21,7 @@
           <ng-select [items]="sedes" bindValue="codigo"
             bindLabel="nombre"
             class="select_filtros select"
+            [loading]="cargandoSedes"
             (change)="cargarJornada()"
             placeholder="Seleccione la sede" name="sede"
             formControlName="sede">
@@ -34,6 +35,7 @@
             Jornada
           </label>
           <ng-select [items]="jornadas"
+            [loading]="cargandoJornadas"
             bindValue="id" bindLabel="nombre"
             class="select_filtros select"
             placeholder="Seleccione la jornada" name="jornada"
@@ -58,6 +60,7 @@
           </label>
           <ng-select
             [items]="tiposIdentificacion"
+            [loading]="cargandoPerfiles"
             bindValue="codigo"
             bindLabel="nombre"
             class="select_filtros select"

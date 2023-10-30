@@ -6,6 +6,7 @@ import { PersonalService } from 'src/app/services/api/personal/personal.service'
 import { EliminarComponent } from './eliminar/eliminar.component';
 import { CerrarComponent } from './cerrar/cerrar.component';
 import { forkJoin } from 'rxjs';
+import { UsuarioService } from 'src/app/services/api/usuario/usuario.service';
 
 @Component({
   selector: 'app-editar-datos',
@@ -22,7 +23,9 @@ export class EditarDatosComponent {
   cargandoPerfiles: boolean = true;
   eliminandoPerfil: boolean = false;
   yaSeEncuentraPerfil: boolean = false;
+  estaInactivo:boolean = false;
 
+  perfilesUsuarios:any;
   idColegio: number
   formDatosUsuario!: FormGroup;
   //Todo Reemplazar esta variable con el formulario
@@ -35,15 +38,16 @@ export class EditarDatosComponent {
     private formBuilder: FormBuilder,
     private personalServices: PersonalService,
     private modalService: NgbModal,
-    private activeModal: NgbActiveModal
+    private activeModal: NgbActiveModal,
+    private usuarioServices:UsuarioService
   ) {
-    let datos_usuario = JSON.parse(sessionStorage.getItem('sap_sec_percol')!)
-    this.idColegio = datos_usuario.colegio.idColegio;
-    this.construirFormularios();
-    this.cargarListas();
   }
 
-  ngOnInit() {
+  ngOnInit(){
+    let datos_usuario  = this.usuarioServices.obtenerAccesoSeleccionado()
+    this.idColegio =  datos_usuario.colegio.id;
+    this.construirFormularios();
+    this.cargarListas();
     this.obtenerDatosUsuario();
   }
 
@@ -106,6 +110,14 @@ export class EditarDatosComponent {
    * Metodo para actualizar los datos del usuario.
    */
   obtenerDatosUsuario() {
+    if(this.registro.estado === "INACTIVO"){
+      this.formDatosUsuario.get("correo").disable();
+      this.formDatosUsuario.get("lista_perfiles").disable();
+      this.estaInactivo = true;
+    }
+    else{
+      this.estaInactivo = false
+    }
     this.formDatosUsuario.patchValue({
       tipo_identificacion: this.registro.tipoIdentificacion,
       numero_identificacion: this.registro.identificacion,
@@ -114,6 +126,7 @@ export class EditarDatosComponent {
       cargo: this.registro.cargo,
       correo: this.registro.correo.toLowerCase()
     })
+
     this.correoInicial = this.registro.correo.toLowerCase();
     this.urlFoto = this.registro.foto
     this.obtenerPerfilUsuario()
@@ -221,12 +234,12 @@ export class EditarDatosComponent {
     let formGroup = this.formBuilder.group({
       jer_codigo: [jerCodigo],
       cod_institucion: [codInstitucion],
-      cod_sede: [codSede, Validators.required],
-      cod_jornada: [codJornada, Validators.required],
+      cod_sede: [{value: codSede, disabled:this.estaInactivo}, Validators.required],
+      cod_jornada: [{value: codJornada, disabled:this.estaInactivo}, Validators.required],
       identificacion: [identificacion],
-      cod_perfil: [codPerfil, Validators.required],
+      cod_perfil: [{value: codPerfil, disabled:this.estaInactivo}, Validators.required],
       estado: [estado],
-      seleccionado: [seleccionado],
+      seleccionado: [{value: seleccionado, disabled:this.estaInactivo}],
       sedes: this.formBuilder.array([]),
       jornadas: this.formBuilder.array([]),
     });
@@ -292,7 +305,7 @@ export class EditarDatosComponent {
   contarPerfiles(perfil: any) {
     let conteo = 0;
     this.listaPerfiles.controls.forEach((item: any) => {
-      if (item.controls.cod_perfil.value  &&
+      if (item.controls.cod_perfil.value==perfil.cod_perfil  &&
         item.controls.cod_jornada.value == perfil.cod_jornada &&
         item.controls.cod_sede.value == perfil.cod_sede
       ) {
@@ -422,10 +435,10 @@ export class EditarDatosComponent {
               error: false,
               esExitoso: 'done',
               titulo: '¡Exito!',
-              mensaje: 'Información actualizada correctamente'
+              mensaje: 'Correo actualizado correctamente'
             }
             this.guardandoDatos = false;
-            this.formDatosUsuario.get('correo')?.setValue(parametros.email);
+            this.activeModal.close()
           }
         }
       },
@@ -501,14 +514,13 @@ export class EditarDatosComponent {
           if (respuesta.status != 200) {
             errorEncontrado = true;
             this.guardandoDatos = false
-
           }
           if(respuesta.status === 207){
-            errorEncontrado = true;
-            errorDuplicado = true;
+            errorEncontrado = true;            errorDuplicado = true;
           }
         }
-        if (!errorEncontrado) {
+        if (!errorEncontrado && !errorDuplicado) {
+          console.log('entra aqu sdadsai');
           // Mostrar mensaje de éxito una vez que todas las solicitudes hayan terminado.
           const modalExito = this.modalService.open(ModalInformacionComponent, { size: 'lg', animation: false, backdrop: 'static', centered: true });
           modalExito.componentInstance.informacion = {
@@ -521,6 +533,7 @@ export class EditarDatosComponent {
           this.activeModal.close(true)
         }
         else if(errorDuplicado){
+          console.log('entra aqui');
           const modalError = this.modalService.open(ModalInformacionComponent, { size: 'lg', animation: false, backdrop: 'static', centered: true });
           modalError.componentInstance.informacion = {
             error: true,
@@ -553,13 +566,16 @@ export class EditarDatosComponent {
    * Metodo para cerrar el modal
    */
   cancelar(){
-    if(this.formDatosUsuario.dirty){
+    if(this.formDatosUsuario.dirty && !this.estaInactivo){
       const modalCerrar = this.modalService.open(CerrarComponent, {size:'md', centered: true, animation: false, backdrop: 'static'})
       modalCerrar.result.then((result:any) => {
         if(result){
           this.activeModal.close(false)
         }
       })
+    }
+    else if(this.estaInactivo){
+      this.activeModal.close(false)
     }
     else{
         this.activeModal.close(false)
@@ -707,6 +723,18 @@ export class EditarDatosComponent {
     }
   }
 
+  cerrarModal(){
+    this.activeModal.close()
+  }
+
+  // enviarDatosFijos(){
+  //   let parametros = {"codJerarquia":44630,"codInstitucion":539,"sedCodigo":3,"jerJorn":0,"codPerfil":422,"activo":1,"numeroDocumento":"80814512"}
+  //   this.personalServices.actualizarPerfil2(parametros).subscribe({
+  //     next: (respuestas: any) => {
+  //       console.log("esta a les repuesta: ", respuestas);
+  //     }
+  //   })
+  // }
 
 }
 

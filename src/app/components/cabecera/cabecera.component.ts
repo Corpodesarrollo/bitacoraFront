@@ -7,7 +7,7 @@ import { MsalService } from '@azure/msal-angular';
 import { UtilsService } from 'src/app/services/generales/utils/utils.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmarCerrarSesionComponent } from '../confirmar-cerrar-sesion/confirmar-cerrar-sesion.component';
-import { PoliticaDatosComponent } from 'src/app/pages/login/politica-datos/politica-datos.component';
+import { niveles } from 'src/app/enums/niveles.enum';
 
 @Component({
   selector: 'app-cabecera',
@@ -15,6 +15,10 @@ import { PoliticaDatosComponent } from 'src/app/pages/login/politica-datos/polit
   styleUrls: ['./cabecera.component.scss']
 })
 export class CabeceraComponent implements OnInit {
+
+
+  texto_niveles = 'acceso'
+
   /* Perfiles Administrador */
   perfilAdmin = 'adminsec'
 
@@ -26,19 +30,16 @@ export class CabeceraComponent implements OnInit {
   usuario: any;
   toggleUser: boolean = false;
   mostrarElemento: boolean;
+  nivelUsuario:number;
+  nivelInstitucion:boolean = false;
 
-  colegioGuardado: string = '';
-  sedeGuardada: string = '';
-  jornadaGuardada: string = '';
-  foto_guardada: string = '';
-  rolGuardado: string = '';
-  etiquetaGuardada: string = '';
   esMicrosoft: boolean = false;
   unicoRegistro: boolean = false;
   nombreUsuario: string = '';
 
   idUsuario: any;
   perfilUsuario: any;
+  fotoGuardada:any;
 
   constructor(
     private elementRef: ElementRef,
@@ -52,17 +53,11 @@ export class CabeceraComponent implements OnInit {
       this.menuMobile = respuesta;
     });
     this.usuario = this.usuarioService.obtenerUsuario();
-    this.idUsuario = this.usuario.id;
     this.unicoRegistro = this.usuarioService.obtenerUnicoRegistro()
-
+    this.idUsuario = this.usuario.id;
     const nombre = this.usuarioService.obtenerUsuario().nombre;
     this.nombreUsuario = this.removerNulos(nombre)
   };
-
-  removerNulos(value: string): string {
-    if (!value) return value;
-    return value.split(' ').filter(word => word.toLowerCase() !== 'null').join(' ');
-  }
 
   ngOnInit(): void {
     this.esMicrosoft = this.authService.instance.getAllAccounts().length > 0;
@@ -87,16 +82,22 @@ export class CabeceraComponent implements OnInit {
       }
     });
 
-    const institutoGuardado = this.usuarioService.obtenerPerfilUsuario();
-    if (institutoGuardado) {
-      this.colegioGuardado = institutoGuardado.colegio.colegio_guardado;
-      this.sedeGuardada = institutoGuardado.sede.sede_guardada;
-      this.jornadaGuardada = institutoGuardado.jornada.jornada_guardada;
-      this.foto_guardada = institutoGuardado.foto_ie;
-      this.rolGuardado = institutoGuardado.perfil.rol_usuario;
-      this.etiquetaGuardada = institutoGuardado.perfil.etiqueta
+    const accesoSeleccionado = this.usuarioService.obtenerAccesoSeleccionado();
+    if (accesoSeleccionado) {
+      this.fotoGuardada = accesoSeleccionado?.colegio?.foto_escudo?.codificacion;
+      this.perfilUsuario = accesoSeleccionado;
+      this.nivelUsuario = accesoSeleccionado.perfil.idPerfilNivel
     };
+    this.nivelInstitucion = this.nivelUsuario == niveles.institucion_sede_jornada || this.nivelUsuario == niveles.institucion
+    if(this.nivelInstitucion){
+      this.texto_niveles = 'colegio o sede'
+    }
   };
+
+  removerNulos(value: string): string {
+    if (!value) return value;
+    return value.split(' ').filter(word => word.toLowerCase() !== 'null').join(' ');
+  }
 
   cerrarSesion() {
     if (this.esMicrosoft) {

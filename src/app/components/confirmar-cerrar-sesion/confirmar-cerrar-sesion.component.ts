@@ -1,5 +1,5 @@
 import { Component, Inject, inject } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UsuarioService } from 'src/app/services/api/usuario/usuario.service';
 
 @Component({
@@ -9,16 +9,16 @@ import { UsuarioService } from 'src/app/services/api/usuario/usuario.service';
 })
 export class ConfirmarCerrarSesionComponent {
 
-  servicioModal = inject(NgbModal)
+  activeModal = inject(NgbActiveModal)
   usuarioService = inject(UsuarioService)
 
   cerrar(){
-    this.servicioModal.dismissAll()
+    this.activeModal.close()
   }
 
   cerrarSesion(){
     this.usuarioService.cerrarSesion(false);
-    this.servicioModal.dismissAll()
+    this.activeModal.close(false)
   }
 
 }

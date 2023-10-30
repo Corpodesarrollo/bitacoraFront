@@ -6,8 +6,8 @@
     </div>
     <div class="modal-body">
         <div class="row flex-row">
-            <ng-container *ngFor="let usuario of listaRegistrosAnuario">
-                <div class="contenedor_card col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12 card-container">
+            <ng-container *ngFor="let usuario of listaRegistrosAnuario; let i">
+                <div class="contenedor_card col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12 card-container" [tabindex]="i" >
                     <div class="card" (click)="editarUsuario(usuario)">
                         <ng-container *ngIf="usuario.foto; else noImage">
                             <img src="data:image/png;base64,{{usuario.foto}}" class="card-img-top fixed-height">

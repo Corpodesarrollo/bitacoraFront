@@ -1,17 +1,5 @@
 <div class="row" id="Personal">
-  <div class="col-12 mt-4 mb-3">
-          <h3 class="titulo_personal">
-              Personal
-          </h3>
-  </div>
   <div class="col-12">
-    <div *ngIf="noEsPerfil && !mostrarFiltros" class="no_perfil">
-      <div class="titulo">El tipo perfil con el que ingreso no puede acceder a este modulo</div>
-      <div class="contenedor_imagen">
-        <img src="assets/img/seleccion_imagen.svg" alt="">
-      </div>
-    </div>
-    <app-editar-datos-docente *ngIf="!mostrarFiltros && !noEsPerfil"> </app-editar-datos-docente>
-    <router-outlet *ngIf="mostrarFiltros && !noEsPerfil"></router-outlet>
+    <router-outlet></router-outlet>
   </div>
 </div>

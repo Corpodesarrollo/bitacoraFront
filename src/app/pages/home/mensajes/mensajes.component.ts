@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { PermisosUsuarios } from 'src/app/enums/usuario-permisos';
+import { AccesoPerfil } from 'src/app/interfaces/acceso_perfil.interface';
 import { MensajesService } from 'src/app/services/api/mensajes/mensajes.service';
 import { UsuarioService } from 'src/app/services/api/usuario/usuario.service';
 
@@ -28,23 +30,27 @@ export class MensajesComponent {
   conMensajesCargados: boolean = true;
   fechaActual: string;
   mensajeResp: any;
+  puedeEnviarMensajes:boolean = false;
+  puedeVerMensaje:boolean = false;
 
 
   constructor(private mensajesService: MensajesService,
               private router: Router,
-              private serviciosUsuario : UsuarioService){
+              private serviciosUsuario : UsuarioService,
+              ){
 
-    let datosUsuario  = JSON.parse(sessionStorage.getItem('sap_sec_percol')!)
+
+    let datosUsuario:AccesoPerfil  = this.serviciosUsuario.obtenerAccesoSeleccionado();
     this.usuarioLogueado = this.serviciosUsuario.obtenerUsuario();
-
-    this.parametrosFiltros.perfilId =  datosUsuario.perfil.idPerfil;
-    this.parametrosFiltros.usuarioId = this.usuarioLogueado.id;
-    this.parametrosFiltros.colegioId = datosUsuario.colegio.idColegio;
-    this.parametrosFiltros.jornadaId = datosUsuario.jornada.idJornada;
-    this.parametrosFiltros.sedeId = datosUsuario.sede.idSede;
-    this.parametrosFiltros.localidadId = datosUsuario.localidad.idLocalidad;
-    this.parametrosFiltros.usuarioId = this.usuarioLogueado.id;
-    this.parametrosFiltros.perfilLoginId = datosUsuario.perfil.idPerfil;
+    this.puedeEnviarMensajes = this.serviciosUsuario.obtetenerPermisosPerfil(PermisosUsuarios.ENVIAR_MENSAJES)
+    this.puedeVerMensaje = this.serviciosUsuario.obtetenerPermisosPerfil(PermisosUsuarios.VER_MENSAJE)
+    if(this.parametroCargado(datosUsuario.perfil.id)) this.parametrosFiltros.perfilId =  datosUsuario.perfil.id;
+    if(this.parametroCargado(this.usuarioLogueado.id)) this.parametrosFiltros.usuarioId = this.usuarioLogueado.id;
+    if(this.parametroCargado(datosUsuario.colegio)) this.parametrosFiltros.colegioId = datosUsuario.colegio.id;
+    if(this.parametroCargado(datosUsuario.jornada)) this.parametrosFiltros.jornadaId = datosUsuario.jornada.id;
+    if(this.parametroCargado(datosUsuario.sede)) this.parametrosFiltros.sedeId = datosUsuario.sede.id;
+    if(this.parametroCargado(datosUsuario.localidad)) this.parametrosFiltros.localidadId = datosUsuario.localidad.id;
+    if(this.parametroCargado(datosUsuario.perfil.id)) this.parametrosFiltros.perfilLoginId = datosUsuario.perfil.id;
 
     this.mensajesService.obtenerMensajes(this.parametrosFiltros).subscribe((resp:any)=>{
       //console.log(resp)
@@ -68,6 +74,12 @@ export class MensajesComponent {
                 let fechaArray = this.fechaActual.split('-');
                 this.fechaActual = `${fechaArray[0]}-${fechaArray[2]}-${fechaArray[1]}`
                 //console.log(this.fechaActual)
+  }
+
+  parametroCargado(parametro){
+      let bool:Boolean;
+      if(parametro == null) { bool = false } else { bool = true }
+      return bool;
   }
 
   formatearFecha(fecha) {

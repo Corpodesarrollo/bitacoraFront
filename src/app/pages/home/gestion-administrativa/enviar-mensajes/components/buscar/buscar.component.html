@@ -23,27 +23,31 @@
 
                     <div class="col-6 tituloMobile">Fecha:</div>
                     <div class="col-6 col-md-2"><p class="fecha">{{mensaje.msjFecha | date:'dd/MM/yyyy'}}</p></div>
-                    <div class="col-12 col-xl-3 mt-2 mt-md-0 iconosListaBuscar"> 
-                        <a  (click)="verMensaje(mensaje.msjCodigo)">
+                    <div class="col-12 col-xl-3 mt-2 mt-md-0 iconosListaBuscar">
+                        <a  (click)="verMensaje(mensaje.msjCodigo)"
+                        *ngIf="permisosUsuario.ver">
                             <span class="material-symbols-outlined">
                                 visibility
-                            </span> 
+                            </span>
                             <p>Ver</p>
-                        </a> 
-  
-                        <a (click)="editarMensajes(mensaje.msjCodigo)">
+                        </a>
+
+                        <a (click)="editarMensajes(mensaje.msjCodigo)"
+                        *ngIf="permisosUsuario.editar">
                             <span class="material-symbols-outlined">
                                 edit
                             </span>
                             <p>Editar</p>
-                        </a> 
+                        </a>
 
-                        <a (click)="eliminarMensaje(mensaje.msjCodigo)">
+                        <a (click)="eliminarMensaje(mensaje.msjCodigo)"
+                        *ngIf="permisosUsuario.eliminar"
+                        >
                             <span class="material-symbols-outlined">
                                 delete
                             </span>
                             <p>Eliminar</p>
-                        </a> 
+                        </a>
                     </div>
                 </div>
                 <div class="paginacion">
@@ -66,7 +70,7 @@
         </div>
 
         <div class="sinMensajes" *ngIf="mensajesCargados == false">Sin mensajes cargados</div>
-        
+
     </div>
 
     <app-cargando *ngIf="cargandoMensajes"></app-cargando>

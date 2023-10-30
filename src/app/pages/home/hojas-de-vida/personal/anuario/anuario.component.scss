@@ -17,6 +17,11 @@
     justify-content: center;
 }
 
+.contenedor_card:focus-visible{
+  border: 2px solid #F4B53F;
+  outline: none;
+  border-radius: 28px;
+}
 
 .flex-row .card-container {
     display: flex;
@@ -169,7 +174,13 @@
     background-color: #e5e5e5;
 }
 
-@media (max-width: 992px) and (min-width: 767.1px) {
+@media (max-width: 1199.98px) {
+    .card-container .card {
+        min-width: 225px;
+    }
+}
+
+@media (max-width: 992px) {
     .contenedor_card {
         max-width: 270px !important;
     }
@@ -182,6 +193,19 @@
 
     #contenedorAnuario {
         padding-right: 1rem;
+    }
+
+    .card-container .card {
+        min-width: 200px;
+    }
+
+    #contenedorAnuario .card {
+        min-height: unset;
+    }
+
+    .card-img-top.fixed-height,
+    .material-symbols-outlined.fixed-height {
+        height: 200px;
     }
 }
 

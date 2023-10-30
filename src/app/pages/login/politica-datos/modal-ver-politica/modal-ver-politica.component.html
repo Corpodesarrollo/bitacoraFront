@@ -1,0 +1,22 @@
+<app-cabecera></app-cabecera>
+<div class="container" id="PoliticasSistema">
+  <div class="cabecera">
+    <div class="titulos">
+      <div *ngIf="politica">
+        {{ politica.tipoPolitica }}<br>
+      </div>
+    </div>
+  </div>
+  <app-cargando *ngIf="cargandoVersion"></app-cargando>
+  <div *ngIf="!cargandoVersion && politica">
+    <div class="titulo">Fecha de entrada en vigencia: {{politica.fecha}}</div>
+    <div class="parrafo"  [innerHTML]="contenido">
+    </div>
+  </div>
+  <div class="acciones">
+    <button type="button" class="btn boton_primario" (click)="aceptar()">
+      Acepto
+    </button>
+  </div>
+</div>
+<app-pie-pagina></app-pie-pagina>

@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ListarComponent } from './listar/listar.component';
 import { PoliticasDatosUsoComponent } from './politicas-datos-uso.component';
 import { PoliticasUsoComponent } from './politicas-uso/politicas-uso.component';
-import { VerPoliticasComponent } from 'src/app/components/ver-politicas/ver-politicas.component';
+import { VerPoliticasComponent } from 'src/app/pages/home/politicas-datos-uso/ver-politicas/ver-politicas.component';
 
 const routes: Routes = [{
   path: '',

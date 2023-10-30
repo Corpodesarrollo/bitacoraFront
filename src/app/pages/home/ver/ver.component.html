@@ -1,0 +1,4 @@
+<div>
+  <iframe id="iframeContenido" *ngIf="esIframe && !cargandoIframe" [src]="urlIframe"></iframe>
+</div>
+<app-cargando [mensaje]="mensaje" *ngIf="cargandoIframe && esIframe"></app-cargando>

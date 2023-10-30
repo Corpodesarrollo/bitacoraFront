@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AsignacionAcademicaService } from 'src/app/services/api/personal/asignacion-academica.service';
 
 @Component({
   selector: 'app-mensaje-descargar-reporte',
@@ -8,14 +9,12 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class MensajeDescargarReporteComponent {
 
-  
   @Input() infoMensaje:any;
+  
+  asignacionAcademicaService = inject(AsignacionAcademicaService);
+  servicioModal = inject(NgbModal);
+
   // @Input() mensaje:string = "";
-
-
-  constructor(private servicioModal : NgbModal){
-    
-  }
 
   ngOnDestroy(): void {
     this.infoMensaje;
@@ -23,6 +22,14 @@ export class MensajeDescargarReporteComponent {
 
   cerrarModal(){
     this.servicioModal.dismissAll()
+  }
+
+  exportarInstitucionPdf(){
+    
+  }
+
+  exportarPdf(){
+
   }
 
 }

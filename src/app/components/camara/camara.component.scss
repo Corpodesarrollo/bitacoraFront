@@ -3,16 +3,16 @@ webcam{
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 2rem;
+  padding: 0.5rem;
 }
 
-#camera{
+#camara{
   position: relative;
 }
 
 #actions{
   position: absolute;
-  bottom: 1rem;
+  bottom: 5rem;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -58,6 +58,11 @@ webcam{
 .snapshot .take_photo{
   width: 397px;
   height: 327px;
+}
+
+#cancelarCaptura{
+  display: flex;
+  justify-content: center;
 }
 
 

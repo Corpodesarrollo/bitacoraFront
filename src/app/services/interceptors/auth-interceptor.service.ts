@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { MsalService } from '@azure/msal-angular';
 import { Observable, filter, map, tap } from 'rxjs';
 import { UsuarioService } from '../api/usuario/usuario.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmarCerrarSesionComponent } from 'src/app/components/confirmar-cerrar-sesion/confirmar-cerrar-sesion.component';
 import { MensajeModal } from 'src/app/pages/home/gestion-administrativa/enviar-mensajes/components/mensaje-modal/mensaje-modal';
 
@@ -18,7 +18,7 @@ export class AuthInterceptorService implements HttpInterceptor {
     private authService: MsalService,
     private router: Router,
     private usuarioService: UsuarioService,
-    private servicioModal: NgbModal,
+    private servicioModal: NgbModal
   ) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -44,6 +44,7 @@ export class AuthInterceptorService implements HttpInterceptor {
   }
 
   mensajeEliminado(){
+    this.cerrarTodosModales();
     let infoMensaje: any = {}
     infoMensaje.titulo = 'Su sesion ha caducado.';
     infoMensaje.mensaje = 'Por favor, inicie sesión de nuevo.';
@@ -55,6 +56,10 @@ export class AuthInterceptorService implements HttpInterceptor {
     setTimeout(()=>{
       this.servicioModal.dismissAll();
     },4000)
+  }
+
+  cerrarTodosModales(){
+    //this.activeModal.dismiss();
   }
 
 }

@@ -1,0 +1,4 @@
+export enum politicas {
+  POLITICA_DATOS = 'DATOS_PERSONALES',
+  POLITICA_USO = 'POLITICA_USO',
+}

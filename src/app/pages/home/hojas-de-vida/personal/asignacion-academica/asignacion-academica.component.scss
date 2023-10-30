@@ -15,6 +15,10 @@
     flex-direction: column;
 }
 
+.deshabilitarInput{
+    opacity: 0.5;
+}
+
 .checkboxMovile{
     display: none;
 }
@@ -34,15 +38,36 @@ input.checkboxInfo {
 .totalHorasSemanales .input-wrapper {
     position: initial;
     height: initial;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 
+.guardando_horas{
+    color: var(--alterno);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 600;
+}
+.error_valorHoras{
+    color: var(--error);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 600;
+    font-size: 12px;
+    width: 64%;
+    line-height: 1;
+}
 
 .totalHorasSemanales input {
     text-align: center;
     width: 79px;
     height: 35px;
-    padding-left: 1.8rem;
-    padding-right: 1.8rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
 }
 
 .nomenclatura {
@@ -152,6 +177,10 @@ input.checkboxInfo {
     margin-top: 2rem;
 }
 
+.accionesInfo > span{
+    cursor: pointer;
+}
+
 .contenedorTablas {
     padding: 2rem 0rem 0rem 0rem;
 }
@@ -225,9 +254,7 @@ span.signoGrado {
 
 .accionesInfo span:nth-child(1):hover .etiqueta_hoverAsignacion {
     display: block !important;
-    width: 77px;
     position: absolute;
-    height: 40px;
     /* top: 770px; */
     /* left: 1134px; */
     padding: 4px 8px 4px 8px;
@@ -244,7 +271,7 @@ span.signoGrado {
     letter-spacing: 0em;
     text-align: left;
     text-wrap: wrap;
-    right: 91px;
+    margin-left: -2%;
 }
 
 .accionesInfo span:nth-child(2):hover .etiqueta_hoverVer {
@@ -283,6 +310,12 @@ span.signoGrado {
 
 .tituloMobile{
     display: none;
+}
+
+.spinner-border.float-end {
+    width: 15px;
+    height: 15px;
+    color: var(--alterno);
 }
 
 @media (max-width: 991.98px) {

@@ -5,6 +5,8 @@ import { MensajesService } from 'src/app/services/api/mensajes/mensajes.service'
 import { UsuarioService } from 'src/app/services/api/usuario/usuario.service';
 import { MensajeModal } from '../mensaje-modal/mensaje-modal';
 import { UtilsService } from 'src/app/services/generales/utils/utils.service';
+import { AccesoPerfil } from 'src/app/interfaces/acceso_perfil.interface';
+import { PermisosUsuarios } from 'src/app/enums/usuario-permisos';
 
 @Component({
   selector: 'app-buscar',
@@ -25,6 +27,12 @@ export class BuscarComponent{
   cargandoMensajes: boolean = false;
   mensajeSinDatosCargados: boolean = false;
   mensajesCargados: boolean = false;
+
+  permisosUsuario = {
+    editar: false,
+    ver: false,
+    eliminar:false,
+  }
 
   mensajes: any[] = [];
 
@@ -55,6 +63,11 @@ export class BuscarComponent{
 
     //this.cargarMensajes();
     this.usuarioLogueado = this.usuarioService.obtenerUsuario();
+    this.permisosUsuario = {
+      editar: this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.EDITAR_MENSAJE),
+      ver:  this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.VER_MENSAJE),
+      eliminar: this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.ELIMINAR_MENSAJE)
+    }
 
     const date = new Date();
     // Iniciar en este año, este mes, en el día 1
@@ -161,14 +174,18 @@ export class BuscarComponent{
       parametros_filtros.fecha_final = "";
     }
 
-    let datosUsuario  = JSON.parse(sessionStorage.getItem('sap_sec_percol')!)
+    // let datosUsuario  = JSON.parse(sessionStorage.getItem('sap_acc_sel')!)
+
+    let datosUsuario:AccesoPerfil  = this.usuarioService.obtenerAccesoSeleccionado();
+
+
     this.pagina = 0;
     this.parametrosFiltros.pagina = 0;
     this.parametrosFiltros.colegioId = parametros_filtros.colegio_id;
     this.parametrosFiltros.localidadId = parametros_filtros.localidad_id;
     this.parametrosFiltros.perfilId = parametros_filtros.perfilId;
     this.parametrosFiltros.usuarioId = this.usuarioLogueado.id;
-    this.parametrosFiltros.perfilLoginId = datosUsuario.perfil.idPerfil;
+    this.parametrosFiltros.perfilLoginId = datosUsuario.perfil.id;
     this.parametrosFiltros.fechaInicio = parametros_filtros.fecha_inicio;
     this.parametrosFiltros.fechaFinal = parametros_filtros.fecha_final;
 

@@ -27,6 +27,7 @@ import { EliminarComponent } from './editar-datos/eliminar/eliminar.component';
 import { FormartEmailDirective } from 'src/app/directives/formart-email.directive';
 import { CerrarComponent } from './editar-datos/cerrar/cerrar.component';
 import { MensajeModal } from './asignacion-academica/components/mensaje-modal/mensaje-modal';
+import { AsignacionDocenteComponent } from '../../../../components/asignacion-docente/asignacion-docente.component';
 
 
 
@@ -51,7 +52,8 @@ import { MensajeModal } from './asignacion-academica/components/mensaje-modal/me
     CopiarAsignacionAcademicaComponent,
     EliminarComponent,
     FormartEmailDirective,
-    CerrarComponent
+    CerrarComponent,
+    AsignacionDocenteComponent
   ],
   imports: [
     CommonModule,
@@ -62,7 +64,7 @@ import { MensajeModal } from './asignacion-academica/components/mensaje-modal/me
     HttpClientModule,
     NgSelectModule,
     NgbCollapseModule,
-    ComponentsModule
+    ComponentsModule,
   ]
 })
 export class PersonalModule { }

@@ -1,0 +1,95 @@
+import { Component } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ModalInformacionComponent } from 'src/app/components/modal-informacion/modal-informacion.component';
+import { Politica } from 'src/app/interfaces/politica.interface';
+import { PoliticasService } from 'src/app/services/api/politicas/politicas.service';
+
+@Component({
+  selector: 'app-modal-ver-politica',
+  templateUrl: './modal-ver-politica.component.html',
+  styleUrls: ['./modal-ver-politica.component.scss']
+})
+export class ModalVerPoliticaComponent {
+
+  idPolitica:number;
+  cargandoVersion:boolean = false;
+  versionId:number
+  politica:Politica
+  contenido:any;
+
+  constructor(
+    private servicioModal: NgbModal,
+    private serviciosPoliticas: PoliticasService,
+    private activeModal: NgbActiveModal,
+    private sanitizer: DomSanitizer
+  ){
+
+  }
+
+  ngOnInit(){
+    this.cargarVersion(this.idPolitica)
+  }
+
+  cargarVersion(version:number){
+    this.cargandoVersion = true;
+    this.serviciosPoliticas.obtenerPolitica(version).subscribe({
+      next: (respuesta: any) => {
+        if (respuesta.code === 200) {
+          this.politica = respuesta.data
+          this.contenido = this.sanitizeHtml(respuesta.data.contenido)
+          this.cargandoVersion = false
+        }
+        else {
+          const modalInformacion = this.servicioModal.open(ModalInformacionComponent, { size: 'md', centered: true, animation: false, backdrop: 'static' })
+          modalInformacion.componentInstance.informacion = {
+            error: true,
+            esExitoso: 'error',
+            titulo: 'Error al visualizar politica',
+            mensaje: respuesta.message
+          }
+          this.cargandoVersion = false
+        }
+      },
+      error: (error) => {
+        const modalInformacion = this.servicioModal.open(ModalInformacionComponent, { size: 'md', centered: true, animation: false, backdrop: 'static' })
+        modalInformacion.componentInstance.informacion = {
+          error: true,
+          esExitoso: 'error',
+          titulo: 'Error al visualizar politica',
+          mensaje: error.error
+        }
+        this.cargandoVersion = false
+      }
+    })
+  }
+
+    /**
+   * Metod par alimpiar el HTML
+   */
+    sanitizeHtml(html: string): SafeHtml {
+      let nuevo_html = this.verificarHTML(html)
+      return this.sanitizer.bypassSecurityTrustHtml(nuevo_html);
+    }
+
+    /**
+     *Metodo para ajustar el HTML
+     */
+    verificarHTML(html: string): string {
+      return html.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+    }
+
+
+  /**
+   * Metodo para aceptar la politica de Uso
+   */
+  aceptar(){
+    let parametros = {
+      tipo_politica: this.politica.tipoPolitica,
+      acepto: true
+    }
+    this.activeModal.close(parametros)
+  }
+
+}

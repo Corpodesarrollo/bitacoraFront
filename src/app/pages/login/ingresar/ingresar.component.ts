@@ -13,9 +13,9 @@ import { ErrorInicioComponent } from '../error-inicio/error-inicio.component';
 import { RecuperarContraseniaComponent } from '../recuperar-contrasenia/recuperar-contrasenia.component';
 import { TokenService } from 'src/app/services/api/token/token.service';
 import { Subject, filter, takeUntil } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
-import { PoliticaDatosComponent } from '../politica-datos/politica-datos.component';
+import { PoliticasService } from 'src/app/services/api/politicas/politicas.service';
+import { environment } from 'src/environments/environment';
 
 
 
@@ -31,6 +31,7 @@ export class IngresarComponent {
   verContrasenia: boolean = false;
   cambiarContrasenia: boolean = false;
 
+
   //Microsoft
   isIframe = false;
   esMicrosoft = false;
@@ -45,6 +46,7 @@ export class IngresarComponent {
     private router: Router,
     private cookieService: CookieService,
     private msalBroadcastService: MsalBroadcastService,
+    private politicasService: PoliticasService,
 
   ) {
     this.construirFormularios();
@@ -61,8 +63,6 @@ export class IngresarComponent {
     else {
       this.router.navigate(['login'])
     }
-
-    //toDo Si no tiene el token y tiene la bandera de configurar politicas vuelva y abra el modal
     this.isIframe = window !== window.parent && !window.opener;
     this.configurarLogin();
     this.msalBroadcastService.msalSubject$
@@ -145,41 +145,36 @@ export class IngresarComponent {
       this.servicioUsuario.removerUsuario();
       this.ingresando = true;
       let contrasenia = this.formLogin.get('contrasenia').value.toString();
-      //ToDo volver a poner cotnrasena hash
       // let contraseniaHash = MD5(contrasenia).toString();
       let contraseniaHash = contrasenia;
       let credenciales: any = {
         usuario: this.formLogin.get('usuario').value,
-        contrasenia: contraseniaHash,
+        contrasenia: contraseniaHash
       }
+      this.abrirSesionAE(credenciales);
       this.servicioUsuario.ingresar(credenciales).subscribe({
         next: (respuesta: any) => {
           if (respuesta.exito) {
-
-            this.ingresando = false
-            let segPorDia = 1 / 86400;
-            let tiempoSesion = segPorDia * respuesta.expira_en;
-            //Todo Si tiene la bandera de politicas abrir el modal, configurarlo en local storage y no crear el token
             if (respuesta.usuario.cambiar_contrasenia === true) {
               const nuevo_usuario = {
                 "id": respuesta.usuario.id,
               }
               this.servicioUsuario.configurarUsuario(JSON.stringify(nuevo_usuario));
               this.router.navigate(['login/cambiar-contrasenia']);
-
-            }
-            else {
+              this.ingresando = false
+            } else {
+              this.ingresando = false
               const nuevo_usuario = {
                 "id": respuesta.usuario.id,
                 "token": respuesta.usuario.userDetails.token
               }
               this.serviciosToken.configurarTokenLocal(JSON.stringify(nuevo_usuario));
-              /*  this.serviciosToken.configurarToken(JSON.stringify(nuevo_usuario), tiempoSesion); */
               const usuario = {
                 ...respuesta.usuario
               }
               delete usuario.token
               delete usuario.expira_en
+              delete usuario.userDetails
               this.servicioUsuario.configurarUsuario(JSON.stringify(usuario));
               this.router.navigate(['login/seleccionar-perfil']);
             }
@@ -197,19 +192,14 @@ export class IngresarComponent {
     }
   }
 
-  /**
-   * Metodo que recibe la contrasenia
-   * y abre ubna nueva sesion para el tema del manejo
-   * de los i frames en el menu princia0pl
-   * @param credenciales
-   */
-  crearNuevaSesion(credenciales:any) {
-    const url = `https://apoyopruebas.educacionbogota.edu.co/apoyo_escolar/autenticaPaginas?bandera=0&Hinicio=22&Hfin=6&ext=1&key=0&cambio=&login=1230021&password=${credenciales.contrasenia}`
-    const opcionesVentana = 'width=20,height=20';
-    const nuevaPestana = window.open(url, '_blank', opcionesVentana);
+  abrirSesionAE(credenciales:{usuario: string, contrasenia:string}){
+
+    //let url = `${environment.URL_APOYO_ESCOLAR}/autenticaPaginas?bandera=0&Hinicio=22&Hfin=6&ext=1&key=0&cambio=&login=${credenciales.usuario}&password=${credenciales.contrasenia}&urlPag=${environment.URL_APOYO_ESCOLAR}/bienvenida.do`;
+    let url = `${environment.URL_APOYO_ESCOLAR}/autenticaPaginas?bandera=0&Hinicio=22&Hfin=6&ext=1&key=0&cambio=&login=226&password=06020586a96e6ae27ff00174c72625ac&urlPag=${environment.URL_APOYO_ESCOLAR}/bienvenida.do`;
+    var nuevaVentana =window.open(url,'_blank','toolbar=no,status=no,menubar=no,scrollbars=no,resizable=no,left=20000, top=20000, width=2, height=2, visible=none');
     setTimeout(() => {
-      nuevaPestana?.close();
-    }, 10000);
+      nuevaVentana.close();
+    }, 2000);
   }
 
   /**
@@ -226,6 +216,9 @@ export class IngresarComponent {
     this.verContrasenia = !this.verContrasenia
   }
 
+  /**
+   * Meotdo que carga las imagenes del carrusel
+   */
   cargarImagenes() {
     const numeroImagenes = 59; // Imagenes en carpeta
     const ruta = "assets/img/slides_acceso_perfil/";
@@ -233,18 +226,6 @@ export class IngresarComponent {
       const url = ruta + 'img-' + i + '.jpg';
       this.slides.push({ url });
     }
-  }
-
-  verPoliticas() {
-    const modalPoliticas = this.servicioModal.open(PoliticaDatosComponent, { modalDialogClass: 'modal-politicas', centered: true, animation: false, backdrop: 'static' })
-    modalPoliticas.result.then((result) => {
-      if (result) {
-        this.router.navigate(['login/seleccionar-perfil']);
-      }
-      else {
-        this.servicioUsuario.cerrarSesion(this.esMicrosoft)
-      }
-    })
   }
 
 }

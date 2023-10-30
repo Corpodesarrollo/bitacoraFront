@@ -5,7 +5,7 @@
                 <h3 class="tituloMensajes">
                     Mensajes
                 </h3>
-                <button class="btn" routerLink="/home/gestion-administrativa/enviar-mensajes">Enviar mensajes</button>
+                <button class="btn" routerLink="/home/gestion-administrativa/enviar-mensajes" *ngIf="puedeEnviarMensajes">Enviar mensajes</button>
             </div>
         </div>
         <div class="col-12 contenedorTablas">
@@ -26,11 +26,14 @@
                     <div class="col-6 col-md-5 col-lg-5"><p class="infoAsunto">{{mensaje.msjAsunto}}</p> <p *ngIf="fechaActual ==  mensaje.msjFechaIni" class="mensajeNuevo">Nuevo</p> </div>
                     <div class="col-6 col-md-5 col-lg-2 tituloMobile">Fecha:</div>
                     <div class="col-2"><p class="fecha">{{mensaje.msjFecha | date:'dd/MM/yyyy'}}</p></div>
-                    <div class="col-12 col-lg-3 d-flex justify-content-center"><button (click)="verMensaje(mensaje.msjCodigo)" class="btn">Ver mensaje</button></div>
+                    <div class="col-12 col-lg-3 d-flex justify-content-center">
+                      <button (click)="verMensaje(mensaje.msjCodigo)"
+                      *ngIf="puedeVerMensaje"
+                      class="btn">Ver mensaje</button></div>
                     <!-- {{fechaActual}}{{mensaje.msjFechaIni}} -->
                 </div>
 
-                
+
             </div>
             <div class="sinMensajes" *ngIf="mensajeResp == false  && conMensajesCargados == false">Sin mensajes cargados</div>
 

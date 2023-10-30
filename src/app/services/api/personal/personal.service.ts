@@ -52,11 +52,11 @@ export class PersonalService {
     let queryString = "";
     if (parametros || parametrosPagina) {
       queryString = "?";
-      if (parametros.sede) {
+      if (parametros.sede!=null) {
         if (queryString != "?") queryString += "&";
         queryString += "sede=" + parametros.sede;
       }
-      if (parametros.jornada) {
+      if (parametros.jornada!=null) {
         if (queryString != "?") queryString += "&";
         queryString += "jornada=" + parametros.jornada
       }
@@ -223,5 +223,18 @@ export class PersonalService {
     const url = `${environment.URL_API_PERSONAL}/personal/actualizar/perfil`;
     return this.http.post(url, parametros, this.httpOptions)
   }
+
+  exportAsignacionAcademica(parametros: any){
+    this.setearCabeceras();
+    return this.http.get(`${environment.URL_API_PERSONAL}/personal/reporte/export/${parametros.institucion}/${parametros.sede}/${parametros.jornada}/${parametros.metodologia}/${parametros.vigencia}`, this.httpOptions)
+
+    // http://localhost:8080/personal/api/personal/reporte/export/{{institucion}}/{{sede}}/{{jornada}}/{{metodologia}}/{{vigencia}}
+
+  }
+  // actualizarPerfil2(parametros: any) {
+  //   this.setearCabeceras();
+  //   const url = `https://pruebas-sed.linktic.com/personal/api/personal/actualizar/perfil`;
+  //   return this.http.post(url, parametros, this.httpOptions)
+  // }
 
 }

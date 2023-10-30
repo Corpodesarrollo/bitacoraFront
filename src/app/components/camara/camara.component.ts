@@ -56,6 +56,7 @@ export class CamaraComponent {
 
 
   errorAlIniciar(error: WebcamInitError): void {
+    console.log(error);
     if (error.mediaStreamError && error.mediaStreamError.name === "NotAllowedError") {
       this.modal.open(this.modalError,{ size: 'md', centered: true,  animation: false, backdrop: 'static', windowClass: 'modal_login'});
       this.activeModal.close();

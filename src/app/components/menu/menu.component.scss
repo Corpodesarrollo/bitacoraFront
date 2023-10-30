@@ -24,7 +24,7 @@
 }
 
 .menu_desplegado {
-  width: 22.5rem;
+  width: 20rem;
 }
 
 .menu_recogido {
@@ -245,6 +245,12 @@
 
 .menu_desplegado .iniciales {
   display: none;
+}
+
+#cerrarVentanas{
+  position: absolute;
+  left: 10;
+  top: 10;
 }
 
 

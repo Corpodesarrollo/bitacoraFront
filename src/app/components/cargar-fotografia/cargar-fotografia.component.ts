@@ -44,8 +44,8 @@ export class CargarFotografiaComponent {
     ){}
 
   ngOnInit(){
-    let rolUsuario = this.serviciosUsuario.obtenerRolUsuario();
-    if(rolUsuario === 'docente'){
+    let perfilUsuario = this.serviciosUsuario.obtenerPerfilUsuario().nombre;
+    if(perfilUsuario === 'docente'){
       this.traeBotones = true
     }
     this.formatosImagenes = environment.formatos_imagen_validos.toString();
@@ -70,10 +70,10 @@ export class CargarFotografiaComponent {
       this.actualizarFoto.emit(this.fotoUsuario)
       this.fotoPrevisualizada = false;
       if( !foto ) return false;
-      let fotoName = foto.name.split(".")
+      let fotoName = foto.name.split(".");
       let nombreArchivo = fotoName[0];
       let tipoArchivo = this.obtenerTipo(foto)
-      if(nombreArchivo === this.identificacion.toString()){
+      if(nombreArchivo === this.identificacion.toString() && fotoName.length==2){
         if(environment.formatos_imagen_validos.includes(`image/${tipoArchivo}`)){
           if(foto.size > environment.tamano_imagen){
             this.traeMensaje = true;

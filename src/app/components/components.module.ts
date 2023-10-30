@@ -18,7 +18,6 @@ import { ConfirmarCerrarSesionComponent } from './confirmar-cerrar-sesion/confir
 import { ContraseniaComponent } from './contrasenia/contrasenia.component';
 import { ErrorCambioComponentC } from './error-cambio/error-cambio.component';
 import { ExitoCambioComponentC } from './exito-cambio/exito-cambio.component';
-import { FilaDinamicaTablaComponent } from './fila-dinamica-tabla/fila-dinamica-tabla.component';
 import { MensajesComponent } from './mensajes/mensajes.component';
 import { MenuComponent } from './menu/menu.component';
 import { MigaPanComponent } from './miga-pan/miga-pan.component';
@@ -26,8 +25,12 @@ import { ModalInformacionComponent } from './modal-informacion/modal-informacion
 import { PaginadorComponent } from './paginador/paginador.component';
 import { PiePaginaComponent } from './pie-pagina/pie-pagina.component';
 import { SinRegistrosComponent } from './sin-registros/sin-registros.component';
-import { TablaRegistroDetalleComponent } from './tabla-registro-detalle/tabla-registro-detalle.component';
 import { VerPoliticasComponent } from './ver-politicas/ver-politicas.component';
+import { CarruselImagenesComponent } from './carrusel-imagenes/carrusel-imagenes.component';
+import { NoAutorizadoComponent } from './no-autorizado/no-autorizado.component';
+import { SesionAEComponent } from './sesion-ae/sesion-ae.component';
+import { FilaDinamicaTablaComponent } from './fila-dinamica-tabla/fila-dinamica-tabla.component';
+import { TablaRegistroDetalleComponent } from './tabla-registro-detalle/tabla-registro-detalle.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +53,9 @@ import { VerPoliticasComponent } from './ver-politicas/ver-politicas.component';
     ModalInformacionComponent,
     VerPoliticasComponent,
     SinRegistrosComponent,
+    CarruselImagenesComponent,
+    NoAutorizadoComponent,
+    SesionAEComponent,
     FilaDinamicaTablaComponent,
     TablaRegistroDetalleComponent
   ],
@@ -70,8 +76,11 @@ import { VerPoliticasComponent } from './ver-politicas/ver-politicas.component';
     ModalInformacionComponent,
     VerPoliticasComponent,
     SinRegistrosComponent,
+    CarruselImagenesComponent,
+    NoAutorizadoComponent,
+    SesionAEComponent,
     FilaDinamicaTablaComponent,
-    TablaRegistroDetalleComponent,
+    TablaRegistroDetalleComponent
   ],
   imports: [
     CommonModule,

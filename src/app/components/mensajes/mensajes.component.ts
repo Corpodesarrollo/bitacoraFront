@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AccesoPerfil } from 'src/app/interfaces/acceso_perfil.interface';
 import { MensajesService } from 'src/app/services/api/mensajes/mensajes.service';
 import { UsuarioService } from 'src/app/services/api/usuario/usuario.service';
 
@@ -40,13 +41,13 @@ export class MensajesComponent implements OnInit{
   ngOnInit() {
     this.parametrosFiltros.usuarioId = this.usuarioLogueado.id;
 
-    let datosUsuario  = JSON.parse(sessionStorage.getItem('sap_sec_percol')!)
-    this.parametrosFiltros.localidadId = datosUsuario.localidad.idLocalidad;
-    this.parametrosFiltros.colegioId = datosUsuario.colegio.idColegio;
-    this.parametrosFiltros.perfilId = datosUsuario.perfil.idPerfil;
-    this.parametrosFiltros.perfilLoginId = datosUsuario.perfil.idPerfil;
-    this.parametrosFiltros.jornadaId = datosUsuario.jornada.idJornada;
-    this.parametrosFiltros.sedeId = datosUsuario.sede.idSede;
+    let datosUsuario:AccesoPerfil  = this.usuarioService.obtenerAccesoSeleccionado();
+    this.parametrosFiltros.localidadId = datosUsuario.localidad?.id;
+    this.parametrosFiltros.colegioId = datosUsuario.colegio?.id;
+    this.parametrosFiltros.perfilId = datosUsuario.perfil.id;
+    this.parametrosFiltros.perfilLoginId = datosUsuario.perfil.id;
+    this.parametrosFiltros.jornadaId = datosUsuario.jornada?.id;
+    this.parametrosFiltros.sedeId = datosUsuario.sede?.id;
     this.cargandoMensajes = true;
     this.obtenerMensajes();
   }

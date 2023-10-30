@@ -10,8 +10,8 @@
         </div>
         <div class="usuario_info" *ngIf="usuario">
             <div class="escudo_contenedor" *ngIf="mostrarElemento">
-                <img class="escudo_ie" *ngIf="foto_guardada" src="data:image/jpeg;base64,{{foto_guardada}}" alt="" />
-                <img class="escudo_defecto" *ngIf="!foto_guardada" src="assets/img/logo_alcaldia.svg" alt="" />
+                <img class="escudo_ie" *ngIf="fotoGuardada" src="data:image/jpeg;base64,{{fotoGuardada}}" alt="" />
+                <img class="escudo_defecto" *ngIf="!fotoGuardada" src="assets/img/logo_alcaldia.svg" alt="" />
             </div>
             <div id="usuario" *ngIf="mostrarElemento">
                 <img class="foto_usuario" *ngIf="usuario.foto && usuario.foto.codificacion"
@@ -22,7 +22,7 @@
                 </span>
                 <div class="descripcion_foto">
                     <p>{{ nombreUsuario | minusculas }}</p>
-                    <p>{{ etiquetaGuardada | inicial }}</p>
+                    <p>{{ perfilUsuario.perfil.etiqueta | inicial }}</p>
                 </div>
             </div>
             <div *ngIf="mostrarElemento">
@@ -46,16 +46,21 @@
 <!-- Desplegable para información de perfil -->
 <div class="container_perfil" *ngIf="toggleUser">
     <div class="perfil container-fluid container-xl">
-        <img class="escudo" *ngIf="foto_guardada" src="data:image/jpeg;base64,{{foto_guardada}}"
+        <img class="escudo" *ngIf="fotoGuardada" src="data:image/jpeg;base64,{{fotoGuardada}}"
             alt="Imagen de usuario" />
-        <img class="escudo" *ngIf="!foto_guardada" src="assets/img/escudo_ie_defecto.svg" alt="" />
+        <img class="escudo" *ngIf="!fotoGuardada" src="assets/img/escudo_ie_defecto.svg" alt="" />
         <div class="nombre">{{ nombreUsuario | minusculas }}</div>
-        <div class="rol">{{ etiquetaGuardada }}</div>
-        <div class="colegio" [ngClass]="{'escondido': rolGuardado == perfilAdmin}">{{ colegioGuardado }}</div>
-        <div class="sede" [ngClass]="{'escondido': rolGuardado == perfilAdmin}"> <strong>SEDE:</strong> {{ sedeGuardada
-            | inicial }}</div>
-        <div class="jornada" [ngClass]="{'escondido': rolGuardado == perfilAdmin}"> <strong>JORNADA:</strong> {{
-            jornadaGuardada | inicial}} </div>
+        <div class="rol" *ngIf="perfilUsuario?.perfil?.etiqueta"> {{ perfilUsuario.perfil.etiqueta }}</div>
+        <div class="colegio" *ngIf="nivelInstitucion">{{ perfilUsuario.colegio.nombre }}</div>
+        <ng-container *ngIf="nivelInstitucion">
+          <div class="sede" *ngIf="perfilUsuario?.sede.nombre"> <strong>Sede:</strong> {{ perfilUsuario.sede.nombre
+              | inicial }}</div>
+          <div class="jornada" *ngIf="perfilUsuario?.jornada?.nombre"> <strong>Jornada:</strong> {{
+            perfilUsuario.jornada.nombre | inicial}} </div>
+        </ng-container>
+        <div class="jornada"  *ngIf="perfilUsuario?.localidad?.nombre"><strong>Localidad: </strong>{{ perfilUsuario.localidad.nombre }}</div>
+        <div class="jornada" *ngIf="perfilUsuario?.dependencia?.nombre"><strong>Dependencia: </strong>{{ perfilUsuario.dependencia.nombre }}</div>
+
     </div>
     <div class="cambiar_contrasena" *ngIf="!esMicrosoft">
         <button type="submit" class="info_btn" (click)="contrasena(); toggleDropdown()">
@@ -76,12 +81,12 @@
             <p class="titulo">Cerrar sesión</p>
         </button>
     </div>
-    <div class="cambiar_sede" [ngClass]="{'escondido': unicoRegistro == true || rolGuardado == perfilAdmin}">
+    <div class="cambiar_sede" [ngClass]="{'escondido': unicoRegistro == true || (nivelUsuario == 1  && unicoRegistro)}">
         <button type="submit" class="info_btn" (click)="cambiar()">
             <div class="icono">
                 <img src="assets/iconos/cambiar_icono.svg" alt="">
             </div>
-            <p class="titulo">Cambiar de colegio o sede</p>
+            <p class="titulo">Cambiar de {{texto_niveles}}</p>
         </button>
     </div>
     <div class="version">

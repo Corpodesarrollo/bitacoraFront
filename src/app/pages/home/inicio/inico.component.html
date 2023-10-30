@@ -1,97 +1,40 @@
-<div id="contenedorInicio" class="container-lg container-fluid">
-    <div class="row">
-        <div class="titulo my-3 col-12 col-md-12 col-lg-12 container-fluid">BIENVENIDO AL SISTEMA DE APOYO ESCOLAR</div>
-        <div class="col-12 col-md-12 container-fluid" [ngClass]="{'col-lg-7': cantidadMensajes > 0, 'col-lg-12': cantidadMensajes === 0}">
-            <div class="contenedor-tabla container-fluid" [ngClass]="{'escondido': perfilUsuario == perfilAdmin}">
-                <div class="tituloContenedor mb-3">Lista de estudiantes de la institución</div>
-                <div class="lista_tabla">
-                    <div id="titulos" class="container-fluid">
-                        <div class="item_1">Grupo</div>
-                        <div class="item_2">Jornada</div>
-                        <div class="item_3">Nombres</div>
-                        <div class="item_4">Apellidos</div>
-                    </div>
-                    <div id="filas" *ngFor="let estudiante of estudiantesMostrar">
-                        <div class="registro">
-                            <div class="item_1">{{estudiante.grupo}}</div>
-                            <div class="item_2">{{estudiante.jornada}}</div>
-                            <div class="item_3">{{estudiante.nombre}}</div>
-                            <div class="item_4">{{estudiante.apellidos}}</div>
-                        </div>
-                    </div>
-                </div>
-                <app-paginador [totalRegistros]="totalItems" *ngIf="totalPaginas > 1" [contadorPagina]="totalPaginas"
-                    [paginaActual]="paginaActual" (cambioPagina)="onPageChange($event)"
-                    [showPreviousButton]="paginaActual > 1" [showNextButton]="paginaActual < totalPaginas">
-                </app-paginador>
-                <div class="mb-2 mt-4 contenedor_botones">
-                    <button type="submit" class="btn boton_primario">
-                        <div>Ver todos los estudiantes</div>
-                    </button>
-                </div>
-            </div>
-            <div class="contenedor-tabla container-fluid" [ngClass]="{'escondido': perfilUsuario != perfilAdmin}">
-                <div class="tituloContenedor mb-3">Lista de colegios en el sistema</div>
-                <div class="lista_tabla">
-                    <div id="titulos" class="container-fluid">
-                        <div class="item_5">Colegio</div>
-                        <div class="item_6">Estudiantes inscritos</div>
-                    </div>
-                    <div id="filas" *ngFor="let colegio of colegiosMostrar">
-                        <div class="registro">
-                            <div class="item_5">{{colegio.nombre}}</div>
-                            <div class="item_6">{{colegio.estudiantes}}</div>
-                        </div>
-                    </div>
-                </div>
-                <app-paginador [totalRegistros]="totalItemsAdm" *ngIf="totalPaginasAdm > 1" [contadorPagina]="totalPaginasAdm"
-                    [paginaActual]="paginaActual" (cambioPagina)="onPageChange($event)"
-                    [showPreviousButton]="paginaActual > 1" [showNextButton]="paginaActual < totalPaginas">
-                </app-paginador>
-                <div class="mb-2 mt-4 contenedor_botones">
-                    <button type="submit" class="btn boton_primario">
-                        <div>Ver todos los colegios</div>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <div class="col-12 col-md-12 container-fluid" [ngClass]="{'col-lg-5': cantidadMensajes > 0, 'escondido': cantidadMensajes ===0}">
-            <div class="contenedor-mensajes">
-                <div class="tituloContenedor">Mensajes</div>
-                <app-mensaje></app-mensaje>
-                <div class="mb-2 mt-4 contenedor_botones">
-                    <button type="submit" class="btn boton_primario" (click)="verMensajes()">
-                        <div>Ver más mensajes</div>
-                    </button>
-                </div>
-            </div>
-        </div>
+<app-cargando *ngIf="cargandoPermisos && !esIframe && !cargandoIframe"></app-cargando>
+<div id="contenedorInicio" class="container-lg" *ngIf="!cargandoPermisos && !esIframe && !cargandoIframe">
+  <div class="titulo">BIENVENIDO AL SISTEMA DE APOYO ESCOLAR</div>
+  <div class="row">
+    <div class="col-12" [ngClass]="{'col-lg-7': (puedeVerMensajes && puedeVerColegios) || (puedeVerMensajes && puedeVerEstudiantes),
+    'col-lg-12': (puedeVerColegios && puedeVerEstudiantes && puedeVerMensajes)
+  }">
+      <app-lista-estudiantes
+        [idColegio]="idInstitucion"
+        [idSede]="idSede"
+        [idJornada]="idJornada"
+        *ngIf=" puedeVerEstudiantes"
+        >
+      </app-lista-estudiantes>
+      <app-lista-colegios *ngIf="puedeVerColegios"
+      [localidad]="localidadId">
+
+      </app-lista-colegios>
     </div>
-    <div class="row px-2 mt-4">
-        <div class="col-12 col-sm-12 col-md-12 col-lg-12 contenedor-accesos">
-            <div class="tituloContenedor">Accesos rápidos</div>
-            <div class="botones container-fluid">
-                <button type="submit" class="btn boton_primario">
-                    <span *ngIf="!perfilAdmin">Plan de estudios</span>
-                    <span *ngIf="perfilAdmin">Anuario Escolar</span>
-                </button>
-                <button type="submit" class="btn boton_primario">
-                    <span *ngIf="!perfilAdmin">Promoción</span>
-                    <span *ngIf="perfilAdmin">Horarios</span>
-                </button>
-                <button type="submit" class="btn boton_primario">
-                    <span *ngIf="!perfilAdmin">Resúmenes de Evaluación</span>
-                    <span *ngIf="perfilAdmin">Importar evaluación</span>
-                </button>
-                <button type="submit" class="btn boton_primario">
-                    <span *ngIf="!perfilAdmin">Generar Boletines</span>
-                    <span *ngIf="perfilAdmin">Libro de notas</span>
-                </button>
-                <button type="submit" class="btn boton_primario">
-                    <span *ngIf="!perfilAdmin">Generar Certificados</span>
-                    <span *ngIf="perfilAdmin">Generar carnés</span>
-                </button>
-            </div>
+    <div class="col-12" [ngClass]="{'col-lg-5':   puedeVerEstudiantes || puedeVerColegios,
+    'col-lg-12': (puedeVerColegios && puedeVerEstudiantes && puedeVerMensajes)
+  }" *ngIf="puedeVerMensajes">
+      <div class="contenedor-mensajes">
+        <div class="titulo_mensaje">Mensajes</div>
+        <app-mensaje *ngIf="cantidadMensajes > 0"></app-mensaje>
+        <div class="no_mensajes" *ngIf="cantidadMensajes === 0">No tiene mensajes para mostrar</div>
+        <div class="acciones mt-4" *ngIf="cantidadMensajes > 0">
+          <button type="submit" class="btn boton_primario" (click)="verMensajes()">
+            <div>Ver más mensajes</div>
+          </button>
         </div>
+      </div>
     </div>
+  </div>
+  <app-accesos-directos></app-accesos-directos>
 </div>
+
+
+<app-cargando [mensaje]="mensaje" *ngIf="cargandoIframe && esIframe && !cargandoPermisos"></app-cargando>
+<iframe *ngIf="esIframe && !cargandoIframe" [src]="urlIframe"></iframe>

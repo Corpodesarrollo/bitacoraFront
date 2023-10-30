@@ -1,7 +1,7 @@
 import { HttpResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { PersonalService } from 'src/app/services/api/personal/personal.service';
-import { DatosFuncionarios } from 'src/app/classes/datos_funcionarios.interface';
+import { DatosFuncionarios } from 'src/app/interfaces/datos_funcionarios.interface';
 import * as XLSX from 'xlsx';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EditarFotoUsuarioComponent } from '../editar-foto-usuario/editar-foto-usuario.component';
@@ -10,6 +10,8 @@ import { AnuarioComponent } from '../anuario/anuario.component';
 import { DesasociarFuncionarioComponent } from '../desasociar-funcionario/desasociar-funcionario.component';
 import { InactivarUsuarioComponent } from '../inactivar-usuario/inactivar-usuario.component';
 import { ModalInformacionComponent } from 'src/app/components/modal-informacion/modal-informacion.component';
+import { UsuarioService } from 'src/app/services/api/usuario/usuario.service';
+import { PermisosUsuarios } from 'src/app/enums/usuario-permisos';
 
 @Component({
   selector: 'app-datos-funcionarios',
@@ -18,21 +20,30 @@ import { ModalInformacionComponent } from 'src/app/components/modal-informacion/
 })
 export class DatosFuncionariosComponent {
 
-  cargandoRegistros:boolean = false;
-  cargandoDatos:boolean = false;
-  datosNoEncontrados:boolean = false;
-  exportandoDatos:boolean = false;
-  mostrarFiltros:boolean = true;
+  cargandoRegistros: boolean = false;
+  cargandoDatos: boolean = false;
+  cargandoPermisos: boolean = false;
+  datosNoEncontrados: boolean = false;
+  exportandoDatos: boolean = false;
+  mostrarFiltros: boolean = true;
 
-  listaRegistros:DatosFuncionarios[] = [];
+  permisosAsignacion: boolean = true;
+  permisosDesasociar: boolean = true;
+  permisosInactivar: boolean = true;
+  permisosEditar: boolean = true;
+  permisosFotografia: boolean = true;
+  permisosExportar: boolean = true;
+  permisosAnuario: boolean = true;
 
-  totalPaginas!:number;
-  totalResultados!:number;
-  pagina:number = 0;
-  pageSize:number = 10;
-  registrosOrdenados:boolean = false;
-  columnaOrden:string = 'primerNombre'
-  esAscendente:boolean = true
+  listaRegistros: DatosFuncionarios[] = [];
+
+  totalPaginas!: number;
+  totalResultados!: number;
+  pagina: number = 0;
+  pageSize: number = 10;
+  registrosOrdenados: boolean = false;
+  columnaOrden: string = 'primerNombre'
+  esAscendente: boolean = true
 
   parametrosPagina = {
     pagina: this.pagina,
@@ -40,7 +51,7 @@ export class DatosFuncionariosComponent {
     sort: 'primerNombre,asc'
   }
 
-  ordenadaAscendente:any = {
+  ordenadaAscendente: any = {
     n: false,
     tipoIdentificacion: false,
     identificacion: false,
@@ -52,58 +63,78 @@ export class DatosFuncionariosComponent {
   parametrosFiltros = {
     sede: "",
     jornada: "",
-    tipoPersonal:"",
-    identificacion:"",
-    primer_nombre:"",
-    segundo_nombre:"",
-    primer_apellido:"",
-    segundo_apellido:"",
+    tipoPersonal: "",
+    identificacion: "",
+    primer_nombre: "",
+    segundo_nombre: "",
+    primer_apellido: "",
+    segundo_apellido: "",
     institucion: "",
   };
 
   constructor(
     private personalService: PersonalService,
     private modalService: NgbModal,
-    ){
+    private usuarioService: UsuarioService
+  ) {
+    this.cargandoPermisos = true
+    this.cargarPermisos();
   }
 
 
+  /**
+   * metodo para cargar Permisos
+   */
+  cargarPermisos() {
+    this.usuarioService.permisosActualizados$.subscribe((permisosActualizados) => {
+      if (permisosActualizados) {
+        this.permisosAsignacion = this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.PERSONAL_ASIGNACION_ACADEMICA),
+        this.permisosDesasociar = this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.PERSONAL_DESASOCIAR),
+        this.permisosInactivar = this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.PERSONAL_INACTIVAR)
+        this.permisosEditar = this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.PERSONAL_EDITAR_ADMIN)
+        this.permisosFotografia = this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.PERSONAL_FOTOGRAFIA)
+        this.permisosExportar = this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.PERSONAL_EXPORTAR)
+        this.permisosAnuario = this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.PERSONAL_ANUARIO)
+        this.cargandoPermisos = false;
+      }
+    });
+  }
 
   /**
    * Carga el servicio con los datos del filtro de busqueda
    */
-  obtenerDatos(){
+  obtenerDatos() {
     this.cargandoDatos = true
     this.listaRegistros = [];
     this.personalService.obtenerDatosFiltrados(this.parametrosFiltros, this.parametrosPagina).subscribe({
-      next: (respuesta: HttpResponse<any>) =>{
-        if(respuesta.status === 200){
-            const data = respuesta.body.data
-            this.listaRegistros = data.content.map((registro:any, index:any) =>{
-              const indiceCalculado = index + 1 + this.pagina * this.pageSize;
-              return{
-                ...registro,
-                indice: indiceCalculado,
-                nombres: registro.primerNombre + " " + registro.segundoNombre,
-                apellidos: registro.primerApellido + " " + registro.segundoApellido
-              }
-            });
-            this.totalResultados= data.totalElements;
-            this.totalPaginas = data.totalPages;
-            this.cargandoRegistros = false;
-            this.cargandoDatos = false;
-            this.mostrarFiltros = false;
-          }
-          else if(respuesta.status === 207 && this.totalResultados > 0){
-            this.abrirFiltros()
-          }
-          else{
-            this.cargandoDatos = false;
-            this.cargandoRegistros = false;
-            this.datosNoEncontrados = true
-          }
-        },
-        error: (error) => {
+      next: (respuesta: HttpResponse<any>) => {
+        if (respuesta.status === 200) {
+          const data = respuesta.body.data
+          this.listaRegistros = data.content.map((registro: any, index: any) => {
+            const indiceCalculado = index + 1 + this.pagina * this.pageSize;
+            return {
+              ...registro,
+              indice: indiceCalculado,
+              nombres: registro.primerNombre + " " + registro.segundoNombre,
+              apellidos: registro.primerApellido + " " + registro.segundoApellido
+            }
+          });
+          this.totalResultados = data.totalElements;
+          this.totalPaginas = data.totalPages;
+          this.cargandoRegistros = false;
+          this.cargandoDatos = false;
+          this.mostrarFiltros = false;
+        }
+        else if (respuesta.status === 207 && this.totalResultados > 0) {
+          this.abrirFiltros()
+        }
+        else {
+          this.cargandoDatos = false;
+          this.cargandoRegistros = false;
+          this.datosNoEncontrados = true
+        }
+      },
+      error: (error) => {
         this.cargandoDatos = false;
         this.cargandoRegistros = false;
         this.datosNoEncontrados = true
@@ -118,16 +149,16 @@ export class DatosFuncionariosComponent {
    * En 3 linea reinica la lista de registros
    * Em la 4 linea asigna el evento (los filtros)
    */
-  filtrar(evento:any){
+  filtrar(evento: any) {
     this.cargandoRegistros = true
     this.datosNoEncontrados = false;
     this.listaRegistros = []
     this.parametrosFiltros = evento;
-    if(this.parametrosFiltros.sede || this.parametrosFiltros.jornada || this.parametrosFiltros.tipoPersonal || this.parametrosFiltros.identificacion || this.parametrosFiltros.primer_nombre || this.parametrosFiltros.segundo_nombre || this.parametrosFiltros.primer_apellido || this.parametrosFiltros.segundo_apellido || this.parametrosFiltros.institucion != ''){
+    if (this.parametrosFiltros.sede || this.parametrosFiltros.jornada || this.parametrosFiltros.tipoPersonal || this.parametrosFiltros.identificacion || this.parametrosFiltros.primer_nombre || this.parametrosFiltros.segundo_nombre || this.parametrosFiltros.primer_apellido || this.parametrosFiltros.segundo_apellido || this.parametrosFiltros.institucion != '') {
       this.parametrosPagina.pagina = -1
       this.obtenerDatos();
     }
-    else{
+    else {
       this.cargandoRegistros = false;
       this.datosNoEncontrados = true;
     }
@@ -136,15 +167,15 @@ export class DatosFuncionariosComponent {
   /**
    * Nos permite actualizar el tamaño de la vista de la lista
    */
-  actualizarTamano(valor:any){
+  actualizarTamano(valor: any) {
     this.parametrosPagina.size = valor;
     let nuevoTotalPaginas = Math.round(this.totalResultados / valor);
-    if(this.pagina >= nuevoTotalPaginas){
+    if (this.pagina >= nuevoTotalPaginas) {
       this.pagina = Math.max(nuevoTotalPaginas - 1, 0)
       this.parametrosPagina.pagina = this.pagina;
       this.obtenerDatos()
     }
-    else{
+    else {
       this.obtenerDatos();
     }
   }
@@ -152,31 +183,31 @@ export class DatosFuncionariosComponent {
   /**
    * Abre la vista para realizsar los filtors y renicia los valores
    */
-  abrirFiltros(){
+  abrirFiltros() {
     this.listaRegistros = [];
     this.mostrarFiltros = true;
     this.parametrosFiltros = {
       sede: "",
       jornada: "",
-      tipoPersonal:"",
-      identificacion:"",
-      primer_nombre:"",
-      segundo_nombre:"",
-      primer_apellido:"",
-      segundo_apellido:"",
+      tipoPersonal: "",
+      identificacion: "",
+      primer_nombre: "",
+      segundo_nombre: "",
+      primer_apellido: "",
+      segundo_apellido: "",
       institucion: "",
     };
     this.esAscendente = true;
     this.columnaOrden = 'primerNombre'
     this.parametrosPagina.pagina = 0;
     this.parametrosPagina.size = 10;
-    this.parametrosPagina.sort = 'primerNombre','sort'
+    this.parametrosPagina.sort = 'primerNombre', 'sort'
     this.pageSize = 10;
     this.pagina = 0;
     this.totalResultados = 0;
-    for( let col in this.ordenadaAscendente){
+    for (let col in this.ordenadaAscendente) {
       this.ordenadaAscendente[col] = false
-      if(col === 'primerNombre'){
+      if (col === 'primerNombre') {
         this.ordenadaAscendente[col] = true;
       }
     }
@@ -187,12 +218,12 @@ export class DatosFuncionariosComponent {
    * Basado en la opcion ordena ascendente o descendentemente
    * @param columna
    */
-  ordenarDatos(columna:string){
-    for( let col in this.ordenadaAscendente){
-      if(col != columna){
+  ordenarDatos(columna: string) {
+    for (let col in this.ordenadaAscendente) {
+      if (col != columna) {
         this.ordenadaAscendente[col] = false
       }
-      else{
+      else {
         this.ordenadaAscendente[col] = !this.ordenadaAscendente[col]
         this.columnaOrden = columna
         this.esAscendente = !this.esAscendente;
@@ -206,12 +237,12 @@ export class DatosFuncionariosComponent {
    * Metodo que ordena la columna del indique acorde a los
    * datos visualizados en pantalla
    */
-  ordenarColumna(columna:string){
-    for( let col in this.ordenadaAscendente){
-      if(col != columna){
+  ordenarColumna(columna: string) {
+    for (let col in this.ordenadaAscendente) {
+      if (col != columna) {
         this.ordenadaAscendente[col] = false;
       }
-      else{
+      else {
         this.ordenadaAscendente[col] = !this.ordenadaAscendente[col];
         this.columnaOrden = columna
       }
@@ -227,9 +258,9 @@ export class DatosFuncionariosComponent {
       return 0;
     }
     if (this.ordenadaAscendente['n']) {
-      this.listaRegistros.sort((a:any, b:any) => compare(b.indice, a.indice));
+      this.listaRegistros.sort((a: any, b: any) => compare(b.indice, a.indice));
     } else {
-      this.listaRegistros.sort((a:any, b:any) => compare(a.indice, b.indice));
+      this.listaRegistros.sort((a: any, b: any) => compare(a.indice, b.indice));
     }
   }
 
@@ -238,9 +269,9 @@ export class DatosFuncionariosComponent {
    * y consulta los registros
    * @param valor
    */
-  cambiarPagina(valor?:string){
-    if(valor === 'siguiente'){
-      if( this.pagina < this.totalPaginas - 1){
+  cambiarPagina(valor?: string) {
+    if (valor === 'siguiente') {
+      if (this.pagina < this.totalPaginas - 1) {
         this.pagina = this.pagina + 1
         this.parametrosPagina.pagina = this.pagina
         this.obtenerDatos()
@@ -256,21 +287,21 @@ export class DatosFuncionariosComponent {
   /**
    * Abre el componente para editar los datos del funcionario
    */
-  editarUsuario(registro:any){
+  editarUsuario(registro: any) {
     let registroUsuario = registro
-    if(registro.estado === "INACTIVO" || registro.estado === "" || registro.estado === null){
-      const modal = this.modalService.open(ModalInformacionComponent, {size: 'md', centered: true, animation:false, backdrop: 'static'})
+    if (registro.estado === "INACTIVO" || registro.estado === "" || registro.estado === null) {
+      const modal = this.modalService.open(ModalInformacionComponent, { size: 'md', centered: true, animation: false, backdrop: 'static' })
       modal.componentInstance.informacion = {
         esExitoso: 'warning',
         titulo: '¡Advertencia!',
         mensaje: 'No puede realizar alguna acción, ya que el usuario se encuentra deshabilitado.'
       }
     }
-    else{
-      const modalRef = this.modalService.open(EditarDatosComponent, {size: 'xl', centered: true, animation:false, backdrop: 'static'}
-        )
+    else {
+      const modalRef = this.modalService.open(EditarDatosComponent, { size: 'xl', centered: true, animation: false, backdrop: 'static' }
+      )
       modalRef.componentInstance.registro = registroUsuario
-      modalRef.result.then(( result) => {
+      modalRef.result.then((result) => {
         this.obtenerDatos()
       })
     }
@@ -279,21 +310,21 @@ export class DatosFuncionariosComponent {
   /**
    * Agregar la fotografia del usaurio
    */
-  editarFotografia(registro:any){
-    if(registro.estado === "INACTIVO" || registro.estado === "" || registro.estado === null){
-      const modal = this.modalService.open(ModalInformacionComponent, {size: 'md', centered: true, animation:false, backdrop: 'static'})
+  editarFotografia(registro: any) {
+    if (registro.estado === "INACTIVO" || registro.estado === "" || registro.estado === null) {
+      const modal = this.modalService.open(ModalInformacionComponent, { size: 'md', centered: true, animation: false, backdrop: 'static' })
       modal.componentInstance.informacion = {
         esExitoso: 'warning',
         titulo: '¡Advertencia!',
         mensaje: 'No puede realizar alguna acción, ya que el usuario se encuentra deshabilitado.'
       }
     }
-    else{
-      const modalFotografia = this.modalService.open(EditarFotoUsuarioComponent, { size: 'lg',  centered: true, animation:false, backdrop: 'static'})
-      modalFotografia.componentInstance.traeBotones =true
+    else {
+      const modalFotografia = this.modalService.open(EditarFotoUsuarioComponent, { size: 'lg', centered: true, animation: false, backdrop: 'static' })
+      modalFotografia.componentInstance.traeBotones = true
       modalFotografia.componentInstance.registroUsuario = registro
       modalFotografia.result.then(() => {
-          this.obtenerDatos()
+        this.obtenerDatos()
       })
     }
   }
@@ -303,7 +334,7 @@ export class DatosFuncionariosComponent {
    * Exporta los datos en formato excel
    * acorde a la busqueda y filtros del usuario.
    */
-  exportarDatos(){
+  exportarDatos() {
     const nombreArchivo = 'resultados.xlsx';
     const headers = [
       'Numeración de registro',
@@ -316,17 +347,17 @@ export class DatosFuncionariosComponent {
       'Correo Institucional',
     ]
 
-    const parametrosPagina  = {
+    const parametrosPagina = {
       pagina: -1,
       size: this.totalResultados,
       sort: 'primerNombre,asc'
     }
     this.exportandoDatos = true
     this.personalService.obtenerDatosFiltrados(this.parametrosFiltros, parametrosPagina).subscribe({
-      next: (respuesta: HttpResponse<any>) =>{
-        if(respuesta.status === 200){
+      next: (respuesta: HttpResponse<any>) => {
+        if (respuesta.status === 200) {
           const data = respuesta.body.data
-          const datos = data.content.map((registro:any, index:any) =>{
+          const datos = data.content.map((registro: any, index: any) => {
             const nuevoRegistro = {
               numeracion: index + 1,
               tipo_documento: registro.tipoIdentificacion,
@@ -358,8 +389,8 @@ export class DatosFuncionariosComponent {
           this.exportandoDatos = false
         }
       },
-      error:(error:any) =>{
-        const modalError = this.modalService.open(ModalInformacionComponent, {size: 'md', animation: false, backdrop: 'static', centered:true})
+      error: (error: any) => {
+        const modalError = this.modalService.open(ModalInformacionComponent, { size: 'md', animation: false, backdrop: 'static', centered: true })
         modalError.componentInstance.informacion = {
           esExitoso: 'error',
           titulo: '¡Error!',
@@ -378,7 +409,7 @@ export class DatosFuncionariosComponent {
     else if (this.totalResultados == 2) {
       modalSize = 'lg';
     }
-   else  if (this.totalResultados >= 3) {
+    else if (this.totalResultados >= 3) {
       modalSize = 'xl';
     }
     const modalAnuario = this.modalService.open(AnuarioComponent, {
@@ -393,24 +424,24 @@ export class DatosFuncionariosComponent {
   }
 
 
-  abrirDesasociar(registro:any) {
-    const modalDesasociar = this.modalService.open(DesasociarFuncionarioComponent, { size: '600px', centered: true, backdrop: 'static'});
+  abrirDesasociar(registro: any) {
+    const modalDesasociar = this.modalService.open(DesasociarFuncionarioComponent, { size: '600px', centered: true, backdrop: 'static' });
     let identificacion = registro.identificacion
     modalDesasociar.componentInstance.identificacion = identificacion
     modalDesasociar.result.then((result) => {
-      if(result == true){
+      if (result == true) {
         this.obtenerDatos()
       }
     })
   }
 
-  abrirInactivar(event:any, registro:any) {
+  abrirInactivar(event: any, registro: any) {
     event.preventDefault();
 
-    const modalInactivar = this.modalService.open(InactivarUsuarioComponent, { size: '600px', centered: true, backdrop: 'static'});
+    const modalInactivar = this.modalService.open(InactivarUsuarioComponent, { size: '600px', centered: true, backdrop: 'static' });
     modalInactivar.componentInstance.registro = registro
     modalInactivar.result.then((result) => {
-      if(result == true){
+      if (result == true) {
         this.obtenerDatos()
       }
     })

@@ -1,6 +1,7 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModalInformacionComponent } from 'src/app/components/modal-informacion/modal-informacion.component';
+import { AccesoPerfil } from 'src/app/interfaces/acceso_perfil.interface';
 import { MensajesService } from 'src/app/services/api/mensajes/mensajes.service';
 import { UsuarioService } from 'src/app/services/api/usuario/usuario.service';
 import { UtilsService } from 'src/app/services/generales/utils/utils.service';
@@ -38,12 +39,11 @@ export class MensajeModal implements OnDestroy {
 
   confirmarEliminarModal() {
     try {
-
+      let datosUsuario:AccesoPerfil  = this.serviciosUsuario.obtenerAccesoSeleccionado();
       let usuarioLogueado = this.serviciosUsuario.obtenerUsuario();
-      let datosUsuario = JSON.parse(sessionStorage.getItem('sap_sec_percol')!)
       //console.log(this.infoMensaje)
       this.activeModal.close('cerrado');
-      this.mensajesService.eliminarMensaje(this.infoMensaje.id, usuarioLogueado.id, datosUsuario.perfil.idPerfil).subscribe((resp: any) => {
+      this.mensajesService.eliminarMensaje(this.infoMensaje.id, usuarioLogueado.id, datosUsuario.perfil.id).subscribe((resp: any) => {
         if (resp.body.code == 200) {
           let infoMensaje: any = {}
           infoMensaje.titulo = '';

@@ -137,7 +137,11 @@ export class MenuComponent {
       this.cerrarSesion()
     }
     if (opcion.serTarget === "1") {
-      this.router.navigate(['/home/ver', opcion.serRecurso])
+      if (opcion.serNombre == 'Bitácora') {
+        this.router.navigate(['/home/gestion-administrativa/consulta-bitacoras'])
+      } else {
+        this.router.navigate(['/home/ver', opcion.serRecurso])
+      }
     }
     else if(opcion.serTarget === "3"){
       this.router.navigate([`${opcion.serRecurso}`]);

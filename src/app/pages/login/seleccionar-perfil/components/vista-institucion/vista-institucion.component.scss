@@ -1,0 +1,64 @@
+
+
+.input-wrapper {
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+  position: relative !important;
+
+  .etiqueta_select {
+      min-width: auto;
+  }
+}
+
+
+.mensajeCarga {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  opacity: 50%;
+  align-content: center;
+
+  p {
+      font-family: "Raleway";
+      font-size: 1rem;
+      padding-top: 1.5rem;
+      padding-bottom: 1rem;
+      text-align: center;
+      margin: 0;
+      font-weight: 300;
+      margin-top: 1rem;
+  }
+}
+
+
+.ingresando {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem
+}
+
+.botones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+
+@media (max-width: 767px) {
+
+  .campo {
+      margin: auto;
+      justify-content: center;
+      align-items: center;
+  }
+
+  .botones {
+      margin: auto;
+      flex-direction: column;
+      width: 100%;
+      justify-content: center;
+  }
+
+}

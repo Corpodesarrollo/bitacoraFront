@@ -1,0 +1,146 @@
+<div *ngIf="!cargandoDocentes" class="row px-4">
+
+    <div *ngIf="datosCargados" class="col-12 mt-4 mb-3">
+            <h3 *ngIf="enInfoFuncionarioSeleccionado" class="titulo_personal">
+                Asignación Académica
+            </h3>
+
+            <h3 *ngIf="!enInfoFuncionarioSeleccionado" class="titulo_personal">
+                {{infoFuncionario.funcionario.primerApellido}} {{infoFuncionario.funcionario.primerNombre}} {{infoFuncionario.funcionario.segundoApellido}} {{infoFuncionario.funcionario.segundoNombre}}
+            </h3>
+
+    </div>
+    <div *ngIf="datosCargados" [class.contenedor]="otrosBotones" class="col-12 ">
+        <div *ngIf="listadoDocentes.length > 0" class="col-12 contenedorTablas tablasDocentes">
+
+            <div *ngIf="enInfoFuncionarioSeleccionado" class="contenedorHorasTotales">
+                <span class="material-symbols-outlined">timelapse</span> Horas asignadas <span>{{horasTotales}}</span>
+            </div>
+            <div class="tabla">
+                <div class="row titulos">
+                    <div class="apellidoNombre titulo">
+                        Apellidos y nombre
+                        <span *ngIf="numero_identificacion" class="material-symbols-outlined">arrow_drop_down</span>
+                        <span *ngIf="!numero_identificacion" class="material-symbols-outlined" >arrow_drop_up
+                        </span>
+                    </div>
+                    <div class="tipoDocumento titulo">
+                        Tipo de documento
+                        <span *ngIf="numero_identificacion" class="material-symbols-outlined">arrow_drop_down</span>
+                        <span *ngIf="!numero_identificacion" class="material-symbols-outlined" >arrow_drop_up
+                        </span>
+                    </div>
+                    <div class="numeroDocumento titulo">
+                        Número de documento
+                        <span *ngIf="numero_identificacion" class="material-symbols-outlined">arrow_drop_down</span>
+                        <span *ngIf="!numero_identificacion" class="material-symbols-outlined" >arrow_drop_up
+                        </span>
+                    </div>
+                    <div class="asignatura titulo">
+                        Asignatura
+                        <span *ngIf="numero_identificacion" class="material-symbols-outlined">arrow_drop_down</span>
+                        <span *ngIf="!numero_identificacion" class="material-symbols-outlined" >arrow_drop_up
+                        </span>
+                    </div>
+                    <div class="grado titulo">
+                        Grado
+                        <span *ngIf="numero_identificacion" class="material-symbols-outlined">arrow_drop_down</span>
+                        <span *ngIf="!numero_identificacion" class="material-symbols-outlined" >arrow_drop_up
+                        </span>
+                    </div>
+                    <div class="grupo titulo">
+                        Grupo
+                        <span *ngIf="numero_identificacion" class="material-symbols-outlined">arrow_drop_down</span>
+                        <span *ngIf="!numero_identificacion" class="material-symbols-outlined" >arrow_drop_up
+                        </span>
+                    </div>
+                    <div class="numeroHoras titulo">
+                        Nº de horas
+                        <span *ngIf="numero_identificacion" class="material-symbols-outlined">arrow_drop_down</span>
+                        <span *ngIf="!numero_identificacion" class="material-symbols-outlined" >arrow_drop_up
+                        </span>
+                    </div>
+                </div>
+
+                <!-- <hr class="hrTabla"> -->
+
+                <div  *ngFor="let infoDocentes of listadoDocentes" class="row contenidoTabla">
+                    <div class="tituloMobile">Apellidos y nombre:</div>
+                    <div class="apellidoNombre infoTabla">
+                        <span *ngIf="!enInfoFuncionarioSeleccionado">
+                            {{infoFuncionario.funcionario.primerApellido}} {{infoFuncionario.funcionario.primerNombre}} {{infoFuncionario.funcionario.segundoApellido}} {{infoFuncionario.funcionario.segundoNombre}}
+                        </span>
+                        <span *ngIf="enInfoFuncionarioSeleccionado">
+                            {{infoDocenteLogueado.apellidos}} {{infoDocenteLogueado.nombres}}
+                        </span>
+                    </div>
+                    <div class="tituloMobile">Tipo de documento:</div>
+                    <div  class="tipoDocumento infoTabla">
+                        <span *ngIf="!enInfoFuncionarioSeleccionado">
+                            {{infoFuncionario.funcionario.tipoIdentificacion}}
+                        </span>
+                        <span *ngIf="enInfoFuncionarioSeleccionado">
+                            {{infoDocenteLogueado.tipo_identificacion}}
+                        </span>
+                    </div>
+                    <div class="tituloMobile">Número de documento:</div>
+                    <div  class="numeroDocumento infoTabla">
+                        <span *ngIf="!enInfoFuncionarioSeleccionado">
+                            {{infoFuncionario.funcionario.identificacion}}
+                        </span>
+                        <span *ngIf="enInfoFuncionarioSeleccionado">
+                            {{infoDocenteLogueado.numero_identificacion}}
+                        </span>
+                    </div>
+                    <div class="tituloMobile">Asignatura:</div>
+                    <div class="asignatura infoTabla">
+                       {{infoDocentes.nombreAsignatura}}
+                    </div>
+                    <div class="tituloMobile">Grado:</div>
+                    <div class="grado infoTabla">
+                        {{infoDocentes.nombreGrado}}
+                    </div>
+                    <div class="tituloMobile">Grupo:</div>
+                    <div class="grupo infoTabla">
+                       {{infoDocentes.nombreGrupo}}
+                    </div>
+                    <div class="tituloMobile">Nº de horas:</div>
+                    <div class="numeroHoras infoTabla">
+                       {{infoDocentes.horasAsignadas || 0}}
+                    </div>
+                </div>
+                <!-- <div class="paginacion">
+                    <div class="d-flex flex-nowrap align-items-center">
+                        <span class="text-nowrap px-2">Página {{pagina + 1  }}&nbsp;-&nbsp;{{totalPaginas}}</span>
+                        <div class="control_paginacion" [class.pagina_deshabilitada]="pagina === 0" (click)="cambiarPagina()">
+                          <span class="material-symbols-outlined">
+                            chevron_left
+                          </span>
+                        </div>
+                        <div [class.pagina_deshabilitada]="pagina >= totalPaginas - 1" class="control_paginacion" (click)="cambiarPagina('siguiente')">
+                            <span class="material-symbols-outlined">
+                              chevron_right
+                            </span>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+
+        <div *ngIf="listadoDocentes.length <= 0" class="col-12 contenedorTablas tablasDocentes">
+
+                <div>Sin horas asignadas</div>
+
+        </div>
+
+    </div>
+    <div  class="col-12 mt-3"  *ngIf="!enInfoFuncionarioSeleccionado && datosCargados">Total de horas: {{horasTotales}}</div>
+    <div  class="acciones" *ngIf="!enInfoFuncionarioSeleccionado && datosCargados">
+        <button type="button" class="btn boton_primario" (click)="cerrarModal()">
+          Cerrar
+        </button>
+    </div>
+  </div>
+  <!-- {{datosCargados | json}} -->
+
+  <app-cargando *ngIf="cargandoDocentes"></app-cargando>

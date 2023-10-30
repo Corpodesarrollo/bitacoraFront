@@ -2,7 +2,9 @@ import { HttpResponse } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModalInformacionComponent } from 'src/app/components/modal-informacion/modal-informacion.component';
+import { AccesoPerfil } from 'src/app/interfaces/acceso_perfil.interface';
 import { PersonalService } from 'src/app/services/api/personal/personal.service';
+import { UsuarioService } from 'src/app/services/api/usuario/usuario.service';
 
 @Component({
   selector: 'app-desasociar-funcionario',
@@ -14,18 +16,18 @@ export class DesasociarFuncionarioComponent {
   activeModal = inject(NgbActiveModal);
   modalService = inject(NgbModal)
   personalServices = inject(PersonalService)
+  usuarioService = inject(UsuarioService);
   identificacion:any
   idColegio!:number
   desasociando:boolean = false
-
 
   cerrar() {
     this.activeModal.close()
   }
 
   ngOnInit(){
-    let datos_usuario = JSON.parse(sessionStorage.getItem('sap_sec_percol')!)
-    this.idColegio = datos_usuario.colegio.idColegio;
+    let datosUsuario:AccesoPerfil  = this.usuarioService.obtenerAccesoSeleccionado();
+    this.idColegio = datosUsuario.colegio.id;
   }
 
   desasociarFuncionario(){

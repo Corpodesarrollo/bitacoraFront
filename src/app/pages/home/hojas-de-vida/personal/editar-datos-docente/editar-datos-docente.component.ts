@@ -1,7 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Route, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { PermisosUsuarios } from 'src/app/enums/usuario-permisos';
+import { AccesoPerfil } from 'src/app/interfaces/acceso_perfil.interface';
 import { PersonalService } from 'src/app/services/api/personal/personal.service';
+import { UsuarioService } from 'src/app/services/api/usuario/usuario.service';
 
 @Component({
   selector: 'app-editar-datos-docente',
@@ -14,17 +18,20 @@ export class EditarDatosDocenteComponent {
   @ViewChild("modalExito") modalExito: any;
   @ViewChild("modalError") modalError: any;
 
+  puedeVerAsignacion:boolean = false;
+  esDocente:any;
   //Modal
   idUsuario:number = 0;
   formDatosDocete!: FormGroup;
   tiposIdentificacion:any = [];
-  datosDocente:any;
+  datosDocente:AccesoPerfil;
 
   cargandoInformacion:boolean = false;
   guardandoCorreo:boolean = false;
   esFotografia!:any;
 
   estaInactivo!:boolean;
+  permisosCapturarFotografia:boolean = true;
   identficacionUsuario!:string;
   fotoUsuario:string | any = ''
   urlFotoUsuario:string = ''
@@ -45,13 +52,25 @@ export class EditarDatosDocenteComponent {
   constructor(
     private formBuilder:FormBuilder,
     private personalServices: PersonalService,
-    private servicioModal: NgbModal
+    private servicioModal: NgbModal,
+    private usuarioServices:UsuarioService,
+    private router:Router
   ){
     this.construirFormularios();
     this.cargarListas();
-    this.datosDocente = JSON.parse(sessionStorage.getItem('sap_sec_percol')!);
-    this.identficacionUsuario = JSON.parse(sessionStorage.getItem('sap_sec_user')!).id
+    this.datosDocente = this.usuarioServices.obtenerAccesoSeleccionado();
+    this.identficacionUsuario = this.usuarioServices.obtenerUsuario().id;
     this.obtenerDatos()
+    this.cargarPermisos()
+  }
+
+
+  cargarPermisos(){
+    this.usuarioServices.permisosActualizados$.subscribe((permisosActualizados) => {
+      if (permisosActualizados) {
+        this.puedeVerAsignacion = this.usuarioServices.obtetenerPermisosPerfil(PermisosUsuarios.PERSONAL_ASIGNACION_ACADEMICA)
+      }
+    })
   }
 
 
@@ -88,10 +107,13 @@ export class EditarDatosDocenteComponent {
   obtenerDatos(){
     let parametos = {
       identificacion: this.identficacionUsuario,
-      institucion: this.datosDocente.colegio.idColegio,
-      sede: this.datosDocente.sede.idSede,
-      jornada: this.datosDocente.jornada.idJornada,
+      institucion: this.datosDocente.colegio ? this.datosDocente.colegio.id : null,
+      sede: this.datosDocente.sede ? this.datosDocente.sede.id : null,
+      jornada: this.datosDocente.jornada ? this.datosDocente.jornada.id : null,
     }
+
+    console.log(parametos);
+
     this.cargandoInformacion = true
     this.personalServices.obtenerDatosSimple(parametos).subscribe({
       next: (respuesta:any) => {
@@ -189,5 +211,9 @@ export class EditarDatosDocenteComponent {
         }
       })
     }
+  }
+
+  verAsignacionAcademica(){
+    this.router.navigate(['../home/hojas-de-vida/personal/asignacion-docente']);
   }
 }

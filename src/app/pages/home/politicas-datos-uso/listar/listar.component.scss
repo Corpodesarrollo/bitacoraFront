@@ -8,6 +8,12 @@
 .col-politicas-uso{
   width: 25%;
 }
+.col-politicas-datos,
+.col-politicas-uso{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 .estado{
   width: 5.125rem;
@@ -15,7 +21,7 @@
   line-height: 1.5rem;
   color: #fff;
   border-radius: 6.25rem;
-  margin: 0 auto;
+  margin: 0 !important;
 }
 
 .no_aceptado{
@@ -35,6 +41,16 @@
 @media (max-width: 767.98px) {
   #ListaUsuarios{
     padding: 0 1rem;
+  }
+  .acciones{
+    flex-direction: column;
+    row-gap: 1rem;
+  }
+
+  .col-apellidos,
+  .col-nombres{
+    word-wrap: break-word;
+    width: 20%;
   }
 }
 
@@ -69,6 +85,10 @@
       text-align: start;
     }
 
+    .col-politicas-datos,
+    .col-politicas-uso{
+      justify-content: flex-start;
+    }
     .col-nombres,
     .col-apellidos,
     .col-politicas-datos,

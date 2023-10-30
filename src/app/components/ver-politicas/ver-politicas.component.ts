@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Politica } from 'src/app/classes/politica.interface';
+import { Politica } from 'src/app/interfaces/politica.interface';
 import { PoliticasService } from 'src/app/services/api/politicas/politicas.service';
 import { ModalInformacionComponent } from '../modal-informacion/modal-informacion.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';

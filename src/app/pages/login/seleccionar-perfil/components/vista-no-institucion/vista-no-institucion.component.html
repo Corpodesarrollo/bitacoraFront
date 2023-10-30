@@ -1,0 +1,71 @@
+<form [formGroup]="formNoInstitucion" (ngSubmit)="ingresar()" id="formSeleccion">
+    <div class="campo" [class.invalid]="campoNoValidoFormulario('perfil_id')">
+      <div class="input-wrapper">
+        <label for="nombrePerfil" class="etiqueta_select"> Perfil <span class="asterisco">* </span></label>
+        <ng-select
+          [items]="perfiles"
+          bindValue="id"
+          bindLabel="etiqueta" class="select"
+          placeholder="Seleccione el perfil"
+          name="perfiles"
+          formControlName="perfil_id"
+          (change)="seleccionPerfil($event)">
+        </ng-select>
+      </div>
+    </div>
+    <div class="campo" [class.invalid]="campoNoValidoFormulario('dependencia_id')" *ngIf="seleccionarDependencia">
+      <div class="input-wrapper">
+        <label for="nombreDependencia" class="etiqueta_select">Dependencia<span class="asterisco">* </span></label>
+        <ng-select [items]="dependencias"
+          bindValue="id" bindLabel="nombre"
+          class="select"
+          placeholder="Seleccione la dependencia"
+          name="dependencias"
+          formControlName="dependencia_id" 
+          (change)="seleccionDependencia($event)">
+        </ng-select>
+        <div class="contenedor_errores">
+          <span class="campo_requerido jornada_error" *ngIf="formNoInstitucion.get('dependencia_id')?.disabled">Debe seleccionar primero un perfil</span>
+        </div>
+      </div>
+    </div>
+    <div class="campo" [class.invalid]="campoNoValidoFormulario('localidad_id')" *ngIf="seleccionarLocalidad">
+      <div class="input-wrapper">
+        <label for="nombreLocalidad" class="etiqueta_select">Localidad<span class="asterisco">* </span></label>
+        <ng-select [items]="localidades"
+          bindValue="id" bindLabel="nombre"
+          class="select"
+          placeholder="Seleccione la localidad"
+          name="localidades"
+          formControlName="localidad_id" 
+          (change)="seleccionLocalidad($event)">
+        </ng-select>
+        <div class="contenedor_errores">
+          <span class="campo_requerido jornada_error" *ngIf="formNoInstitucion.get('localidad_id')?.disabled">Debe seleccionar primero un perfil</span>
+        </div>
+      </div>
+    </div>
+    <div class="mb-2 mt-2 botones">
+      <div class="btn boton_secundario" (click)="cerrarSesion()">
+        <span class="material-symbols-outlined azul">
+          logout
+        </span>
+        <div>Salir</div>
+      </div>
+      <button type="submit" class="btn boton_primario"
+        [ngClass]="{'boton_deshabilitado': formNoInstitucion.invalid}"
+        [disabled]="formNoInstitucion.invalid">
+        <span *ngIf="!ingresando" class="material-symbols-outlined">
+          arrow_forward
+        </span>
+        <div *ngIf="!ingresando">Ingresar</div>
+        <div class="ingresando" *ngIf="ingresando">
+          <div>Ingresando</div>
+          <div class="spinner-border text-light" role="status">
+            <span class="visually-hidden">Loading</span>
+          </div>
+        </div>
+      </button>
+    </div>
+  </form>
+  

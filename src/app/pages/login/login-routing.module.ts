@@ -5,7 +5,7 @@ import { CambiarContraseniaComponentLogin } from './cambiar-contrasenia/cambiar-
 import {  IngresarComponent } from './ingresar/ingresar.component';
 import { LoginComponent } from './login.component';
 import { AuthGuard } from 'src/app/guards/auth.guard';
-import { VerPoliticasComponent } from '../../components/ver-politicas/ver-politicas.component';
+import { VerPoliticasComponent } from '../home/politicas-datos-uso/ver-politicas/ver-politicas.component';
 import { PaginadorComponent } from 'src/app/components/paginador/paginador.component';
 
 const routes: Routes = [
@@ -32,7 +32,7 @@ const routes: Routes = [
         loadChildren: () => import('./consultas/consultas.module').then(m => m.ConsultasModule)
       },
       {
-        path: 'visualizar-politicas',
+        path: 'visualizar-politicas/:id',
         component: VerPoliticasComponent,
       },
     ],

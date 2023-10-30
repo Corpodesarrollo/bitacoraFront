@@ -16,10 +16,6 @@ const routes: Routes = [
         component: VerComponent
       }
     ]
-  },
-  {
-    path:'**',
-    redirectTo: ''
   }
 ];
 

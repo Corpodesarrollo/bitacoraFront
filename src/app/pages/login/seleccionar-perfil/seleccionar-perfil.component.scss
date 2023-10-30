@@ -8,22 +8,10 @@
     position: relative;
 }
 
-.bienvenido {
-    font-size: 28px;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-    text-align: center;
-}
-
 #formSeleccion {
     padding-left: 0;
 }
 
-.recordatorio {
-    font-size: 0.75rem;
-    display: flex;
-    justify-content: center;
-}
 .invalid {
     color: var(--error);
 }
@@ -230,72 +218,6 @@
     }
 }
 
-.carousel {
-    max-height: 768px !important;
-    position: relative;
-}
-
-.carousel-inner {
-    padding-top: 20px;
-}
-
-.carousel-caption {
-    position: static;
-    font-size: 1rem;
-    padding-bottom: 0;
-    color: var(--textos_claro);
-}
-
-.carousel-control-next,
-.carousel-control-prev {
-    top: 0;
-    width: 24px;
-    color: #fff;
-    opacity: 0.9;
-}
-.carousel-indicators {
-    bottom: -3rem;
-}
-.carousel-indicators [data-bs-target] {
-    background-color: #bbb9b9 !important;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-}
-.carousel-indicators .active {
-    border: 1px solid #fefefe !important;
-    background-color: #989794 !important;
-    width: 10px;
-    height: 10px;
-    box-shadow: 0px 1px 5px #bbb9b9;
-    margin-top: 8px;
-}
-.titulo-imagen {
-    color: var(--textos);
-    font-size: 2rem;
-    margin-bottom: 0;
-    line-height: 1;
-}
-
-.carousel-image {
-    display: flex;
-    justify-content: center;
-    img {
-        width: 90%;
-        height: 25.9375rem;
-        border-radius: 20px;
-        object-fit: cover;
-        transition: transform 0.5s ease-out;
-    }
-    img:hover {
-        transform: translateY(-10px);
-        transition: transform 1s ease-out;
-    }
-}
-
-.carousel-item.active {
-    border: none !important;
-}
 
 .escondido {
     display: none;

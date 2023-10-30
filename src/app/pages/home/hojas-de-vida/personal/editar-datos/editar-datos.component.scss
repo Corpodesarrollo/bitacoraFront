@@ -7,6 +7,7 @@
 
 #editarDatos{
   padding: 2rem;
+  position: relative;
   .contenedor_datos{
     display: flex;
     width: 100%;
@@ -56,6 +57,13 @@
 .titulos{
   padding-top: 0;
   padding-bottom: 0;
+  position: relative;
+}
+
+.cerrar_titulos{
+  position: absolute;
+  right: 0px;
+  cursor: pointer;
 }
 
 .contenedor_checkbox{

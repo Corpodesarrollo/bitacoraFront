@@ -1,0 +1,11 @@
+<div class="col-12 mt-4 contenedor_accesos" *ngIf="!noTieneAccesos">
+    <div class="titulo_accesos">Accesos rápidos</div>
+    <div class="accesos" >
+        <button type="submit" class="btn boton_primario"
+        *ngFor="let acceso of accesosRapidos"
+        (click)="abrirOpcion(acceso.ruta)">
+            <span >{{acceso.nombre}}</span>
+        </button>
+    </div>
+</div>
+

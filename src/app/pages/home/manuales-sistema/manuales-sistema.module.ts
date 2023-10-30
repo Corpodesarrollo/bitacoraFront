@@ -10,7 +10,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 @NgModule({
   declarations: [
     VerComponent,
-    SubirComponent
+    SubirComponent,
   ],
   imports: [
     CommonModule,

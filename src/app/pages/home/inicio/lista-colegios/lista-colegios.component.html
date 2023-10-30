@@ -1,0 +1,30 @@
+
+
+<div class="contenedor-tabla mb-4">
+  <div class="titulo_tabla mb-3">Lista de colegios en el sistema</div>
+  <app-cargando *ngIf="cargandoColegios"></app-cargando>
+  <app-sin-registros *ngIf="!cargandoColegios && colegios.length == 0"></app-sin-registros>
+  <div class="lista_tabla" *ngIf="!cargandoColegios && colegios.length > 0">
+      <div id="titulos">
+        <div class="item_5">Colegio</div>
+        <div class="item_6">Localidad</div>
+        <div class="col_num">Estudiantes inscritos</div>
+      </div>
+      <div id="filas" *ngFor="let colegio of colegios">
+          <div class="registro">
+              <div class="item_5">{{colegio.nombreInstitucion}}</div>
+              <div class="item_6">{{colegio.localidad}}</div>
+              <div class="col_num">{{colegio.totalEstudiantes}}</div>
+          </div>
+      </div>
+  </div>
+  <app-paginador
+    [totalRegistros]="totalColegios"
+    *ngIf="totalPaginas > 1"
+    [contadorPagina]="totalPaginas"
+    [paginaActual]="paginaActual"
+    (cambioPagina)="cambiarPagina($event)"
+    [showPreviousButton]="paginaActual > 1"
+    [showNextButton]="paginaActual < totalPaginas">
+  </app-paginador>
+</div>

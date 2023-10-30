@@ -74,6 +74,9 @@
       </div>
 
       <div class="acciones col-12">
+        <button class="btn boton_secundario mb-2" (click)="verAsignacionAcademica()" *ngIf="puedeVerAsignacion">
+          Asignación Académica
+        </button>
         <button type="submit" class="btn boton_primario" (click)="actualizarCorreo()" [disabled]="estaInactivo">
           <div  *ngIf="!guardandoCorreo">
             <span>Guardar</span>

@@ -1,12 +1,15 @@
 import { HttpResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ListaGenerales } from 'src/app/classes/lista_generales.interfaces';
-import { ListaJornadas } from 'src/app/classes/lista_jorandas.interface';
+import { ListaGenerales } from 'src/app/interfaces/lista_generales.interfaces';
+import { ListaJornadas } from 'src/app/interfaces/lista_jorandas.interface';
 import { PersonalService } from 'src/app/services/api/personal/personal.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MensajesService } from 'src/app/services/api/mensajes/mensajes.service';
 import { AsignacionAcademicaService } from 'src/app/services/api/personal/asignacion-academica.service';
+import { MensajeModal } from '../mensaje-modal/mensaje-modal';
+import { AccesoPerfil } from 'src/app/interfaces/acceso_perfil.interface';
+import { UsuarioService } from 'src/app/services/api/usuario/usuario.service';
 
 @Component({
   selector: 'app-filtros-asignacion',
@@ -28,6 +31,7 @@ export class FiltrosAsignacionComponent {
   tiposIdentificacion:ListaGenerales[] = [];
   metodologias:any[] = [];
   vigencias:any[] = [];
+  cargandoJornadas = false;
 
   parametrosFiltros = {
     id_vigencia: 0,
@@ -36,18 +40,28 @@ export class FiltrosAsignacionComponent {
     id_metodologia: 0
   };
   desactivarJornadas: boolean;
+  infoMensaje:any = {};
 
   constructor(
     private formBuilder:FormBuilder,
     private personalService: PersonalService,
     private servicioModal: NgbModal,
     private mensajesService: MensajesService,
-    private asignacionAcademicaService:AsignacionAcademicaService
+    private asignacionAcademicaService:AsignacionAcademicaService,
+    private usarioService:UsuarioService
   ){
-    let datos_usuario  = JSON.parse(sessionStorage.getItem('sap_sec_percol')!)
-    this.idColegio =  datos_usuario.colegio.idColegio;
+    let datos_usuario:AccesoPerfil  = this.usarioService.obtenerAccesoSeleccionado();
+    this.idColegio =  datos_usuario.colegio.id;
     this.construirFormularios();
     this.cargarListas();
+
+    const fechaActual = new Date();
+    const anioActual = fechaActual.getFullYear();
+
+    this.formFiltros.patchValue({
+      id_vigencia:anioActual
+    })
+
   }
 
   ngAfterViewChecked()	{
@@ -106,32 +120,42 @@ export class FiltrosAsignacionComponent {
      })
   }
 
-  cargarJornada(){
-
-    let parametros = {
-       id_colegio: this.idColegio,
-       id_sede: this.formFiltros.get('id_sede')?.value
-    }
-
-    if(parametros.id_sede === null || parametros.id_sede === ''){
-      this.jornadas = []
-      this.formFiltros.controls['id_jornada'].setValue(null);
+  cargarJornada(e:any){
+ 
+    this.cargandoJornadas = true;
+    // console.log(e)
+    if(e){
+      let parametros = {
+         id_colegio: this.idColegio,
+         id_sede: this.formFiltros.get('id_sede')?.value
+      }
+  
+      if(parametros.id_sede === null || parametros.id_sede === ''){
+        this.jornadas = []
+        this.formFiltros.controls['id_jornada'].setValue(null);
+        this.desactivarJornadas = true
+        this.formFiltros.controls['id_jornada'].disable();
+        this.cargandoJornadas = false;
+      }
+      else{
+        this.personalService.obtenerJonadaPorSede(parametros).subscribe({
+          next: (respuesta: HttpResponse<any>) =>{
+            if(respuesta.status === 200 ){
+              this.desactivarJornadas = false
+              this.formFiltros.controls['id_jornada'].enable();
+              this.jornadas = respuesta.body.data
+              this.cargandoJornadas = false;
+              // console.log(this.jornadas)
+              // campo_jornada?.enable()
+            }
+          },
+          error: (error) => console.log(error)
+        })
+      }
+    }else{
       this.desactivarJornadas = true
       this.formFiltros.controls['id_jornada'].disable();
-    }
-    else{
-      this.personalService.obtenerJonadaPorSede(parametros).subscribe({
-        next: (respuesta: HttpResponse<any>) =>{
-          if(respuesta.status === 200 ){
-            this.desactivarJornadas = false
-            this.formFiltros.controls['id_jornada'].enable();
-            this.jornadas = respuesta.body.data
-            // console.log(this.jornadas)
-            // campo_jornada?.enable()
-          }
-        },
-        error: (error) => console.log(error)
-      })
+      this.cargandoJornadas = false;
     }
   }
 
@@ -153,19 +177,42 @@ export class FiltrosAsignacionComponent {
     return false;
   }
 
-  limmpiarDatos(){
+  limpiarDatos(){
+    this.desactivarJornadas = true
+    this.formFiltros.controls['id_jornada'].disable();
     this.formFiltros.reset();
     this.jornadas  = []
+    this.filtros.emit({limpiarListado:true});
   }
 
   buscar(){
 
-      this.parametrosFiltros.id_vigencia = this.formFiltros.get('id_vigencia')?.value
-      this.parametrosFiltros.id_metodologia = this.formFiltros.get('id_metodologia')?.value
-      this.parametrosFiltros.id_sede =this.formFiltros.get('id_sede')?.value
-      this.parametrosFiltros.id_jornada =this.formFiltros.get('id_jornada')?.value
+    this.cargandoRegistros = true;
 
-      this.filtros.emit(this.parametrosFiltros);
+    this.formFiltros.markAsTouched();
+
+      if(this.formFiltros.valid == true){
+        this.parametrosFiltros.id_vigencia = this.formFiltros.get('id_vigencia')?.value
+        this.parametrosFiltros.id_metodologia = this.formFiltros.get('id_metodologia')?.value
+        this.parametrosFiltros.id_sede =this.formFiltros.get('id_sede')?.value
+        this.parametrosFiltros.id_jornada =this.formFiltros.get('id_jornada')?.value
+        setTimeout(()=>{
+          this.cargandoRegistros = false;
+        },1000)
+        this.filtros.emit(this.parametrosFiltros);
+      }else{
+        setTimeout(()=>{
+          this.cargandoRegistros = false;
+        },1000)
+        this.infoMensaje.titulo = 'Filtros vacios';
+        this.infoMensaje.mensaje = 'Uno o más valores de los filtros están vacíos Por favor, seleccione valores en todos los filtros.';
+        this.infoMensaje.botonesAsignacionErrorEliminar = true;
+        this.infoMensaje.botonesAsignacionEliminar = false;
+        this.infoMensaje.ventanaEnviado = true;
+        const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
+        modalRef.componentInstance.infoMensaje = this.infoMensaje;
+      }
+
   }
 
 }

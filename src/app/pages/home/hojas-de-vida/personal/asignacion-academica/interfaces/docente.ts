@@ -5,5 +5,11 @@ export interface Docente {
     asignatura: string,
     grado: string,
     grupo: string,
-    numeroHoras: string
+    numeroHoras: string,
+    primerNombre?:string,
+    primerApellido?:string,
+    sede?:string,
+    jornada?:string,
+    institucion?:string,
+    identificacion?:string
 }

@@ -14,10 +14,8 @@ import { CustomDateParserFormatter, FiltrosComponent } from './enviar-mensajes/c
 import { RouterModule } from '@angular/router';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 import { MensajeModal } from './enviar-mensajes/components/mensaje-modal/mensaje-modal';
-
-
-
-
+import { BitacoraComponent } from './bitacora/bitacora.component';
+import { BitacoraService } from './bitacora/services/bitacora/bitacora.service';
 
 @NgModule({
   declarations: [
@@ -26,7 +24,8 @@ import { MensajeModal } from './enviar-mensajes/components/mensaje-modal/mensaje
     BuscarComponent,
     NuevoMensajeComponent,
     FiltrosComponent,
-    MensajeModal
+    MensajeModal,
+    BitacoraComponent
   ],
   imports: [
     NgbDatepickerModule,
@@ -34,7 +33,7 @@ import { MensajeModal } from './enviar-mensajes/components/mensaje-modal/mensaje
     AdminRoutingModule,
     NgbNavModule,
     NgSelectModule,
-    NgbPaginationModule, 
+    NgbPaginationModule,
     NgbAlertModule,
     ComponentsModule,
     ReactiveFormsModule,
@@ -42,10 +41,11 @@ import { MensajeModal } from './enviar-mensajes/components/mensaje-modal/mensaje
     NgbModule,
     RouterModule,
     AngularEditorModule
-    ],
-    providers: [
-      // { provide: NgbDateAdapter, useClass: CustomAdapter },
-      { provide: NgbDateParserFormatter, useClass: CustomDateParserFormatter },
-    ],
+  ],
+  providers: [
+    // { provide: NgbDateAdapter, useClass: CustomAdapter },
+    { provide: NgbDateParserFormatter, useClass: CustomDateParserFormatter},
+    BitacoraService,
+  ],
 })
 export class GestionAdministrativaModule { }

@@ -1,0 +1,95 @@
+
+.contenedor-tabla{
+  button {
+    margin-right: 1rem;
+    margin-left: auto;
+  };
+};
+
+.titulo_estudiantes{
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.contenedor-tabla {
+  background-color: #f8fafa;
+  padding: 1rem 1rem;
+  border-radius: 1.25rem;
+};
+
+#titulos {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: #d7e3ff;
+  color: var(--titulos_tablas);
+  padding: 0 0.75rem;
+
+  .item_1,
+  .item_2,
+  .item_3,
+  .item_4{
+    padding: 0.5rem 0.5rem;
+    line-height: 1.3;
+    font-family: "Raleway";
+    font-size: 0.6875rem;
+    font-weight: 600;
+  };
+};
+
+#filas {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin: auto;
+
+  .registro {
+    display: flex;
+    width: 100%;
+    background-color: var(--blanco);
+    padding: 0 .75rem;
+    border-bottom: .0625rem solid var(--gris_degradado);
+  };
+
+  .item_1,
+  .item_2,
+  .item_3,
+  .item_4{
+    padding: 0.5rem 0.5rem;
+    line-height: 1.3;
+    font-family: "Raleway";
+    font-size: .6875rem;
+    font-weight: 500;
+  };
+};
+
+.item_1 {
+  width: 20%;
+};
+
+.item_2 {
+  width: 20%;
+};
+
+.item_3 {
+  width: 30%;
+};
+
+.item_4 {
+  width: 30%;
+};
+
+
+@media (max-width: 575.98px) {
+  #filas,
+  #titulos,
+  .registro {
+    width: 26.25rem;
+  };
+
+  .lista_tabla {
+    table-layout: fixed;
+    white-space: nowrap;
+    overflow-x: scroll;
+  };
+};

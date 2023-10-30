@@ -1,6 +1,11 @@
 <div class="row" id="editarDatos">
   <div class="titulos">
     Editar datos básicos
+    <div class="cerrar_titulos" (click)="cerrarModal()">
+      <span class="material-symbols-outlined">
+        close
+        </span>
+    </div>
   </div>
   <form [formGroup]="formDatosUsuario" (ngSubmit)="guardar()">
     <div class="contenedor_datos">
@@ -71,12 +76,14 @@
     <div class="titulo">
       Perfiles asociados
     </div>
+    <!-- <button type="button" (click)="enviarFijos()">Mandar Datos</button> -->
     <app-cargando *ngIf="cargandoPerfiles"></app-cargando>
-    <ng-container *ngIf="!cargandoPerfiles">
+    <app-sin-registros *ngIf="cargandoPerfiles && listaPerfiles.controls.length ==0 "></app-sin-registros>
+    <ng-container *ngIf="!cargandoPerfiles && listaPerfiles.controls.length > 0">
       <div formArrayName="lista_perfiles"  *ngFor="let perfil of listaPerfiles.controls; let p = index">
         <div class="perfil" [formGroupName]="p">
           <div class="contenedor_checkbox">
-            <input type="checkbox" formControlName="seleccionado">
+            <input type="checkbox" formControlName="seleccionado" [disabled]="estaInactivo">
           </div>
           <div class="contenedor_perfiles row w-100">
             <div class="campo col-12 mb-3" [class.invalid]="campoNoValidoEnFormArray('cod_sede',p)">
@@ -133,19 +140,19 @@
       </div>
     </ng-container>
     <div class="acciones">
-      <button class="btn boton_primario" type="button" (click)="abrirModalEliminarPerfil()">
-        Quitar perfil para otra sede/jornada
+      <button class="btn boton_primario" type="button" (click)="abrirModalEliminarPerfil()" [disabled]="estaInactivo">
+        Quitar perfil de sede/jornada seleccionado
       </button>
-      <button class="btn boton_primario" type="button"  (click)="agregarNuevoPerfil()">
+      <button class="btn boton_primario" type="button"  (click)="agregarNuevoPerfil()" [disabled]="estaInactivo">
         Agregar perfil para otra sede/jornada
       </button>
     </div>
   </div>
     <div class="acciones col-12">
-      <div class="btn boton_secundario" type="button"  (click)="cancelar()">
+      <button class="btn boton_secundario" type="button"  (click)="cancelar()" >
         Cancelar
-      </div>
-      <button type="submit" class="btn boton_primario">
+      </button>
+      <button type="submit" class="btn boton_primario" [disabled]="estaInactivo">
         <div *ngIf="!guardandoDatos">
           <span>Guardar cambios</span>
         </div>

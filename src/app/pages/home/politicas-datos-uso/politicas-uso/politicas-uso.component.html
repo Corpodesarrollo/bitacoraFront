@@ -1,5 +1,10 @@
 <div class="cabecera">
   <div class="titulos">
+    <div class="volver">
+      <span class="material-symbols-outlined" (click)="volver()">
+        arrow_back_ios
+      </span>
+    </div>
     Políticas de uso
   </div>
 </div>
@@ -35,13 +40,15 @@
         </div>
         <div class="titulo_movil">Estado</div>
         <div class="col-acciones">
-          <button type="button" class="contenedor_iconos" (click)="verPolitica(i)">
+          <button type="button" class="contenedor_iconos" (click)="verPolitica(version.id)">
             <span class="material-symbols-outlined">
               visibility
             </span>
             <label>Ver</label>
           </button>
-          <button type="button" class="contenedor_iconos" (click)="eliminarVersion(version)">
+          <button type="button" class="contenedor_iconos"
+          *ngIf="puedeEliminar"
+          (click)="eliminarVersion(version)">
             <span class="material-symbols-outlined">
               delete
               </span>

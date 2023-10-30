@@ -1,7 +1,9 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModalInformacionComponent } from 'src/app/components/modal-informacion/modal-informacion.component';
+import { AccesoPerfil } from 'src/app/interfaces/acceso_perfil.interface';
 import { MensajesService } from 'src/app/services/api/mensajes/mensajes.service';
+import { AsignacionAcademicaService } from 'src/app/services/api/personal/asignacion-academica.service';
 import { UsuarioService } from 'src/app/services/api/usuario/usuario.service';
 import { UtilsService } from 'src/app/services/generales/utils/utils.service';
 
@@ -10,9 +12,10 @@ import { UtilsService } from 'src/app/services/generales/utils/utils.service';
   templateUrl: './mensaje-modal.html',
   styleUrls: ['./mensaje-modal.scss']
 })
-export class MensajeModal implements OnDestroy {
+export class MensajeModal implements OnDestroy, OnInit {
 
   @Input() infoMensaje: any;
+  eliminandoRegistro: boolean = false;
 
 
   constructor(private servicioModal: NgbModal,
@@ -20,11 +23,21 @@ export class MensajeModal implements OnDestroy {
     private utilsService: UtilsService,
     public activeModal: NgbActiveModal,
     private modalService: NgbModal,
-    private serviciosUsuario: UsuarioService) {
+    private serviciosUsuario: UsuarioService,
+    private asignacionAcademicaService: AsignacionAcademicaService) {
+  }
+
+  ngOnInit(): void {
+    // console.log(this.infoMensaje)
   }
 
   ngOnDestroy(): void {
     this.infoMensaje;
+    if(this.infoMensaje.cerradoTemporizador){
+      setTimeout(()=>{
+        this.servicioModal.dismissAll();
+      },2000)
+    } 
   }
 
   cerrarModal() {
@@ -36,14 +49,46 @@ export class MensajeModal implements OnDestroy {
     }
   }
 
+  confirmarEliminacionFuncionarios(){
+    this.eliminandoRegistro = true;
+
+    let body:any[] = this.infoMensaje.arrayFuncionario;
+    // console.log(body)
+
+    this.asignacionAcademicaService.eliminarAsignacionAcademica(body).subscribe((resp:any)=>{
+
+      if(resp.status == 200){
+        this.activeModal.close('cerrado');
+        this.eliminandoRegistro = false;
+        let infoMensaje: any = {}
+        infoMensaje.titulo = '';
+        infoMensaje.mensaje = resp.data;
+        const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
+        modalRef.componentInstance.infoMensaje = infoMensaje;
+      }else{
+        this.eliminandoRegistro = false;
+        let infoMensaje: any = {}
+        infoMensaje.titulo = '';
+        infoMensaje.mensaje = resp.data;
+        const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
+        modalRef.componentInstance.infoMensaje = infoMensaje;
+      }
+      setTimeout(()=>{
+        this.servicioModal.dismissAll();
+      },2000)
+    })
+
+
+  }
+
   confirmarEliminarModal() {
     try {
 
       let usuarioLogueado = this.serviciosUsuario.obtenerUsuario();
-      let datosUsuario = JSON.parse(sessionStorage.getItem('sap_sec_percol')!)
+      let datosUsuario:AccesoPerfil  = this.serviciosUsuario.obtenerAccesoSeleccionado();
       //console.log(this.infoMensaje)
       this.activeModal.close('cerrado');
-      this.mensajesService.eliminarMensaje(this.infoMensaje.id, usuarioLogueado.id, datosUsuario.perfil.idPerfil).subscribe((resp: any) => {
+      this.mensajesService.eliminarMensaje(this.infoMensaje.id, usuarioLogueado.id, datosUsuario.perfil.id).subscribe((resp: any) => {
         if (resp.body.code == 200) {
           let infoMensaje: any = {}
           infoMensaje.titulo = '';

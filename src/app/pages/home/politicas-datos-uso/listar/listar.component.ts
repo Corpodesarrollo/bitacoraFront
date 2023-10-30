@@ -13,6 +13,7 @@ export class ListarComponent {
   sinRegistros:boolean = false;
   cargandoListado:boolean = false;
   reenviando:boolean = false;
+  reenviandoUso:boolean = false;
 
 
   listadoPersonas:any = []
@@ -48,6 +49,79 @@ export class ListarComponent {
       },
       error: (error) => {
         console.log(error);
+      }
+    })
+  }
+
+  reenviarPoliticasDatos(){
+    if (this.reenviando) {
+      return;
+    }
+    this.reenviando = true;
+    this.serviciosPoliticas.reenviarPoliticasDatos().subscribe({
+      next: (respuesta: any) => {
+        if (respuesta.status === 200) {
+          const modalInformacion = this.servicioModal.open(ModalInformacionComponent, { size: 'md', centered: true, animation: false, backdrop: 'static' })
+          modalInformacion.componentInstance.informacion = {
+            error: false,
+            esExitoso: 'done',
+            titulo: 'Exito',
+            mensaje: 'Politicas reenviadas'
+          }
+          this.reenviando = false
+        }
+        else {
+          const modalInformacion = this.servicioModal.open(ModalInformacionComponent, { size: 'md', centered: true, animation: false, backdrop: 'static' })
+          modalInformacion.componentInstance.informacion = {
+            error: true,
+            esExitoso: 'error',
+            titulo: 'Error',
+            mensaje: 'No se pudo enviar politicas'
+          }
+          this.reenviando = false
+        }
+      },
+      error: (error) => {
+        console.log(error);
+        this.reenviando = false
+      }
+    })
+  }
+
+  reenviarPoliticasUso(){
+    if (this.reenviandoUso) {
+      return;
+    }
+    this.reenviandoUso = true;
+    this.serviciosPoliticas.reenviarPoliticasUso().subscribe({
+      next: (respuesta: any) => {
+        if (respuesta.status === 200) {
+          const modalInformacion = this.servicioModal.open(ModalInformacionComponent, { size: 'md', centered: true, animation: false, backdrop: 'static' })
+          modalInformacion.componentInstance.informacion = {
+            error: false,
+            esExitoso: 'done',
+            titulo: 'Exito',
+            mensaje: 'Politicas reenviadas'
+          }
+    this.reenviandoUso = false;
+
+        }
+        else {
+          const modalInformacion = this.servicioModal.open(ModalInformacionComponent, { size: 'md', centered: true, animation: false, backdrop: 'static' })
+          modalInformacion.componentInstance.informacion = {
+            error: true,
+            esExitoso: 'error',
+            titulo: 'Error',
+            mensaje: 'No se pudo enviar politicas'
+          }
+    this.reenviandoUso = false;
+
+        }
+      },
+      error: (error) => {
+        console.log(error);
+    this.reenviandoUso = false;
+
       }
     })
   }

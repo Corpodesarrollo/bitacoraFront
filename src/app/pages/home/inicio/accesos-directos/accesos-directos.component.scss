@@ -1,0 +1,42 @@
+.accesos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 1rem 1rem;
+  column-gap: 0.5rem;
+  row-gap: 0.625rem;
+  .btn{
+    line-height: 1
+  }
+};
+
+.titulo_accesos {
+  font-size: 1rem;
+  font-weight: 600;
+};
+
+.contenedor_accesos{
+  background-color: #f8fafa;
+  padding: 1rem 1rem;
+  border-radius: 1.25rem;
+};
+
+.boton_primario{
+  line-height: 1;
+}
+
+
+@media (max-width: 767.98px) {
+
+  .titulo_accesos{
+    text-align: center;
+  }
+  .accesos .boton_primario {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem;
+    line-height: 1.2;
+    width: 100%;
+    min-width: 6.875rem;
+  };
+}
