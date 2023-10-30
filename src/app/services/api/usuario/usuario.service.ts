@@ -123,6 +123,16 @@ export class UsuarioService {
     sessionStorage.removeItem('sap_sec_percol');
   }
 
+  //obtenerPerfilUsuario
+  obtenerAccesoSeleccionado() {
+    const accesoSeleccionado = sessionStorage.getItem('sap_acc_sel');
+    if (accesoSeleccionado !== null) {
+      return JSON.parse(accesoSeleccionado);
+    } else {
+      return null;
+    }
+  }
+
   obtenerPerfilUsuario() {
     const institutoGuardado = sessionStorage.getItem('sap_sec_percol');
     if (institutoGuardado !== null) {

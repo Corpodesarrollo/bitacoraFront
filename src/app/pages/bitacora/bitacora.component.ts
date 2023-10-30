@@ -58,7 +58,7 @@ export class BitacoraComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.obtenerFiltros();
+    this.initFiltros();
     this.consultarBitacora();
     this.filtrosFormGroup.get('fechaDesde').valueChanges.subscribe((value) => {
       this.minDate = new NgbDate(value.year, value.month, value.day);
@@ -69,7 +69,7 @@ export class BitacoraComponent implements OnInit {
 
   }
 
-  private obtenerFiltros(): void {
+  private initFiltros(): void {
     let bodyUsuarios = {
       "nivelPerfil": 1,
       "perfil": 110,
@@ -77,34 +77,49 @@ export class BitacoraComponent implements OnInit {
     }
     this.usuarioFiltrosService.obtenerUsarios(bodyUsuarios).subscribe((response: any) => {
       this.listaUsuarios = response?.data;
+      this.listaColegios = [];
+      this.listaSedes = [];
+      this.listaJornadas = [];
+      this.filtrosFormGroup.get('colegio').reset();
     });
 
+    this.tipoLogService.obtenerTiposLog().subscribe((response: any) => {
+      this.listaTiposLog = response?.data;
+    });
+  }
+
+  public getColegios(idUsuario: string) {
     let bodyColegios = {
-      "usuario": "52824727"
+      usuario: idUsuario
     }
     this.colegioService.obtenerColegios(bodyColegios).subscribe((response: any) => {
       this.listaColegios = response?.data;
+      this.listaSedes = [];
+      this.listaJornadas = [];
+      this.filtrosFormGroup.get('sede').reset();
     });
+  }
 
+  public getSedes(idColegio) {
     let bodySedes = {
-      "colegio": 1
+      colegio: idColegio
     }
     this.sedeService.obtenerSedes(bodySedes).subscribe((response: any) => {
       this.listaSedes = response?.data;
+      this.listaJornadas = [];
+      this.filtrosFormGroup.get('jornada').reset();
     });
 
+  }
 
+  public getJornadas(idSede) {
     let bodyJornadas = {
-      "sede": 12
+      sede: idSede
     }
     this.jornadaService.obtenerJornadas(bodyJornadas).subscribe((response: any) => {
       this.listaJornadas = response?.data;
     });
 
-
-    this.tipoLogService.obtenerTiposLog().subscribe((response: any) => {
-      this.listaTiposLog = response?.data;
-    });
   }
 
   private consultarBitacora(): void {

@@ -83,7 +83,8 @@
             bindLabel="pernombre1"
             class="select"
             placeholder="Seleccione un Usuario"
-            formControlName="usuario">
+            formControlName="usuario"
+            (change)="getColegios($event)">
           </ng-select>
         </div>
       </div>
@@ -96,7 +97,9 @@
             bindLabel="nombre"
             class="select"
             placeholder="Seleccione un colegio"
-            formControlName="colegio">
+            formControlName="colegio"
+            [disabled]="!(listaColegios?.length > 0)"
+            (change)="getSedes($event)">
           </ng-select>
         </div>
       </div>
