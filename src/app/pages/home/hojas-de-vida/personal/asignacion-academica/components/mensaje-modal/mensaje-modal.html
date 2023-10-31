@@ -14,7 +14,7 @@
     <p>{{infoMensaje.mensaje}}</p>
   </div>
 
-  <div class="acciones" *ngIf="infoMensaje.ventanaEnviado == false">
+  <div class="acciones" *ngIf="infoMensaje.ventanaEnviado === false">
     <button type="button" class="btn boton_primario" (click)="confirmarEliminarModal()">
       Si
     </button>
@@ -23,7 +23,7 @@
     </button>
   </div>
 
-  <div class="acciones" *ngIf="infoMensaje.ventanaEnviado == true">
+  <div class="acciones" *ngIf="infoMensaje.ventanaEnviado === true">
     <button type="button" class="btn boton_secundario" (click)="cerrarModal()">
       Aceptar
     </button>

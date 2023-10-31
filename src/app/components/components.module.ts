@@ -25,7 +25,6 @@ import { WebcamModule } from 'ngx-webcam';
 import { ConfirmarCerrarSesionComponent } from './confirmar-cerrar-sesion/confirmar-cerrar-sesion.component';
 import { ModalInformacionComponent } from './modal-informacion/modal-informacion.component';
 import { SinRegistrosComponent } from './sin-registros/sin-registros.component';
-import { VerPoliticasComponent } from './ver-politicas/ver-politicas.component';
 import { CarruselImagenesComponent } from './carrusel-imagenes/carrusel-imagenes.component';
 import { NoAutorizadoComponent } from './no-autorizado/no-autorizado.component';
 import { SesionAEComponent } from './sesion-ae/sesion-ae.component';
@@ -51,7 +50,6 @@ import { TablaRegistroDetalleComponent } from './tabla-registro-detalle/tabla-re
     CamaraComponent,
     ConfirmarCerrarSesionComponent,
     ModalInformacionComponent,
-    VerPoliticasComponent,
     SinRegistrosComponent,
     CarruselImagenesComponent,
     NoAutorizadoComponent,
@@ -74,7 +72,6 @@ import { TablaRegistroDetalleComponent } from './tabla-registro-detalle/tabla-re
     ContraseniaComponent,
     ConfirmarCerrarSesionComponent,
     ModalInformacionComponent,
-    VerPoliticasComponent,
     SinRegistrosComponent,
     CarruselImagenesComponent,
     NoAutorizadoComponent,

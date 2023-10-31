@@ -1,17 +1,14 @@
 import { Component, Input } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AsignacionesFuncionarioComponent } from './components/asignaciones-funcionario/asignaciones-funcionario.component';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { VerAsignacionAcademicaComponent } from './components/ver-asignacion-academica/ver-asignacion-academica.component';
+import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { funcionario } from './interfaces/funcionario';
-import { Docente } from './interfaces/docente';
 import { MensajeDescargarReporteComponent } from './components/mensaje-descargar-reporte/mensaje-descargar-reporte.component';
 import { CopiarAsignacionAcademicaComponent } from './components/copiar-asignacion-academica/copiar-asignacion-academica.component';
 import { AsignacionAcademicaService } from 'src/app/services/api/personal/asignacion-academica.service';
 import { MensajeModal } from './components/mensaje-modal/mensaje-modal';
 import { UsuarioService } from 'src/app/services/api/usuario/usuario.service';
 import { AccesoPerfil } from 'src/app/interfaces/acceso_perfil.interface';
-import { intensidad } from './interfaces/intensidadHoraria';
 import { AsignacionDocenteComponent } from 'src/app/components/asignacion-docente/asignacion-docente.component';
 
 @Component({
@@ -320,8 +317,11 @@ export class AsignacionAcademicaComponent {
 
 
     } else {
-
+      this.parametrosFiltros.institucion = this.datos_usuario.colegio.id;
+      this.infoMensaje.parametros = this.parametrosFiltros;
+      this.infoMensaje.funcionarios = this.arrayFuncionarios;
       this.infoMensaje.idFuncionario = 'id';
+      this.infoMensaje.exportePorinstitucion = false;
       this.infoMensaje.ventanaEnviado = true;
       const modalRef = this.servicioModal.open(MensajeDescargarReporteComponent, { size: 'md', centered: true, backdrop: 'static' });
       modalRef.componentInstance.infoMensaje = this.infoMensaje;
@@ -333,6 +333,8 @@ export class AsignacionAcademicaComponent {
   exportarRegistroInstitucion(){
       this.infoMensaje.idFuncionario = 'id';
       this.infoMensaje.ventanaEnviado = true;
+      this.parametrosFiltros.institucion = this.datos_usuario.colegio.id;
+      this.infoMensaje.parametros = this.parametrosFiltros
       this.infoMensaje.exportePorinstitucion = true;
       const modalRef = this.servicioModal.open(MensajeDescargarReporteComponent, { size: 'md', centered: true, backdrop: 'static' });
       modalRef.componentInstance.infoMensaje = this.infoMensaje;

@@ -1,5 +1,5 @@
 export const environment = {
-  production: true,
+  production: false,
   URL_WEB_: "http://localhost:4200",
   URL_WEB: "https://pruebas-sed.linktic.com/apoyo-ui",
   URL_DEV: "https://web-laf.s3-website-us-east-1.amazonaws.com",
