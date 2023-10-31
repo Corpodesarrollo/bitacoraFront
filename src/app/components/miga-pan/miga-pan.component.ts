@@ -39,6 +39,7 @@ export class MigaPanComponent {
       'cambiar-contrasenia': 'Cambiar contraseña',
       'gestion-administrativa': 'Gestión administrativa',
       'enviar-mensajes': 'Enviar Mensajes',
+      'consulta-bitacoras': 'Bitácora',
       'manuales-sistema': 'Manuales del sistema',
       'subir-manual': 'Subir manual',
       'hojas-de-vida': 'Hojas de vida',

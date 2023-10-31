@@ -36,7 +36,7 @@ export class MenuComponent {
     private utilsService: UtilsService,
     private ngZone: NgZone,
     private servicioModal: NgbModal,
-    private router:Router
+    private router: Router
   ) {
     window.onresize = (e) => {
       //ngZone.run will help to run change detection
@@ -72,28 +72,28 @@ export class MenuComponent {
     let test_array = []
     let parametros = {
       perfil_id: this.perfilId,
-      institucion_id: (this.institucionId)?this.institucionId:0
+      institucion_id: (this.institucionId) ? this.institucionId : 0
     }
     this.cargandoMenu = true
     this.usuarioService.obtenerMenu(parametros).subscribe({
       next: (respuesta: any) => {
         if (respuesta.code == 200) {
           this.cargandoMenu = false;
-          let menu_general =   this.iconosMenuGeneral(respuesta.data.menuGeneralMenu)
+          let menu_general = this.iconosMenuGeneral(respuesta.data.menuGeneralMenu)
           const cerrar_sesion = menu_general[0]
-          menu_general.splice(0,1)
+          menu_general.splice(0, 1)
           menu_general.push(cerrar_sesion)
           this.menuGeneral = menu_general
           let menu_catalogo = respuesta.data.menuServiceCatalog
           let menu_subCatalogo = respuesta.data.subMenuGeneralPrivate
-          menu_catalogo.forEach((menu:any) => {
+          menu_catalogo.forEach((menu: any) => {
             const sub_opciones = menu_subCatalogo.filter((sub_menu: any) => menu.serCatCodigo === sub_menu.serCatCodigo);
             const etiqueta = menu.catNombre
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .trim()
-            .toLowerCase()
-            .replace(/[\s.]+/g, '');
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .trim()
+              .toLowerCase()
+              .replace(/[\s.]+/g, '');
             const ruta_icono = `assets/iconos/menu/${etiqueta}.svg`
             let recurso = {
               ...menu,
@@ -124,7 +124,7 @@ export class MenuComponent {
     return nueva_lista
   }
 
-  abrirUrl(opcion: any){
+  abrirUrl(opcion: any) {
     if (window.innerWidth < 575.98) {
       this.utilsService.toggleMenuMobile();
     }
@@ -133,20 +133,16 @@ export class MenuComponent {
       this.mostrarMenu = false
     }
     this.opcionActiva = opcion
-    if(opcion.serCodigo == 2){
+    if (opcion.serCodigo == 2) {
       this.cerrarSesion()
     }
     if (opcion.serTarget === "1") {
-      if (opcion.serNombre == 'Bitácora') {
-        this.router.navigate(['/home/gestion-administrativa/consulta-bitacoras'])
-      } else {
-        this.router.navigate(['/home/ver', opcion.serRecurso])
-      }
+      this.router.navigate(['/home/ver', opcion.serRecurso])
     }
-    else if(opcion.serTarget === "3"){
+    else if (opcion.serTarget === "3") {
       this.router.navigate([`${opcion.serRecurso}`]);
     }
-    else{
+    else {
       this.opcionActiva = opcion;
       this.router.navigate([`/home/${opcion.serRecurso}`]);
     }
@@ -166,8 +162,8 @@ export class MenuComponent {
     }
     else {
       const modalRef = this.servicioModal.open(ConfirmarCerrarSesionComponent, { size: 'md', centered: true, backdrop: 'static' })
-      modalRef.result.then((result:any) =>{
-        if(result == false){
+      modalRef.result.then((result: any) => {
+        if (result == false) {
           this.opcionActiva = null
         }
       })
