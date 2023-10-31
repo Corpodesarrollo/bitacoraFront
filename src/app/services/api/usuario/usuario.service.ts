@@ -17,7 +17,7 @@ export class UsuarioService {
   httpOptions = {};
   private permisosActualizados = new BehaviorSubject<boolean>(true);
   permisosActualizados$ = this.permisosActualizados.asObservable();
-  credencialesUsuarios: { usuario: string, contrasenia: string };
+  credencialesUsuarios:{usuario:string, contrasenia:string};
 
   constructor(
     private http: HttpClient,
@@ -28,14 +28,14 @@ export class UsuarioService {
   }
 
 
-  setearCabeceras() {
+  setearCabeceras(){
     this.httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': `${environment.CONTENT_TYPE}`,
-        "Authorization": (this.tokenService.getToken().token) ? `Bearer ${this.tokenService.getToken().token}` : ''
-      })
+    headers: new HttpHeaders({
+       'Content-Type': `${environment.CONTENT_TYPE}`,
+       "Authorization": (this.tokenService.getToken().token)?`Bearer ${this.tokenService.getToken().token}`:''
+    })
     };
-  }
+ }
 
   obtenerUsuarioPerCol() {
     const usuarioString = sessionStorage.getItem("sap_acc_sel");
@@ -77,7 +77,7 @@ export class UsuarioService {
     await sessionStorage.clear();
 
     let url = `${environment.URL_APOYO_ESCOLAR}/autenticaPaginas?bandera=0&Hinicio=22&Hfin=6&ext=1&key=-1&cambio= `;
-    var nuevaVentana = window.open(url, '_blank', 'toolbar=no,status=no,menubar=no,scrollbars=no,resizable=no,left=2000, top=2000, width=2, height=2, visible=none');
+    var nuevaVentana =window.open(url,'_blank','toolbar=no,status=no,menubar=no,scrollbars=no,resizable=no,left=2000, top=2000, width=2, height=2, visible=none');
     setTimeout(() => {
       nuevaVentana.close();
     }, 2000);
@@ -88,11 +88,11 @@ export class UsuarioService {
     return this.http.post(`${environment.URL_API}/apoyo/seguridad/login`, credenciales);
   };
 
-  asignarCredenciales(credenciales: { usuario: string, contrasenia: string }) {
+  asignarCredenciales(credenciales:{usuario:string, contrasenia:string}){
     this.credencialesUsuarios = credenciales;
   }
 
-  obtenerCredenciales() {
+  obtenerCredenciales(){
     return this.credencialesUsuarios;
   }
 
@@ -110,7 +110,7 @@ export class UsuarioService {
     return this.http.get(`${environment.URL_API}/apoyo/seguridad/usuarios/${usuario}`);
   }
 
-  guardarAcceso(acceso: AccesoPerfil) {
+  guardarAcceso(acceso:AccesoPerfil) {
     sessionStorage.setItem('sap_acc_sel', JSON.stringify(acceso));
   }
 
@@ -128,7 +128,7 @@ export class UsuarioService {
     }
   }
 
-  obtenerPerfilUsuario() {
+  obtenerPerfilUsuario(){
     const accesoSeleccionado = sessionStorage.getItem('sap_acc_sel');
     if (accesoSeleccionado !== null) {
       return JSON.parse(accesoSeleccionado).perfil;
@@ -158,11 +158,11 @@ export class UsuarioService {
     return valorEnsessionStorage === 'true';
   }
 
-  guardarPermisosPerfil(perfilId: number) {
+  guardarPermisosPerfil(perfilId:number){
     this.setearCabeceras();
     this.permisosActualizados.next(false);
     this.http.get(`${environment.URL_API}/apoyo/usuarios/permisos/${perfilId}`, this.httpOptions).subscribe({
-      next: (permisos: { code: number, data: Permiso[], message: string }) => {
+      next: (permisos: {code:number, data:Permiso[], message:string}) => {
         sessionStorage.setItem('sap_perms', JSON.stringify(permisos.data));
         this.permisosActualizados.next(true);
       },
@@ -172,20 +172,20 @@ export class UsuarioService {
     });
   }
 
-  obtetenerPermisosPerfil(permisosUsuario: string) {
-    let perms = sessionStorage.getItem('sap_perms');
-    let permisos: Perms[]
-    let result = false;
-    if (perms) {
-      permisos = JSON.parse(perms);
+    obtetenerPermisosPerfil(permisosUsuario: string){
+      let perms = sessionStorage.getItem('sap_perms');
+      let permisos:Perms[]
+      let result = false;
+      if (perms) {
+        permisos = JSON.parse(perms);
+      }
+      if (permisos && permisos.length ) {
+        result = permisos.some(
+          (permiso:Perms) => permiso.nombreGrupoServicio === permisosUsuario
+        );
+      }
+      return result;
     }
-    if (permisos && permisos.length) {
-      result = permisos.some(
-        (permiso: Perms) => permiso.nombreGrupoServicio === permisosUsuario
-      );
-    }
-    return result;
-  }
 
 
 }

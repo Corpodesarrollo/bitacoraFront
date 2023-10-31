@@ -121,7 +121,7 @@ export class IngresarComponent {
   construirFormularios() {
     this.formLogin = this.formBuilder.group({
       usuario: ['', [Validators.required, Validators.maxLength(15), Validators.pattern('^[0-9]+')]],
-      contrasenia: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(200)]],
+      contrasenia: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(12)]],
     });
   }
 
@@ -145,8 +145,7 @@ export class IngresarComponent {
       this.servicioUsuario.removerUsuario();
       this.ingresando = true;
       let contrasenia = this.formLogin.get('contrasenia').value.toString();
-      // let contraseniaHash = MD5(contrasenia).toString();
-      let contraseniaHash = contrasenia;
+      let contraseniaHash = MD5(contrasenia).toString();
       let credenciales: any = {
         usuario: this.formLogin.get('usuario').value,
         contrasenia: contraseniaHash

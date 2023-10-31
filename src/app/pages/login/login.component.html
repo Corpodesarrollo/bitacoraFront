@@ -1,7 +1,6 @@
 <div class="contenedor_principal">
   <app-cabecera></app-cabecera>
-      <div class="continer-fluid">
-        <!-- <app-bitacora></app-bitacora> -->
+      <div class="container-fluid">
         <router-outlet *ngIf="!cargandoOffice365"></router-outlet>
         <app-cargando *ngIf="cargandoOffice365" class="cargando" mensaje="Un momento, estamos validando el usuario de Microsoft..."></app-cargando>
       </div>

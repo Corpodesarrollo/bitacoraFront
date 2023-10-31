@@ -288,14 +288,25 @@ export class ConsultasComponent {
     fecha.getHours(), fecha.getMinutes(), fecha.getSeconds(),fecha.getMilliseconds()));
     this.datosDescarga.data = dtoData;
       this.serviciosConsulta.generarBoletinEstudiante(JSON.stringify(this.datosDescarga)).subscribe((data: Blob) => {
+        console.log(data);
         if(data){
+
           const blob = new Blob([data], { type: 'application/pdf' });
-          const url = window.URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = "Boletin__Periodo_" + idPeriodo + "_" + this.datosDescarga.data.numeroDocumento + "_Fecha_" + fechaFormat;
-          link.click();
-          window.URL.revokeObjectURL(url);
+          if(blob.size === 0)
+          {
+            const modalRef =this.servicioModal.open(ModalErroresCamposComponent, {size: 'md', centered: true, animation: false, backdrop: 'static'})
+            modalRef.componentInstance.titulo = 'No se puede generar boletín'
+            modalRef.componentInstance.lista_errores = ['No se encontró datos con la información suministrada.']
+          }
+          else{
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = "Boletin__Periodo_" + idPeriodo + "_" + this.datosDescarga.data.numeroDocumento + "_Fecha_" + fechaFormat;
+            link.click();
+            window.URL.revokeObjectURL(url);
+          }
+          
         }else{
           const modalRef =this.servicioModal.open(ModalErroresCamposComponent, {size: 'md', centered: true, animation: false, backdrop: 'static'})
           modalRef.componentInstance.titulo = 'Error al generar boletín'

@@ -224,17 +224,45 @@ export class PersonalService {
     return this.http.post(url, parametros, this.httpOptions)
   }
 
-  exportAsignacionAcademica(parametros: any){
+  exportReporteInstitucion(parametros: any){
     this.setearCabeceras();
-    return this.http.get(`${environment.URL_API_PERSONAL}/personal/reporte/export/${parametros.institucion}/${parametros.sede}/${parametros.jornada}/${parametros.metodologia}/${parametros.vigencia}`, this.httpOptions)
+  
+    const url = this.buildReportUrlInstitucion(parametros);
 
-    // http://localhost:8080/personal/api/personal/reporte/export/{{institucion}}/{{sede}}/{{jornada}}/{{metodologia}}/{{vigencia}}
-
+    return this.http.get(url, {
+      ...this.httpOptions,
+      observe: 'response',
+      responseType: 'blob',
+    });
   }
-  // actualizarPerfil2(parametros: any) {
-  //   this.setearCabeceras();
-  //   const url = `https://pruebas-sed.linktic.com/personal/api/personal/actualizar/perfil`;
-  //   return this.http.post(url, parametros, this.httpOptions)
-  // }
+
+  private buildReportUrlInstitucion(params: any): string {
+    const { institucion, sede, jornada, metodologia, vigencia } = params;
+    return `${environment.URL_API_PERSONAL}/personal/reporte/exportall/${institucion}/${sede}/${jornada}/${metodologia}/${vigencia}`;
+  }
+
+
+  exportReporte(parametros: any,body:any){
+    const options = {
+      headers: new HttpHeaders({
+        'Content-Type': `${environment.CONTENT_TYPE}`,
+        "Authorization": (this.tokenService.getToken().token)?`Bearer ${this.tokenService.getToken().token}`:''
+      }),
+      body: body
+    };
+    
+    const url = this.buildReportUrl(parametros);
+
+    return this.http.get(url, {
+      ...options,
+      observe: 'response',
+      responseType: 'blob',
+    });
+  }
+
+  private buildReportUrl(params: any): string {
+    const { institucion, sede, jornada, metodologia, vigencia } = params;
+    return `${environment.URL_API_PERSONAL}/personal/reporte/export/${institucion}/${sede}/${jornada}/${metodologia}/${vigencia}`;
+  }
 
 }
