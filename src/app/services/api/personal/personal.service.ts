@@ -243,18 +243,12 @@ export class PersonalService {
 
 
   exportReporte(parametros: any,body:any){
-    const options = {
-      headers: new HttpHeaders({
-        'Content-Type': `${environment.CONTENT_TYPE}`,
-        "Authorization": (this.tokenService.getToken().token)?`Bearer ${this.tokenService.getToken().token}`:''
-      }),
-      body: body
-    };
     
     const url = this.buildReportUrl(parametros);
 
-    return this.http.get(url, {
-      ...options,
+    this.setearCabeceras();
+    return this.http.post(url, body,  {
+      ...this.httpOptions,
       observe: 'response',
       responseType: 'blob',
     });

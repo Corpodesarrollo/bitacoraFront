@@ -32,6 +32,7 @@ export class BuscarComponent{
     editar: false,
     ver: false,
     eliminar:false,
+    puedeEnviarMensajes:false
   }
 
   mensajes: any[] = [];
@@ -66,7 +67,8 @@ export class BuscarComponent{
     this.permisosUsuario = {
       editar: this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.EDITAR_MENSAJE),
       ver:  this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.VER_MENSAJE),
-      eliminar: this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.ELIMINAR_MENSAJE)
+      eliminar: this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.ELIMINAR_MENSAJE),
+      puedeEnviarMensajes: this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.ENVIAR_MENSAJES)
     }
 
     const date = new Date();

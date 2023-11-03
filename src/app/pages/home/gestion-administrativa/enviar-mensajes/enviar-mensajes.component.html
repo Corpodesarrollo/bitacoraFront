@@ -19,7 +19,7 @@
 
                     </ng-template>
                 </li>
-                <li [ngbNavItem]="2">
+                <li *ngIf="puedeEnviarMensajes" [ngbNavItem]="2">
                     <button ngbNavLink>Nuevo Mensaje</button>
                     <ng-template ngbNavContent>
 

@@ -15,12 +15,20 @@
     </div>
 
     <div *ngIf="infoMensaje.exportePorinstitucion === false" class="acciones mb-5 mt-2 d-flex justify-content-center">
-        <button (click)="exportarPdf()" class="btn boton_primario">Descargar PDF</button>
+        <button (click)="exportarPdf()" class="btn boton_primario">
+            <span *ngIf="exportandoRegistros == false">Descargar PDF</span> 
+            <span *ngIf="exportandoRegistros == true">Descargando PDF</span> 
+            <div *ngIf="exportandoRegistros == true" class="spinner-border float-end" role="status"></div>
+        </button>
         <button class="btn boton_primario">Descargar Excel</button>
     </div>
 
     <div *ngIf="infoMensaje.exportePorinstitucion === true" class="acciones mb-5 mt-2 d-flex justify-content-center">
-        <button (click)="exportarInstitucionPdf()" class="btn boton_primario"><span>Descargar PDF</span></button>
+        <button (click)="exportarInstitucionPdf()" class="btn boton_primario">
+            <span *ngIf="exportandoRegistros == false">Descargar PDF</span> 
+            <span *ngIf="exportandoRegistros == true">Descargando PDF</span> 
+            <div *ngIf="exportandoRegistros == true" class="spinner-border float-end" role="status"></div>
+        </button>
         <button class="btn boton_primario">Descargar Excel</button>
     </div>
 

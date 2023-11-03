@@ -264,7 +264,7 @@
                         <p class="perfilesAgreg">Cargando colegios</p>
                         <div class="spinner-border"  role="status"></div>
                     </div>
-                    
+                    <!-- {{cargandoColegiosEditarMensajes}} -->
 
 
                 </div>
@@ -728,7 +728,7 @@
             <hr>
 
             <div *ngIf="tipoUsuario == 'Admin'" class="col-12 col-md-2 ps-0 d-flex ms-auto justify-content-end justify-content-md-center">
-                <button  type="submit" class="btn buttonEnviar mt-3" (click)="crearMensaje()">
+                <button *ngIf="puedeEnviarMensajes" type="submit" class="btn buttonEnviar mt-3" (click)="crearMensaje()">
                     <span *ngIf="enviarMensaje == false">  Enviar mensaje</span>
                    
                     <div class="d-flex align-items-center gap-2" *ngIf="enviarMensaje == true">

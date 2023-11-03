@@ -31,7 +31,7 @@ export class VerComponent {
     this.esIframe = true
     this.cargandoIframe = true
     this.mensaje = "Un momento, estamos cargando la información";
-    const url = environment.URL_APOYO_ESCOLAR + ruta
+    const url = ruta
     this.urlIframe = this.sanitizer.bypassSecurityTrustResourceUrl(url)
     setTimeout(() => {
       this.cargandoIframe = false

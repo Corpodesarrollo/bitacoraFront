@@ -32,6 +32,8 @@ export class MensajesComponent {
   mensajeResp: any;
   puedeEnviarMensajes:boolean = false;
   puedeVerMensaje:boolean = false;
+  cargandoPermisos: boolean;
+  permisoEnviarMensaje: boolean;
 
 
   constructor(private mensajesService: MensajesService,
@@ -81,6 +83,8 @@ export class MensajesComponent {
       if(parametro == null) { bool = false } else { bool = true }
       return bool;
   }
+  
+
 
   formatearFecha(fecha) {
     // year: 2023, month: 4, day: 1

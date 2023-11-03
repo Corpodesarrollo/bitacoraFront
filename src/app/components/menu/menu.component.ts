@@ -6,6 +6,7 @@ import { UsuarioService } from 'src/app/services/api/usuario/usuario.service';
 import { UtilsService } from 'src/app/services/generales/utils/utils.service';
 import { ConfirmarCerrarSesionComponent } from '../confirmar-cerrar-sesion/confirmar-cerrar-sesion.component';
 import { MenuGeneral } from 'src/app/interfaces/menu_general.interface';
+import { environment } from 'src/environments/environment';
 
 
 @Component({
@@ -137,10 +138,13 @@ export class MenuComponent {
       this.cerrarSesion()
     }
     if (opcion.serTarget === "1") {
-      this.router.navigate(['/home/ver', opcion.serRecurso])
+      this.router.navigate(['/home/ver', environment.URL_APOYO_ESCOLAR + opcion.serRecurso])
     }
     else if (opcion.serTarget === "3") {
       this.router.navigate([`${opcion.serRecurso}`]);
+    }
+    else if (opcion.serTarget === "4") {
+      this.router.navigate(['/home/ver', opcion.serRecurso])
     }
     else {
       this.opcionActiva = opcion;

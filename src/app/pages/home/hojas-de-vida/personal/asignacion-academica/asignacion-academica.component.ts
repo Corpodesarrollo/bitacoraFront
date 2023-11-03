@@ -10,6 +10,8 @@ import { MensajeModal } from './components/mensaje-modal/mensaje-modal';
 import { UsuarioService } from 'src/app/services/api/usuario/usuario.service';
 import { AccesoPerfil } from 'src/app/interfaces/acceso_perfil.interface';
 import { AsignacionDocenteComponent } from 'src/app/components/asignacion-docente/asignacion-docente.component';
+import { PermisosUsuarios } from 'src/app/enums/usuario-permisos';
+import { ModalInformacionComponent } from 'src/app/components/modal-informacion/modal-informacion.component';
 
 @Component({
   selector: 'app-asignacion-academica',
@@ -80,6 +82,17 @@ export class AsignacionAcademicaComponent {
   deshabilitarInput: boolean;
   mensajeEnteros: boolean = false;
 
+
+  /**Permisos */
+  cargandoPermisos:boolean = true;
+  permisoEliminar:boolean = false;
+  permisoCopiar:boolean = false;
+  peermisoExportar:boolean = false;
+  permisoExportarInstitucion:boolean = false;
+  permisoEditarHoras:boolean = false;
+  permisoEditarAsignacion:boolean = false;
+  permisoAsigVer:boolean = false;
+
   toggleAll() {
     this.allChecked = !this.allChecked;
     this.listadosFuncionarios.forEach(element => element.checked = this.allChecked);
@@ -95,7 +108,25 @@ export class AsignacionAcademicaComponent {
 
     this.construirFormulario();
     this.cargarVigencias()
+    this.cargarPermisos();
+  }
 
+  /**
+   * Metood para cargar permisos
+   */
+  cargarPermisos(){
+      this.usuarioService.permisosActualizados$.subscribe((permisosActualizados) => {
+        if (permisosActualizados) {
+          this.permisoEliminar = this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.PERSONAL_ASIG_ACAD_ELIMINAR),
+          this.permisoCopiar = this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.PERSONAL_ASIG_ACAD_COPIAR),
+          this.peermisoExportar = this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.PERSONAL_ASIG_ACAD_EXPORTAR)
+          this.permisoExportarInstitucion = this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.PERSONAL_ASIG_ACAD_EXPORTARINSTITUCIÓN)
+          this.permisoEditarHoras = this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.PERSONAL_ASIG_ACAD_EDITARTOTALHORASSEMANALES)
+          this.permisoEditarAsignacion = this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.PERSONAL_ASIG_ACAD_EDITARASIGNACIÓNACADÉMICA)
+          this.permisoAsigVer = this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.PERSONAL_ASIG_ACAD_VER)
+          this.cargandoPermisos = false;
+        }
+      });
   }
 
   construirFormulario() {
@@ -196,25 +227,35 @@ export class AsignacionAcademicaComponent {
 
   gestionarAsignacionAcademica(index: any, horasAsignadas) {
 
-    let docente = this.listadosFuncionarios[index];
+    if(this.permisoEditarAsignacion){
+      let docente = this.listadosFuncionarios[index];
 
-    if (this.listaHoras.value[index].horas <= 0) {
-      this.infoMensaje.ventanaEnviado = true;
-      this.infoMensaje.titulo = 'Funcionario sin horas asignadas';
-      this.infoMensaje.mensaje = 'El funcionario seleccionado no tiene cargado un valor para el total de horas semanales. Por favor, indique un valor para el número de horas semanales que dictará el funcionario.';
-      this.infoMensaje.botonesAsignacionErrorEliminar = true;
-      const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
-      modalRef.componentInstance.infoMensaje = this.infoMensaje;
+      if (this.listaHoras.value[index].horas <= 0) {
+        this.infoMensaje.ventanaEnviado = true;
+        this.infoMensaje.titulo = 'Funcionario sin horas asignadas';
+        this.infoMensaje.mensaje = 'El funcionario seleccionado no tiene cargado un valor para el total de horas semanales. Por favor, indique un valor para el número de horas semanales que dictará el funcionario.';
+        this.infoMensaje.botonesAsignacionErrorEliminar = true;
+        const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
+        modalRef.componentInstance.infoMensaje = this.infoMensaje;
 
-    } else {
-      this.infoAsignacionFuncionario.filtros = this.parametrosFiltros
-      this.infoAsignacionFuncionario.horasAsignadas = horasAsignadas
-      this.infoAsignacionFuncionario.funcionario = `${docente.primerApellido} ${docente.segundoApellido} ${docente.primerNombre} ${docente.segundoNombre}
-      `;
-      this.infoAsignacionFuncionario.numeroDocumento = docente.identificacion;
-      const modalRef = this.servicioModal.open(AsignacionesFuncionarioComponent, { size: 'md', centered: true, backdrop: 'static' });
-      //console.log("Estos son los datos: ", this.infoAsignacionFuncionario);
-      modalRef.componentInstance.infoAsignacionFuncionario = this.infoAsignacionFuncionario;
+      } else {
+        this.infoAsignacionFuncionario.filtros = this.parametrosFiltros
+        this.infoAsignacionFuncionario.horasAsignadas = horasAsignadas
+        this.infoAsignacionFuncionario.funcionario = `${docente.primerApellido} ${docente.segundoApellido} ${docente.primerNombre} ${docente.segundoNombre}
+        `;
+        this.infoAsignacionFuncionario.numeroDocumento = docente.identificacion;
+        const modalRef = this.servicioModal.open(AsignacionesFuncionarioComponent, { size: 'md', centered: true, backdrop: 'static' });
+        //console.log("Estos son los datos: ", this.infoAsignacionFuncionario);
+        modalRef.componentInstance.infoAsignacionFuncionario = this.infoAsignacionFuncionario;
+      }
+    }
+    else{
+      const modalRef = this.servicioModal.open(ModalInformacionComponent, {size:'md', centered: true, backdrop: 'static'})
+      modalRef.componentInstance.informacion = {
+        esExitoso: 'warning',
+        titulo: '¡Advertencia!',
+        mensaje: 'Debe tener permisos para acceder a esta sección'
+      }
     }
 
   }
@@ -343,28 +384,42 @@ export class AsignacionAcademicaComponent {
 
   verDocente(funcionario: any, index) {
     // console.log(funcionario)
-    let infoFuncionario: any = {}
-    infoFuncionario.funcionario = funcionario;
-    infoFuncionario.metodologia = this.parametrosFiltros.id_metodologia;
-    infoFuncionario.vigencia = this.parametrosFiltros.id_vigencia;
+    if(this.permisoAsigVer){
+      let infoFuncionario: any = {}
+      infoFuncionario.funcionario = funcionario;
+      infoFuncionario.metodologia = this.parametrosFiltros.id_metodologia;
+      infoFuncionario.vigencia = this.parametrosFiltros.id_vigencia;
 
-    // infoFuncionario.h
-    infoFuncionario.tipoVentanaModal = true;
-    const modalRef = this.servicioModal.open(AsignacionDocenteComponent, { size: 'xl', centered: true, backdrop: 'static' });
-    modalRef.componentInstance.infoFuncionario = infoFuncionario;
+      // infoFuncionario.h
+      infoFuncionario.tipoVentanaModal = true;
+      const modalRef = this.servicioModal.open(AsignacionDocenteComponent, { size: 'xl', centered: true, backdrop: 'static' });
+      modalRef.componentInstance.infoFuncionario = infoFuncionario;
+    }
+    else{
+      const modalRef = this.servicioModal.open(ModalInformacionComponent, {size:'md', centered: true, backdrop: 'static'})
+      modalRef.componentInstance.informacion = {
+        esExitoso: 'warning',
+        titulo: '¡Advertencia!',
+        mensaje: 'Debe tener permisos para acceder a esta sección'
+      }
+    }
 
   }
 
   filtrar(event: any) {
 
+    this.mensajeEnteros = false;
+     this.listadosFuncionarios = []
+
     if (event.limpiarListado) {
       this.listadosFuncionarios = [];
       return
     }
+  
 
     this.cargandoDocentes = true;
     //console.log(event)
-    // {id_vigencia: 3, id_sede: 2, id_jornada: 2, id_metodologia: 1} 
+    // {id_vigencia: 3, id_sede: 2, id_jornada: 2, id_metodologia: 1}
 
 
     this.parametrosFiltros.id_vigencia = event.id_vigencia;
@@ -469,12 +524,12 @@ export class AsignacionAcademicaComponent {
   }
 
   actualizarHorasAsignadas(e, funcionario, i) {
-  
+
 
     if (Number(e.target.value) !== Math.floor(Number(e.target.value))) {
       this.indiceActualActualizando = i;
       this.mensajeEnteros = true;
-      return 
+      return
     }
 
     this.mensajeEnteros = false;
@@ -515,7 +570,7 @@ export class AsignacionAcademicaComponent {
         dsjJornada: this.parametrosFiltros.id_jornada,
         horas: Number(horaDocente)
       }
- 
+
       // console.log(this.listaHoras.controls[i].status )
       if(this.listaHoras.controls[i].status != "INVALID"){
         this.asignacionAcademicaService.actualizarIntensidadHorario(body).subscribe((resp: any) => {
@@ -549,7 +604,7 @@ export class AsignacionAcademicaComponent {
 
     this.allChecked = false;
     this.listadosFuncionarios = [];
-    
+
     if (valor === 'siguiente') {
       if (this.pagina < this.totalPaginas - 1) {
         this.pagina = this.pagina + 1

@@ -8,6 +8,8 @@ import { NgbDate, NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { last, lastValueFrom } from 'rxjs';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { AccesoPerfil } from 'src/app/interfaces/acceso_perfil.interface';
+import { PermisosUsuarios } from 'src/app/enums/usuario-permisos';
+
 
 @Component({
   selector: 'app-nuevo-mensaje',
@@ -100,6 +102,7 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
   desHabilitarJornada: boolean;
   cargandoColegiosSelect: boolean;
   cargandoSedesSelect: boolean;
+  puedeEnviarMensajes: any;
 
 
   constructor(private mensajesService: MensajesService,
@@ -109,7 +112,7 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
     private servicioModal: NgbModal,
     private router: Router) {
     this.datosUsuario  = this.usuarioService.obtenerAccesoSeleccionado();
-
+    this.puedeEnviarMensajes = this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.ENVIAR_MENSAJES)
     const today = new Date();
     this.minDate = new NgbDate(today.getFullYear(), today.getMonth() + 1, today.getDate())
 
@@ -213,6 +216,8 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
       this.deshabilitarBotonesAgregar = true;
       this.deshabilitarInputSelect = true;
 
+         console.log(this.listadoLocalidades)
+
       if (this.tipoUsuario === 'Admin') {
 
         this.formularioMensajes.patchValue({
@@ -221,7 +226,6 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
           colegio_id: this.infoUsuariologueado.colegio.id,
           colegioFiltrar_id: this.infoUsuariologueado.colegio.id
         });
-
         if (this.listadoLocalidades) {
           const localidadPromise = this.listadoLocalidades.map(async (localidad: any) => {
             if (this.infoUsuariologueado.localidad.id === localidad.id) {
@@ -277,15 +281,13 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
       // this.obtenerElementosEditar(resp.data.perfiles, 'perfiles');
       await this.obtenerPerfilesEditar(resp.data.perfiles);
 
+      this.cargarInfoLocalidades = true;
+
       await this.cargarLocalidadesColegios(resp.data.localidades, resp.data.colegios);
 
       if (this.datosUsuario.perfil.id == 110 && this.tipoUsuario == 'modoEditor') {
         this.formularioMensajes.controls['colegio_id'].enable();
       }
-
-      this.cargandoColegiosEditarMensajes = true;
-      this.cargandoInfoSedesEditar = true
-      this.cargarInfoJornadas = true;
 
     })
   }
@@ -322,7 +324,10 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
 
   // Ultimos cambios editar
   async cargarLocalidadesColegios(localidades: any[], colegios: any[]) {
-    if (this.listadoLocalidades) {
+    console.log(localidades)
+    
+    this.cargandoColegiosEditarMensajes = true;
+    if (this.listadoLocalidades && localidades) {
       await this.listadoLocalidades.map((localidad: any) => {
         localidades.map(async (localidadGuardada: any) => {
           if (localidadGuardada == localidad.id) {
@@ -343,6 +348,10 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
         })
       })
       this.cargarInfoLocalidades = true;
+    }else{
+      this.cargandoColegiosEditarMensajes = false
+      this.cargandoInfoSedesEditar = false
+      this.cargarInfoJornadas = false;
     }
   }
 
@@ -366,6 +375,10 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
       });
 
       await Promise.all(promiceColegios);
+    }else{
+      this.cargandoColegiosEditarMensajes = false
+      this.cargandoInfoSedesEditar = false
+      this.cargarInfoJornadas = false;
     }
 
   }
