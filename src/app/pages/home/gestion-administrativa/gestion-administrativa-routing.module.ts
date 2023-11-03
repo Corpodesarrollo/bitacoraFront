@@ -20,7 +20,7 @@ const routes: Routes = [
         path: 'consulta-bitacoras',
         component: BitacoraComponent,
         canActivate: [CanActivatePermisosGuard],
-        data: { permisos: PermisosUsuarios.ENVIAR_MENSAJES }
+        data: { permisos: PermisosUsuarios.BITACORA }
       },
       {
         path: 'mensajes/editar/:id',

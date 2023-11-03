@@ -26,3 +26,5 @@ import { ReactiveFormsModule } from '@angular/forms';
   providers: [BitacoraService],
 })
 export class BitacoraModule {}
+
+// BORRAR  TODOS LO PERTENECIENTE A ESTE MODULO CUANDO SE INTEGRE CON EL REPOSITORIO PRINCIPAL

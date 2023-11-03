@@ -9,6 +9,9 @@ import { ColegioService } from 'src/app/services/api/colegio/colegio.service';
 import { SedeService } from 'src/app/services/api/sede/sede.service';
 import { UsuarioFiltrosService } from 'src/app/services/api/usuario-filtros/usuario-filtros.service';
 import { TipoLogService } from 'src/app/services/api/tipoLog/tipo-log.service';
+import { UsuarioService } from 'src/app/services/api/usuario/usuario.service';
+import { AccesoPerfil } from 'src/app/interfaces/acceso_perfil.interface';
+import { Perfiles } from 'src/app/enums/perfiles.enum';
 
 @Component({
   selector: 'app-bitacora',
@@ -37,9 +40,12 @@ export class BitacoraComponent implements OnInit {
 
   datosBitacora: DatosBitacora[] = [];
 
+  public informacionUsuario: AccesoPerfil;
+  public idUsuario: string;
   public constructor(
     private bitacoraService: BitacoraService,
     private formBuilder: FormBuilder,
+    private usuarioService: UsuarioService,
     private usuarioFiltrosService: UsuarioFiltrosService,
     private colegioService: ColegioService,
     private sedeService: SedeService,
@@ -50,7 +56,7 @@ export class BitacoraComponent implements OnInit {
       fechaDesde: ['', [Validators.required]],
       fechaHasta: ['', [Validators.required]],
       usuario: [null, [Validators.required]],
-      colegio: [null, [Validators.required]],
+      colegio: [{value: null, disabled: false}, [Validators.required]],
       sede: [null, [Validators.required]],
       jornada: [null, [Validators.required]],
       tipoLog: [null, [Validators.required]],
@@ -58,6 +64,11 @@ export class BitacoraComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.idUsuario = this.usuarioService.obtenerUsuario()?.id;
+    this.informacionUsuario = this.usuarioService.obtenerUsuarioPerCol();
+    if (this.informacionUsuario.perfil.id !== Perfiles.ADMINISTRADOR) { // Valida si es administrador
+      this.getColegios(this.idUsuario, true);
+    }
     this.initFiltros();
     this.consultarBitacora();
     this.filtrosFormGroup.get('fechaDesde').valueChanges.subscribe((value) => {
@@ -71,16 +82,12 @@ export class BitacoraComponent implements OnInit {
 
   private initFiltros(): void {
     let bodyUsuarios = {
-      "nivelPerfil": 1,
-      "perfil": 110,
-      "institucion": 0
+      nivelPerfil: this.informacionUsuario.perfil.idPerfilNivel,
+      perfil: this.informacionUsuario.perfil.id,
+      institucion: 0
     }
     this.usuarioFiltrosService.obtenerUsarios(bodyUsuarios).subscribe((response: any) => {
       this.listaUsuarios = response?.data;
-      this.listaColegios = [];
-      this.listaSedes = [];
-      this.listaJornadas = [];
-      this.filtrosFormGroup.get('colegio').reset();
     });
 
     this.tipoLogService.obtenerTiposLog().subscribe((response: any) => {
@@ -88,15 +95,22 @@ export class BitacoraComponent implements OnInit {
     });
   }
 
-  public getColegios(idUsuario: string) {
+  public getColegios(idUsuario: string, disableInput: boolean = false) {
     let bodyColegios = {
       usuario: idUsuario
     }
     this.colegioService.obtenerColegios(bodyColegios).subscribe((response: any) => {
       this.listaColegios = response?.data;
-      this.listaSedes = [];
-      this.listaJornadas = [];
-      this.filtrosFormGroup.get('sede').reset();
+      if (disableInput) {
+        this.filtrosFormGroup.controls['colegio'].setValue({codigo: this.informacionUsuario.colegio.id, nombre: this.informacionUsuario.colegio.nombre});
+        this.filtrosFormGroup.get('colegio').disable();
+        this.getSedes(this.informacionUsuario.colegio.id)
+      }
+      if (this.informacionUsuario.perfil.id == Perfiles.ADMINISTRADOR) {
+        this.listaSedes = [];
+        this.listaJornadas = [];
+        this.filtrosFormGroup.get('sede').reset();
+      }
     });
   }
 

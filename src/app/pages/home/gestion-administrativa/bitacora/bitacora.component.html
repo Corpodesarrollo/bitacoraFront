@@ -84,7 +84,7 @@
             class="select"
             placeholder="Seleccione un Usuario"
             formControlName="usuario"
-            (change)="getColegios($event)">
+            (change)="$event?.codigo ? getColegios($event?.codigo) : null">
           </ng-select>
         </div>
       </div>
@@ -93,13 +93,11 @@
           <label for="usuario" class="etiqueta_select"> Colegio:</label>
           <ng-select
             [items]="listaColegios"
-            bindValue="codigo"
             bindLabel="nombre"
             class="select"
             placeholder="Seleccione un colegio"
             formControlName="colegio"
-            [disabled]="!(listaColegios?.length > 0)"
-            (change)="getSedes($event)">
+            (change)="$event?.codigo ? getSedes($event?.codigo) : null">
           </ng-select>
         </div>
       </div>
@@ -112,7 +110,8 @@
             bindLabel="nombre"
             class="select"
             placeholder="Seleccione la sede"
-            formControlName="sede">
+            formControlName="sede"
+            (change)="$event?.jornada ? getJornadas($event?.jornada) : null">
           </ng-select>
         </div>
       </div>
