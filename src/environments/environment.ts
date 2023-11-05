@@ -7,7 +7,7 @@ export const environment = {
   URL_API_PERSONAL: "https://pruebas-sed.linktic.com/personal/api",
   URL_API_REPORTE: "https://pruebas-sed.linktic.com/reportes-api/api",
   URL_ESTUDIANTES: "https://pruebas-sed.linktic.com/#/students",
-  URL_BITACORAS: "http://20.237.244.76:8080",
+  URL_BITACORAS: "http://20.237.244.76:8080/api",
   URL_POLITICA_DATOS: 'https://www.educacionbogota.edu.co/portal_institucional/sites/default/files/inline-files/Politica_Tratamiento_Datos_Personales_SED.pdf',
   URL_APOYO_ESCOLAR: "https://pruebas-sed.linktic.com/apoyo_escolar/",
   CONTENT_TYPE: 'application/json',
