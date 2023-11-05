@@ -13,7 +13,7 @@
               account_circle
             </span>
             <input
-              formControlName="fechaDesde"
+              formControlName="fechaInicio"
               type="text"
               placeholder="Seleccione la fecha de inicio"
               ng-reflect-name="fechaInicio"
@@ -43,7 +43,7 @@
               account_circle
             </span>
             <input
-              formControlName="fechaHasta"
+              formControlName="fechaFin"
               placeholder="Seleccione la fecha de finalizacion"
               class
               (click)="date2.toggle()"
@@ -137,7 +137,7 @@
             bindLabel="nombre"
             class="select"
             placeholder="Seleccione el tipo de log"
-            formControlName="tipoLog">
+            formControlName="tipoLogBitacora">
           </ng-select>
         </div>
       </div>
@@ -145,7 +145,7 @@
         <button
           type="submit"
           class="btn boton_primario"
-          (click)="mostrarFiltrosAvanzados = !mostrarFiltrosAvanzados">
+          (click)="consultarBitacora(0)">
           Filtrar
         </button>
       </div>
@@ -154,6 +154,10 @@
 </div>
 
 <app-tabla-registro-detalle
+  (consultarDatos)="consultarBitacora($event)"
+  [nPag]="nPag"
+  [itemXpag]="itemXpag"
+  [totalPag]="totalPag"
   (exportarDatos)="exportar($event)"
   [datos]="datosBitacora"
   [columnasTabla]="columnasTablaBitacora"

@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { DatosBitacora } from 'src/app/classes/datos_bitacora.interface';
+import { DatosFiltrados } from 'src/app/classes/datos_filtrados.interface';
 
 @Injectable()
 export class BitacoraService {
   constructor() {}
 
-  consultaBitacoras(): DatosBitacora[] {
+  consultaBitacoras(filtros: DatosFiltrados): any[] {
     return [
       {
         fecha: new Date('23/10/2023'),

@@ -14,6 +14,11 @@ export class TablaRegistroDetalleComponent {
   @Input() columnasTabla: ColumnaTabla[] = [];
   @Output() exportarDatos: EventEmitter<any> = new EventEmitter<any>();
   @Output() buscar: EventEmitter<string> = new EventEmitter<string>();
+  @Output() consultarDatos: EventEmitter<any> = new EventEmitter<any>();
+  
+  @Input() nPag:number = 0;
+  @Input() itemXpag:number = 5;
+  @Input() totalPag:number = 5;
 
   exportar(datos: any): void {
     let datosExportar: any;
@@ -27,5 +32,17 @@ export class TablaRegistroDetalleComponent {
   buscarDatos(datos: any): void {
     console.log(datos.target.value);
     this.buscar.emit(datos.target.value);
+  }
+  siguientePag():void {
+    this.consultarDatos.emit(this.nPag+1);
+  }
+  anteriorPag():void {
+    this.consultarDatos.emit(this.nPag-1);
+  }
+  ultimaPag():void {
+    this.consultarDatos.emit(this.totalPag-1);
+  }
+  primeraPag():void {
+    this.consultarDatos.emit(0);
   }
 }

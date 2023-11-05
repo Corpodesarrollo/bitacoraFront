@@ -28,6 +28,6 @@ export class TipoLogService {
   }
 
   obtenerTiposLog(): Observable<any> {
-    return this.http.get<any>(`${environment.URL_BITACORAS}/api/apoyo/consultas/tipoLog`, this.httpOptions)
+    return this.http.get<any>(`${environment.URL_BITACORAS}/apoyo/consultas/tipoLog`, this.httpOptions)
   }
 }

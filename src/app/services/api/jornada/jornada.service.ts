@@ -28,6 +28,6 @@ export class JornadaService {
   }
 
   obtenerJornadas(body: any): Observable<any> {
-    return this.http.post<any>(`${environment.URL_BITACORAS}/api/apoyo/consultas/Jornadas`, body, this.httpOptions)
+    return this.http.post<any>(`${environment.URL_BITACORAS}/apoyo/consultas/Jornadas`, body, this.httpOptions)
   }
 }

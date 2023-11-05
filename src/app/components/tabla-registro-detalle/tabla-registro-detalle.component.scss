@@ -31,6 +31,22 @@
   }
 }
 
+.footer-tabla {
+  padding: 5px;
+  align-items: center;
+  width: 100%;
+  border-top: solid 1px #403f4933;
+  margin-top: 20px;
+  .paginacion-tabla {
+    margin-left: auto;
+    padding-right: 5px;
+    padding-left: 5px;
+  }
+  .paginacion-botones {
+    margin-left: auto;
+  }
+}
+
 .contenedor {
   padding: 0px 20px;
 }

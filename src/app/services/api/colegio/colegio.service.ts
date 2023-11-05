@@ -28,6 +28,6 @@ export class ColegioService {
   }
 
   obtenerColegios(body: any): Observable<any> {
-    return this.http.post<any>(`${environment.URL_BITACORAS}/api/apoyo/consultas/Colegios`, body, this.httpOptions)
+    return this.http.post<any>(`${environment.URL_BITACORAS}/apoyo/consultas/Colegios`, body, this.httpOptions)
   }
 }

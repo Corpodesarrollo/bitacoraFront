@@ -2,6 +2,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
+import { DatosFiltrados } from 'src/app/classes/datos_filtrados.interface';
+import { DatosBitacora } from 'src/app/classes/datos_bitacora.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -46,6 +48,25 @@ export class ConsultasService {
   obtenerTiposDocumento(){
     const url = `${environment.URL_API}/apoyo/consultas/estudiantes/listaDocumentosIdentidad`
     return this.http.get(url)
+  }
+
+  consultaBitacoras(filtros: DatosFiltrados):Observable<DatosBitacora[]> {
+    const url = `${environment.URL_BITACORAS}/apoyo/consultas/Bitacora`
+    return this.http.post<DatosBitacora[]>(url, filtros);
+  }
+
+  exportarBitacoraPDF(id?: number):Observable<any> {
+    let url = `${environment.URL_BITACORAS}/apoyo/bitacora/exportarAPdf`
+    if(id)
+      url = `${url}?id=${id}`;
+    return this.http.get<any>(url);
+  }
+
+  exportarBitacoraExcel(id?: number):Observable<any> {
+    let url = `${environment.URL_BITACORAS}/apoyo/bitacora/exportarAExcel`
+    if(id)
+      url = `${url}?id=${id}`;
+    return this.http.get<any>(url);
   }
 
 }

@@ -28,6 +28,6 @@ export class UsuarioFiltrosService {
   }
 
   obtenerUsarios(body: any): Observable<any> {
-    return this.http.post<any>(`${environment.URL_BITACORAS}/api/apoyo/consultas/Usuarios`, body, this.httpOptions)
+    return this.http.post<any>(`${environment.URL_BITACORAS}/apoyo/consultas/Usuarios`, body, this.httpOptions)
   }
 }

@@ -28,6 +28,6 @@ export class SedeService {
   }
 
   obtenerSedes(body: any): Observable<any> {
-    return this.http.post<any>(`${environment.URL_BITACORAS}/api/apoyo/consultas/Sedes`, body, this.httpOptions)
+    return this.http.post<any>(`${environment.URL_BITACORAS}/apoyo/consultas/Sedes`, body, this.httpOptions)
   }
 }

@@ -1,9 +1,16 @@
 export interface DatosBitacora {
-  fecha:Date,
-  modulo:string,
-  tipoLog:string,
+  id:number,
+  fechaRegistro:any,
   usuario:string,
+  modulo:any,
+  submodulo:any,
+  tipoLog:any,
+  colegio:number,
+  jornada:number,
+  sede:number,
+  perfil:number,
   detalle:string
+  totalPag:number
 }
 
 
