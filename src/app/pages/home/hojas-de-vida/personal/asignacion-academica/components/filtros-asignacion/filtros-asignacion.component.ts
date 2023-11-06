@@ -58,9 +58,9 @@ export class FiltrosAsignacionComponent {
     const fechaActual = new Date();
     const anioActual = fechaActual.getFullYear();
 
-    this.formFiltros.patchValue({
-      id_vigencia:anioActual
-    })
+    // this.formFiltros.patchValue({
+    //   id_vigencia:anioActual
+    // })
 
   }
 
@@ -113,9 +113,15 @@ export class FiltrosAsignacionComponent {
   }
 
   cargarVigencias(){
-     this.asignacionAcademicaService.obtenerVigencias().subscribe((resp:any)=>{
+    let datos_usuario:AccesoPerfil  = this.usarioService.obtenerAccesoSeleccionado();
+
+     this.asignacionAcademicaService.obtenerVigencias(datos_usuario.colegio.id).subscribe((resp:any)=>{
       if(resp.status == 200){
         this.vigencias = resp.data;
+        const vigenciasLength = this.vigencias.length;
+        this.formFiltros.patchValue({
+          id_vigencia:this.vigencias[vigenciasLength - 1].vigencia
+        })
       }
      })
   }

@@ -78,6 +78,8 @@ export class UsuarioService {
 
     let url = `${environment.URL_APOYO_ESCOLAR}/autenticaPaginas?bandera=0&Hinicio=22&Hfin=6&ext=1&key=-1&cambio= `;
     var nuevaVentana =window.open(url,'_blank','toolbar=no,status=no,menubar=no,scrollbars=no,resizable=no,left=2000, top=2000, width=2, height=2, visible=none');
+    nuevaVentana.resizeTo(0, 0);
+    nuevaVentana.moveTo(10000, 10000);
     setTimeout(() => {
       nuevaVentana.close();
     }, 2000);

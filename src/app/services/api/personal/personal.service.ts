@@ -241,6 +241,18 @@ export class PersonalService {
     return `${environment.URL_API_PERSONAL}/personal/reporte/exportall/${institucion}/${sede}/${jornada}/${metodologia}/${vigencia}`;
   }
 
+  exportReporteInstitucionExcel(parametros: any){
+    this.setearCabeceras();
+  
+    const url = this.buildReportUrlInstitucionExcel(parametros);
+
+    return this.http.get(url,this.httpOptions);
+  }
+
+  private buildReportUrlInstitucionExcel(params: any): string {
+    const { institucion, sede, jornada, metodologia, vigencia } = params;
+    return `${environment.URL_API_PERSONAL}/personal/reporte/excel/${institucion}/${sede}/${jornada}/${metodologia}/${vigencia}`;
+  }
 
   exportReporte(parametros: any,body:any){
     
@@ -257,6 +269,19 @@ export class PersonalService {
   private buildReportUrl(params: any): string {
     const { institucion, sede, jornada, metodologia, vigencia } = params;
     return `${environment.URL_API_PERSONAL}/personal/reporte/export/${institucion}/${sede}/${jornada}/${metodologia}/${vigencia}`;
+  }
+
+  exportReporteExcel(parametros: any,body:any){
+    
+    const url = this.buildReportUrlExcel(parametros);
+
+    this.setearCabeceras();
+    return this.http.post(url, body, this.httpOptions);
+  }
+
+  private buildReportUrlExcel(params: any): string {
+    const { institucion, sede, jornada, metodologia, vigencia } = params;
+    return `${environment.URL_API_PERSONAL}/personal/reporte/excel/seleccion/${institucion}/${sede}/${jornada}/${metodologia}/${vigencia}`;
   }
 
 }

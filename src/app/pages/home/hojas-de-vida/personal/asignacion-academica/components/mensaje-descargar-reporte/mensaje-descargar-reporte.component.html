@@ -15,21 +15,29 @@
     </div>
 
     <div *ngIf="infoMensaje.exportePorinstitucion === false" class="acciones mb-5 mt-2 d-flex justify-content-center">
-        <button (click)="exportarPdf()" class="btn boton_primario">
+        <button (click)="exportar('pdf')" class="btn boton_primario">
             <span *ngIf="exportandoRegistros == false">Descargar PDF</span> 
             <span *ngIf="exportandoRegistros == true">Descargando PDF</span> 
             <div *ngIf="exportandoRegistros == true" class="spinner-border float-end" role="status"></div>
         </button>
-        <button class="btn boton_primario">Descargar Excel</button>
+        <button (click)="exportar('excel')" class="btn boton_primario">
+            <span *ngIf="exportandoRegistrosExcel == false">Descargar Excel</span>
+            <span *ngIf="exportandoRegistrosExcel == true">Descargando Excel</span> 
+            <div *ngIf="exportandoRegistrosExcel == true" class="spinner-border float-end" role="status"></div>
+        </button>
     </div>
 
     <div *ngIf="infoMensaje.exportePorinstitucion === true" class="acciones mb-5 mt-2 d-flex justify-content-center">
-        <button (click)="exportarInstitucionPdf()" class="btn boton_primario">
+        <button (click)="exportarInstitucion('pdf')" class="btn boton_primario">
             <span *ngIf="exportandoRegistros == false">Descargar PDF</span> 
             <span *ngIf="exportandoRegistros == true">Descargando PDF</span> 
             <div *ngIf="exportandoRegistros == true" class="spinner-border float-end" role="status"></div>
         </button>
-        <button class="btn boton_primario">Descargar Excel</button>
+        <button (click)="exportarInstitucion('excel')" class="btn boton_primario">
+            <span *ngIf="exportandoRegistrosExcel == false">Descargar Excel</span> 
+            <span *ngIf="exportandoRegistrosExcel == true">Descargando Excel</span> 
+            <div *ngIf="exportandoRegistrosExcel == true" class="spinner-border float-end" role="status"></div>
+        </button>
     </div>
 
     <div class="acciones">

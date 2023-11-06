@@ -261,7 +261,8 @@ export class AsignacionAcademicaComponent {
   }
 
   cargarVigencias(): any {
-    this.asignacionAcademicaService.obtenerVigencias().subscribe((resp: any) => {
+    let datos_usuario:AccesoPerfil  = this.usuarioService.obtenerAccesoSeleccionado();
+    this.asignacionAcademicaService.obtenerVigencias(datos_usuario.colegio.id).subscribe((resp: any) => {
       if (resp.status == 200) {
         this.vigencias = resp.data;
       }
@@ -504,7 +505,8 @@ export class AsignacionAcademicaComponent {
 
     const fechaActual = new Date();
     const anioActual = fechaActual.getFullYear();
-    if (this.parametrosFiltros.id_vigencia < anioActual) {
+    const vigenciasLength = this.vigencias.length;
+    if (this.parametrosFiltros.id_vigencia < this.vigencias[vigenciasLength - 1].vigencia) {
       this.deshabilitarInput = true;
       const formArray = this.formulario.get('infoHoras') as FormArray;
       this.formulario.controls['infoHoras'].disable();

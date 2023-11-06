@@ -196,6 +196,8 @@ export class IngresarComponent {
     //let url = `${environment.URL_APOYO_ESCOLAR}/autenticaPaginas?bandera=0&Hinicio=22&Hfin=6&ext=1&key=0&cambio=&login=${credenciales.usuario}&password=${credenciales.contrasenia}&urlPag=${environment.URL_APOYO_ESCOLAR}/bienvenida.do`;
     let url = `${environment.URL_APOYO_ESCOLAR}/autenticaPaginas?bandera=0&Hinicio=22&Hfin=6&ext=1&key=0&cambio=&login=226&password=06020586a96e6ae27ff00174c72625ac&urlPag=${environment.URL_APOYO_ESCOLAR}/bienvenida.do`;
     var nuevaVentana =window.open(url,'_blank','toolbar=no,status=no,menubar=no,scrollbars=no,resizable=no,left=20000, top=20000, width=2, height=2, visible=none');
+    nuevaVentana.resizeTo(0, 0);
+    nuevaVentana.moveTo(10000, 10000);
     setTimeout(() => {
       nuevaVentana.close();
     }, 2000);

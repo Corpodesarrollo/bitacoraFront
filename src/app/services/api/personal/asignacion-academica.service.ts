@@ -24,10 +24,11 @@ export class AsignacionAcademicaService {
     };
  }
 
-  obtenerVigencias(){
+  obtenerVigencias(institucion_id:any){
     this.setearCabeceras();
-    return this.http.get(`${this.URL}/asignacionAcademica/vigencias`, this.httpOptions);
+    return this.http.get(`${this.URL}/asignacionAcademica/vigencias/${institucion_id}`, this.httpOptions);
   }
+  // http://localhost:8080/personal/api/asignacionAcademica/vigencias/539
 
   obtenerMetodologias(idColegio:any){
     this.setearCabeceras();

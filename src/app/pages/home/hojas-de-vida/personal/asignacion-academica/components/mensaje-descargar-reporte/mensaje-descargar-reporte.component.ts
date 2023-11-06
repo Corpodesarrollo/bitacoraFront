@@ -1,8 +1,8 @@
 import { HttpResponse } from '@angular/common/http';
 import { Component, Input, inject } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { AsignacionAcademicaService } from 'src/app/services/api/personal/asignacion-academica.service';
 import { PersonalService } from 'src/app/services/api/personal/personal.service';
+import { saveAs } from 'file-saver'
 
 @Component({
   selector: 'app-mensaje-descargar-reporte',
@@ -16,11 +16,11 @@ export class MensajeDescargarReporteComponent {
   personalService = inject(PersonalService);
   servicioModal = inject(NgbModal);
   exportandoRegistros: boolean = false;
-
+  exportandoRegistrosExcel: boolean = false;
   // @Input() mensaje:string = "";
 
-  ngOnInit(){
-    
+  ngOnInit() {
+
   }
 
   ngOnDestroy(): void {
@@ -31,9 +31,8 @@ export class MensajeDescargarReporteComponent {
     this.servicioModal.dismissAll()
   }
 
-  exportarInstitucionPdf() {
+  exportarInstitucion(tipo_exportacion: any) {
 
-    this.exportandoRegistros = true;
 
     let parametros: any = {
       institucion: this.infoMensaje.parametros.institucion,
@@ -43,86 +42,123 @@ export class MensajeDescargarReporteComponent {
       metodologia: this.infoMensaje.parametros.id_metodologia
     }
 
-    this.personalService.exportReporteInstitucion(parametros).subscribe((response: HttpResponse<Blob>) => {
-      console.log(response)
-      // Extraer la información necesaria de la respuesta
-      if(response.status == 200){
+    if (tipo_exportacion == 'pdf') {
+      this.exportandoRegistros = true;
+      this.personalService.exportReporteInstitucion(parametros).subscribe((response: HttpResponse<Blob>) => {
+        console.log(response)
+        // Extraer la información necesaria de la respuesta
+        if (response.status == 200) {
+          this.exportandoRegistros = false;
+          const blob = response.body;
+          const filename = this.extractFilename(response, 'pdf');
+
+          // Crear una URL para el blob
+          const blobUrl = window.URL.createObjectURL(blob);
+
+          // Crear un enlace (<a>) para iniciar la descarga
+          const a = document.createElement('a');
+          a.href = blobUrl;
+          a.download = filename;
+
+          // Simular un clic en el enlace para iniciar la descarga
+          a.click();
+
+
+
+          // Liberar los recursos de la URL del blob
+          window.URL.revokeObjectURL(blobUrl);
+        }
+      },
+        error => {
+          this.exportandoRegistros = false;
+          console.error('Error al descargar el archivo', error);
+        })
+    } else if (tipo_exportacion == 'excel') {
+      this.exportandoRegistrosExcel = true;
+      this.personalService.exportReporteInstitucionExcel(parametros).subscribe((response: any) => {
+        // Extraer la información necesaria de la respuesta
+        console.log(response)
+        if (response.status == 200) {
+          this.exportandoRegistrosExcel = false;
+          
+          let salida = "data:application/octet-stream;base64,"+response.data
+          saveAs(salida,"reporte"+".xls")
+        }
+      },
+        error => {
+          this.exportandoRegistrosExcel = false;
+          console.error('Error al descargar el archivo', error);
+        })
+    }
+
+  }
+
+
+  exportar(tipo_exportacion: any) {
+
+
+    let parametros: any = {
+      institucion: this.infoMensaje.parametros.institucion,
+      jornada: this.infoMensaje.parametros.id_jornada,
+      sede: this.infoMensaje.parametros.id_sede,
+      vigencia: this.infoMensaje.parametros.id_vigencia,
+      metodologia: this.infoMensaje.parametros.id_metodologia
+    }
+
+
+    let body = []
+
+    this.infoMensaje.funcionarios.forEach((funcionario) => {
+      body.push({ "identificacion": funcionario.identifacion })
+      // console.log(body)
+    })
+
+    if (tipo_exportacion == 'pdf') {
+      this.exportandoRegistros = true;
+      this.personalService.exportReporte(parametros, body).subscribe((response: HttpResponse<Blob>) => {
+        //console.log(response)
+        // Extraer la información necesaria de la respuesta
         this.exportandoRegistros = false;
         const blob = response.body;
-        const filename = this.extractFilename(response);
-  
+        const filename = this.extractFilename(response, 'pdf');
+
         // Crear una URL para el blob
         const blobUrl = window.URL.createObjectURL(blob);
-  
+
         // Crear un enlace (<a>) para iniciar la descarga
         const a = document.createElement('a');
         a.href = blobUrl;
         a.download = filename;
-  
+
         // Simular un clic en el enlace para iniciar la descarga
         a.click();
-  
-        
-  
+
         // Liberar los recursos de la URL del blob
         window.URL.revokeObjectURL(blobUrl);
-      }
-    },
-      error => {
-        this.exportandoRegistros = false;
-        console.error('Error al descargar el archivo', error);
-      })
-
-  }
-
-
-  exportarPdf() {
-
-    this.exportandoRegistros = true;
-
-    let parametros: any = {
-      institucion: this.infoMensaje.parametros.institucion,
-      jornada: this.infoMensaje.parametros.id_jornada,
-      sede: this.infoMensaje.parametros.id_sede,
-      vigencia: this.infoMensaje.parametros.id_vigencia,
-      metodologia: this.infoMensaje.parametros.id_metodologia
+      },
+        error => {
+          console.error('Error al descargar el archivo', error);
+        })
+    } else if (tipo_exportacion == 'excel') {
+      this.exportandoRegistrosExcel = true;
+      this.personalService.exportReporteExcel(parametros, body).subscribe((response:any) => {
+        //console.log(response)
+        // Extraer la información necesaria de la respuesta
+        console.log(response)
+        if (response.status == 200) {
+          this.exportandoRegistrosExcel = false;
+          
+          let salida = "data:application/octet-stream;base64,"+response.data
+          saveAs(salida,"reporte"+".xls")
+        }
+      },
+        error => {
+          console.error('Error al descargar el archivo', error);
+        })
     }
-
-    
-    let body =  []
-    
-    this.infoMensaje.funcionarios.forEach((funcionario)=>{
-      body.push({"identificacion": funcionario.identifacion})
-      // console.log(body)
-    })
-
-    this.personalService.exportReporte(parametros,body).subscribe((response: HttpResponse<Blob>) => {
-      //console.log(response)
-      // Extraer la información necesaria de la respuesta
-      this.exportandoRegistros = false;
-      const blob = response.body;
-      const filename = this.extractFilename(response);
-
-      // Crear una URL para el blob
-      const blobUrl = window.URL.createObjectURL(blob);
-
-      // Crear un enlace (<a>) para iniciar la descarga
-      const a = document.createElement('a');
-      a.href = blobUrl;
-      a.download = filename;
-
-      // Simular un clic en el enlace para iniciar la descarga
-      a.click();
-
-      // Liberar los recursos de la URL del blob
-      window.URL.revokeObjectURL(blobUrl);
-    },
-      error => {
-        console.error('Error al descargar el archivo', error);
-      })
   }
 
-  private extractFilename(response: HttpResponse<Blob>): string {
+  private extractFilename(response: HttpResponse<Blob>, tipo_exportacion): string {
     const contentDisposition = response.headers.get('content-disposition');
     if (contentDisposition) {
       const filenameMatch = contentDisposition.match(/filename="(.+)"/);
@@ -130,8 +166,10 @@ export class MensajeDescargarReporteComponent {
         return filenameMatch[1];
       }
     }
+    if (tipo_exportacion == "excel") {
+      return 'archivo_descarga.xls';
+    }
     return 'archivo_descarga.pdf';
   }
-
 
 }
