@@ -111,7 +111,7 @@
             class="select"
             placeholder="Seleccione la sede"
             formControlName="sede"
-            (change)="$event?.jornada ? getJornadas($event?.jornada) : null">
+            (change)="$event?.codigo ? getJornadas($event?.codigo) : null">
           </ng-select>
         </div>
       </div>
