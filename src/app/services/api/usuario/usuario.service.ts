@@ -114,6 +114,18 @@ export class UsuarioService {
 
   guardarAcceso(acceso:AccesoPerfil) {
     sessionStorage.setItem('sap_acc_sel', JSON.stringify(acceso));
+    let data: any = {
+      "usuario": this.obtenerUsuario().id,
+      "modulo": null,
+      "submodulo": null,
+      "tipoLog": 5,
+      "colegio": acceso.colegio.id,
+      "jornada": acceso.jornada.id,
+      "sede": acceso.sede.id,
+      "perfil": acceso.perfil.id,
+      "descripcion": "{\"Inicio de sesi&oacute;n\":\"\"}"
+    };
+    this.http.post(`${environment.URL_BITACORAS}/apoyo/consultas/insertarBitacora`, data).subscribe((response:any) => {});
   }
 
   borrarSeleccionColegio() {

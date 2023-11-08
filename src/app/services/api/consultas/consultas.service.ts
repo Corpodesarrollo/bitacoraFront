@@ -52,7 +52,7 @@ export class ConsultasService {
 
   consultaBitacoras(filtros: DatosFiltrados):Observable<DatosBitacora[]> {
     const url = `${environment.URL_BITACORAS}/apoyo/consultas/Bitacora`
-    return this.http.post<DatosBitacora[]>(url, filtros);
+    return this.http.post<DatosBitacora[]>(url, filtros, {headers : {'Content-Type' : 'application/json; charset=UTF-8'}});
   }
 
   exportarBitacoraPDF(id?: number):Observable<any> {

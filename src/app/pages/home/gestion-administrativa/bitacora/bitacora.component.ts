@@ -166,19 +166,19 @@ export class BitacoraComponent implements OnInit {
         }
         this.datosBitacora.map((registro:DatosBitacora) => {
           registro.fechaRegistro = moment(registro.fechaRegistro).format('DD/MM/YYYY h:mm a');
-          registro.usuario = this.listaUsuarios.find(usuario => usuario.codigo === registro.usuario).nombre;
-          registro.modulo = this.listaModulos.find(modulo => Number(modulo.serCatCodigo) === registro.modulo)?.catNombre;
-          registro.submodulo = registro.modulo + ' - ' + this.listaSubModulos.find(submodulo => Number(submodulo.serCodigo) === registro.submodulo)?.serNombre;
-          registro.tipoLog = this.listaTiposLog.find(tipo => tipo.id === registro.tipoLog).nombre;
+          registro.usuario = this.listaUsuarios?.find(usuario => usuario.codigo === registro.usuario)?.nombre;
+          registro.modulo = this.listaModulos?.find(modulo => Number(modulo.serCatCodigo) === registro.modulo)?.catNombre;
+          registro.submodulo = this.listaSubModulos?.find(submodulo => Number(submodulo.serCodigo) === registro.submodulo)?.serNombre;
+          if(registro.modulo && registro.submodulo)
+            registro.submodulo = registro.modulo + ' - ' + registro.submodulo;
+          else
+            registro.submodulo = "";
+          registro.tipoLog = this.listaTiposLog?.find(tipo => tipo.id === registro.tipoLog)?.nombre;
         })
       });
     }
   }
   
-  public changeFecha(event: any) {
-    debugger;
-    console.log(event);
-  }
   exportar(datos: any): void {
     if (datos?.tipo == 'pdf') {
       this.consultasService.exportarBitacoraPDF(datos?.fila?.id).subscribe((resultado:any) => {
