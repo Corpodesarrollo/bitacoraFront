@@ -31,9 +31,9 @@
 
         <div class="campo mt-2 col-12 col-md-6">
             <div [class.deshabilitarInputSelect]="deshabilitarFechaFin" class="input-wrapper">
-                <label for="usuario"> Fecha de finalizacion:<span class="asterisco">*</span></label>
+                <label for="usuario"> Fecha de finalización:<span class="asterisco">*</span></label>
                 <span class="material-symbols-outlined input-icon"> account_circle </span>
-                <input formControlName="fecha_final" placeholder="Seleccione la fecha de finalizacion"
+                <input formControlName="fecha_final" placeholder="Seleccione la fecha de finalización"
                     class="" (click)="date2.toggle()" [minDate]="minDate" value="05/02/2023" type="datetime" readonly
                      ngbDatepicker #date2="ngbDatepicker"
                     [ngClass]="{'error':  campoNoValido('fecha_final')}">
@@ -129,7 +129,7 @@
                     </div>
 
                     <div class="col-12 pt-3" *ngIf="perfilesGuardados.length <= 0 && cargarListadosPerfiles == true">
-                        <p class="perfilesAgreg">Sin perfiles agregadas</p>
+                        <p class="perfilesAgreg">Sin perfiles agregados</p>
                     </div>
                    
                     <div class="col-12 pt-3" *ngIf="cargarListadosPerfiles == false">
@@ -257,7 +257,7 @@
 
 
                     <div class="col-12 pt-3" *ngIf="colegiosGuardados.length <= 0 && cargandoColegiosEditarMensajes == false">
-                        <p class="perfilesAgreg">Sin colegios agregadas</p>
+                        <p class="perfilesAgreg">Sin colegios agregados</p>
                     </div>
                    
                     <div class="col-12 pt-3" *ngIf="cargandoColegiosEditarMensajes == true">
@@ -371,7 +371,7 @@
 
                     <div class="col-12 pt-3" *ngIf="jornadasGuardados.length > 0">
 
-                        <p class="perfilesAgreg">Lista de jornadas agregados:</p>
+                        <p class="perfilesAgreg">Lista de jornadas agregadas:</p>
 
                         <div *ngFor="let jornadaInfo of jornadasGuardados; index as i"
                             class="col-12 mb-1 perfilAgreg mb-1">
@@ -456,7 +456,7 @@
                     </div>
 
                     <div class="col-12 pt-3" *ngIf="perfilesGuardados.length <= 0">
-                        <p class="perfilesAgreg">Sin perfiles agregadas</p>
+                        <p class="perfilesAgreg">Sin perfiles agregados</p>
                     </div>
 
                 </div>
@@ -588,7 +588,7 @@
 
 
                     <div class="col-12 pt-3" *ngIf="colegiosGuardados.length <= 0 && cargandoColegiosNuevoMensaje == false">
-                        <p class="perfilesAgreg">Sin colegios agregadas</p>
+                        <p class="perfilesAgreg">Sin colegios agregados</p>
                     </div>
 
                     <div class="col-12 pt-3" *ngIf="cargandoColegiosNuevoMensaje == true">
@@ -704,7 +704,7 @@
 
                     <div class="col-12 pt-3" *ngIf="jornadasGuardados.length > 0">
 
-                        <p class="perfilesAgreg">Lista de jornadas agregados:</p>
+                        <p class="perfilesAgreg">Lista de jornadas agregadas:</p>
 
                         <div *ngFor="let jornadaInfo of jornadasGuardados; index as i"
                             class="col-12 mb-1 perfilAgreg mb-1">

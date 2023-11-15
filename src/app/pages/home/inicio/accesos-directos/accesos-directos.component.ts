@@ -2,7 +2,9 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { AccesosRapdios } from 'src/app/interfaces/accesos_rapidos.interface';
 import { InicioService } from 'src/app/services/api/inicio/inicio.service';
+import { OpcionesMenuService } from 'src/app/services/api/opciones-menu/opciones-menu.service';
 import { UsuarioService } from 'src/app/services/api/usuario/usuario.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-accesos-directos',
@@ -20,6 +22,7 @@ export class AccesosDirectosComponent {
   constructor(
     private usuariosServices: UsuarioService,
     private inicioServices: InicioService,
+    private opcionesService: OpcionesMenuService,
     private router: Router
   ){
     this.perfilUsuario = this.usuariosServices.obtenerUsuarioPerCol().perfil.id;
@@ -41,9 +44,9 @@ export class AccesosDirectosComponent {
     })
   }
 
-  abrirOpcion(ruta:string){
-    console.log(ruta);
-    this.router.navigate(['/home/ver', ruta])
+  async abrirOpcion(ruta:string){
+    let recursoUrl = await this.opcionesService.obtenerRecurso(ruta)
+    this.router.navigate(['/home/ver', environment.URL_APOYO_ESCOLAR +  recursoUrl])
   }
 
 }

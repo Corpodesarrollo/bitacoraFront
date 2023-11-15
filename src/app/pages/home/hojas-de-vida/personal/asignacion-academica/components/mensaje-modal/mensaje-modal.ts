@@ -14,7 +14,13 @@ import { UtilsService } from 'src/app/services/generales/utils/utils.service';
 })
 export class MensajeModal implements OnDestroy, OnInit {
 
-  @Input() infoMensaje: any;
+  @Input() infoMensaje:any = {
+    cerradoTemporizador:false,
+    arrayFuncionario:false,
+    ventanaEnviado:false,
+    eliminarFuncionario:false,
+    cerrarAviso:false
+  };
   eliminandoRegistro: boolean = false;
 
 
@@ -29,15 +35,16 @@ export class MensajeModal implements OnDestroy, OnInit {
 
   ngOnInit(): void {
     // console.log(this.infoMensaje)
-  }
-
-  ngOnDestroy(): void {
-    this.infoMensaje;
     if(this.infoMensaje.cerradoTemporizador){
       setTimeout(()=>{
         this.servicioModal.dismissAll();
       },2000)
     } 
+  }
+
+  ngOnDestroy(): void {
+    this.infoMensaje = {};
+    this.infoMensaje = {};
   }
 
   cerrarModal() {
@@ -47,6 +54,10 @@ export class MensajeModal implements OnDestroy, OnInit {
     } catch (error) {
       // console.log(error)
     }
+  }
+
+  cerrarModalHijo(){
+    this.activeModal.close('cerrado');
   }
 
   confirmarEliminacionFuncionarios(){

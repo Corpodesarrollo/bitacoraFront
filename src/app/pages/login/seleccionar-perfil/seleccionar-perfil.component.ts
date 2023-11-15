@@ -39,12 +39,12 @@ export class SeleccionarPerfilComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private usuarioService: UsuarioService,
+    private serviciosUsuario: UsuarioService,
     private authService: MsalService,
     private servicioModal: NgbModal,
     private politicasService: PoliticasService,
   ) {
-    this.usuarioId = this.usuarioService.obtenerUsuario().id;
+    this.usuarioId = this.serviciosUsuario.obtenerUsuario().id;
   };
 
   ngOnInit(): void {
@@ -53,17 +53,17 @@ export class SeleccionarPerfilComponent implements OnInit {
   };
 
   async cargarInfoUsuario(){
-    let infoUsuarioGuardada:InfoUsuario = await this.usuarioService.obtenerInfoGuardada();
+    let infoUsuarioGuardada:InfoUsuario = await this.serviciosUsuario.obtenerInfoGuardada();
     this.cargandoPerfil = true;
     if (infoUsuarioGuardada){
       this.configurarVista(infoUsuarioGuardada);
       this.cargandoPerfil = false;
     }else{
-      this.usuarioService.obtenerInfoUsuario(this.usuarioId).subscribe({
+      this.serviciosUsuario.obtenerInfoUsuario(this.usuarioId).subscribe({
         next: (infoUsuario: InfoUsuario) => {
           //console.log("Info Usuarios: ", infoUsuario.registros);
           if(infoUsuario.registros){
-            this.usuarioService.guardarInfoCargada(infoUsuario.registros);
+            this.serviciosUsuario.guardarInfoCargada(infoUsuario.registros);
             this.configurarVista(infoUsuario.registros);
           }else{
             this.vistaSeleccion='sin_accesos';
@@ -96,7 +96,7 @@ export class SeleccionarPerfilComponent implements OnInit {
           }
         }
       }else{
-        this.usuarioService.guardarUnicoRegistro(true);
+        this.serviciosUsuario.guardarUnicoRegistro(true);
         this.seleccionarAcceso(infoUsuario[0]);
       }
     }
@@ -105,11 +105,35 @@ export class SeleccionarPerfilComponent implements OnInit {
 
   async seleccionarAcceso(accesoSeleccionado:AccesoPerfil){
     //console.log("Accesos Seleccionado: ", accesoSeleccionado);
-    this.usuarioService.guardarAcceso(accesoSeleccionado);
+    this.serviciosUsuario.guardarAcceso(accesoSeleccionado);
     this.cargandoPermisos = true;
-    await this.usuarioService.guardarPermisosPerfil(accesoSeleccionado.perfil.id);
+    await this.serviciosUsuario.guardarPermisosPerfil(accesoSeleccionado.perfil.id);
+    this.abrirSesionAE(accesoSeleccionado.perfil.idPerfilNivel);
     this.cargandoPermisos = false;
     this.router.navigate(['home']);
+  }
+
+  async abrirSesionAE(nivelPerfilId:number){
+    let url = environment.URL_LOGIN_NARANJA;
+    let credenciales = await this.serviciosUsuario.obtenerCredenciales();
+    url = url.replace("{{usuario}}", credenciales.usuario).replace("{{contrasenia}}", credenciales.contrasenia);
+    if(niveles.distrito==nivelPerfilId || niveles.nivel_central_poa==nivelPerfilId || niveles.localidad==nivelPerfilId){
+      url = url.replace("{{key}}", "0")
+    }
+    if(niveles.institucion==nivelPerfilId){
+      url = url.replace("{{key}}", "2")
+    }
+    //console.log("Este es el nivel perfil: ", nivelPerfilId, url);
+    if(niveles.institucion_sede_jornada==nivelPerfilId){
+      url = url.replace("{{key}}", "1")
+    }
+    //console.log("URL LOGIN NARANJA: ", url);
+    var nuevaVentana =window.open(url,'_blank','toolbar=no,status=no,menubar=no,scrollbars=no,resizable=no,left=20000, top=20000, width=2, height=2, visible=none');
+    nuevaVentana.resizeTo(0, 0);
+    nuevaVentana.moveTo(10000, 10000);
+    setTimeout(() => {
+      nuevaVentana.close();
+    }, 2000);
   }
 
   identificarPerfiles(accesos:AccesoPerfil[]){
@@ -130,9 +154,9 @@ export class SeleccionarPerfilComponent implements OnInit {
   }
 
   cerrarSesion(event?:any) {
-    this.usuarioService.borrarSeleccionColegio();
+    this.serviciosUsuario.borrarSeleccionColegio();
     if (this.esMicrosoft) {
-      this.usuarioService.cerrarSesion(this.esMicrosoft)
+      this.serviciosUsuario.cerrarSesion(this.esMicrosoft)
     }
     else {
       const modalRef = this.servicioModal.open(ConfirmarCerrarSesionComponent, { size: 'md', centered: true, backdrop: 'static' })
@@ -188,7 +212,7 @@ export class SeleccionarPerfilComponent implements OnInit {
                 titulo: 'Ocurrio un error, por favor intente mas',
                 mensaje: 'No se pudo acceder al sistema'
               };
-              this.usuarioService.cerrarSesion(this.esMicrosoft)
+              this.serviciosUsuario.cerrarSesion(this.esMicrosoft)
             }
           }
           if (!errorEncontrado) {
@@ -202,7 +226,7 @@ export class SeleccionarPerfilComponent implements OnInit {
                   this.cargarInfoUsuario();
                 }
                 else{
-                  this.usuarioService.cerrarSesion(this.esMicrosoft)
+                  this.serviciosUsuario.cerrarSesion(this.esMicrosoft)
                 }
               })
             }
@@ -219,7 +243,7 @@ export class SeleccionarPerfilComponent implements OnInit {
             titulo: 'Ocurrio un error, por favor intente mas tarde',
             mensaje: 'No se pudo acceder al sistema'
           };
-          this.usuarioService.cerrarSesion(this.esMicrosoft)
+          this.serviciosUsuario.cerrarSesion(this.esMicrosoft)
         },
       });
     }

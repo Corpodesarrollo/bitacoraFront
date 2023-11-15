@@ -1,137 +1,157 @@
 <app-cargando *ngIf="cargandoIntensidad"></app-cargando>
-<form  *ngIf="!cargandoIntensidad" class="asignacionMaterias" [formGroup]="formAsignacion">
-    <div id="contendorAsignacionesFuncionarios">
+<form *ngIf="!cargandoIntensidad" class="asignacionMaterias" [formGroup]="formAsignacion">
+  <div id="contendorAsignacionesFuncionarios">
 
-        <div class="titulo">
-            <h1>{{infoAsignacionFuncionario.numeroDocumento}} - {{infoAsignacionFuncionario.funcionario}}</h1>
-        </div>
+    <div class="titulo">
+      <h1>{{infoAsignacionFuncionario.numeroDocumento}} - {{infoAsignacionFuncionario.funcionario}}</h1>
+    </div>
 
-        <div formArrayName="asignaturas">
-            <ng-container *ngFor="let asignatura of listaAsignaturas.controls; let asignaturaIndex = index">
-                <div [formGroupName]="asignaturaIndex" class="accordion accordion-flush accordionContenedorTotal"
-                    [attr.id]="'accordion-' + asignaturaIndex">
-                    <div class="accordion-item px-3">
-                        <h2 class="accordion-header" [attr.id]="'heading-' + asignaturaIndex">
-                            <button class="accordion-button" type="button" [attr.data-bs-toggle]="'collapse'"
-                                [attr.data-bs-target]="'#collapse-' + asignaturaIndex" [attr.aria-expanded]="false"
-                                [attr.aria-controls]="'collapse-' + asignaturaIndex"
-                                (click)="abrirAsignatura(asignaturaIndex)">
-                                <input type="checkbox" class="checkbox">
-                                <div class="titulo">
-                                    <p>{{listaAsignaturas.value[asignaturaIndex].nombre}}</p>
-                                </div>
-                                <div class="input-wrapper">
-                                    <input [disabled]="true" type="text" class="form_input"
-                                        [value]="listaAsignaturas.value[asignaturaIndex].cantidad ">
-                                </div>
-                            </button>
-                        </h2>
-                        <div [attr.id]="'collapse-' + asignaturaIndex" class="accordion-collapse collapse"
-                            [attr.aria-labelledby]="'heading-' + asignaturaIndex">
-                            <div class="accordion-body">
-                                <div formArrayName="grados">
-                                    <ng-container
-                                        *ngFor="let cargo of listaGrados(asignaturaIndex).controls; let gradoIndex = index">
-                                        <div [formGroupName]="gradoIndex"
-                                            class="accordion accordion-flush accordionContenedorTotal"
-                                            [attr.id]="'accordion-' + asignaturaIndex+'-'+ gradoIndex">
-                                            <div class="accordion-item px-3">
-                                                <h2 class="accordion-header"
-                                                    [attr.id]="'heading-' + asignaturaIndex+'-'+ gradoIndex">
-                                                    <button class="accordion-button" type="button"
-                                                        [attr.data-bs-toggle]="'collapse'"
-                                                        [attr.data-bs-target]="'#collapse-' + asignaturaIndex+'-'+ gradoIndex"
-                                                        [attr.aria-expanded]="false"
-                                                        [attr.aria-controls]="'collapse-' + asignaturaIndex+'-'+ gradoIndex"
-                                                        (click)="abrirGrado(asignaturaIndex, gradoIndex,listaAsignaturas.value[asignaturaIndex].nombre,listaGrados(asignaturaIndex).value[gradoIndex].nombre)">
-                                                        <input type="checkbox" class="checkbox">
-                                                        <div class="titulo">
-                                                            <p>{{listaGrados(asignaturaIndex).value[gradoIndex].nombre}}
-                                                            </p>
-                                                        </div>
-                                                        <div class="input-wrapper">
-                                                            <input [disabled]="true" type="text" class="form_input"
-                                                                [value]="listaGrados(asignaturaIndex).value[gradoIndex].cantidad || 0">
-                                                        </div>
-                                                    </button>
-                                                </h2>
-                                                <div [attr.id]="'collapse-' + asignaturaIndex+'-'+ gradoIndex"
-                                                    class="accordion-collapse collapse"
-                                                    [attr.aria-labelledby]="'heading-' + asignaturaIndex+'-'+ gradoIndex">
-                                                    <div class="accordion-body" formArrayName="grupos">
-                                                        <div
-                                                            *ngFor="let grupos of listaGrupos(asignaturaIndex, gradoIndex).controls; let grupoIndex = index">
-                                                            <div [formGroupName]="grupoIndex"
-                                                                class="accordion accordion-flush"
-                                                                [attr.id]="'asignatura-' + asignaturaIndex + '-' + gradoIndex + '-' + grupoIndex">
-                                                                <div class="accordion-item">
-                                                                    <h2 class="accordion-header"
-                                                                        [attr.id]="'asignatura-heading-' +asignaturaIndex + '-' + gradoIndex + '-' + grupoIndex">
-                                                                        <button
-                                                                            class="accordion-button collapsed claseTres"
-                                                                            type="button"
-                                                                            [attr.data-bs-toggle]="'collapse'"
-                                                                            [attr.data-bs-target]="'#asignatura-collapse-' + asignaturaIndex + '-' + gradoIndex + '-' + grupoIndex"
-                                                                            [attr.aria-expanded]="false"
-                                                                            [attr.aria-controls]="'asignatura-collapse-' + asignaturaIndex + '-' + gradoIndex + '-' + grupoIndex">
-                                                                            <input (change)="verificarValor($event,grupoIndex)" type="checkbox" class="checkbox">
-                                                                            <div class="error_valorHoras" *ngIf="mensajeEnteros && indiceActualActualizando == grupoIndex">
-                                                                                <span>Solo numeros enteros</span>
-                                                                            </div>
-                                                                            <div class="titulo">
-                                                                                <p>{{listaGrupos(asignaturaIndex,
-                                                                                    gradoIndex).value[grupoIndex].nombre}}
-                                                                                </p>
-                                                                            </div>
-                                                                            <div class="input-wrapper">
-                                                                                <input type="text" class="form_input"
-                                                                                    formControlName="cantidad"
-                                                                                    (keyup)="calcularTotales(asignaturaIndex, gradoIndex, grupoIndex)">
-                                                                            </div>
-                                                                        </button>
-                                                                    </h2>
-                                                                    <div [attr.id]="'asignatura-collapse-' + asignaturaIndex + '-' + gradoIndex + '-' + grupoIndex"
-                                                                        class="accordion-collapse collapse"
-                                                                        [attr.aria-labelledby]="'asignatura-heading-' + asignaturaIndex + '-' + gradoIndex + '-' + grupoIndex">
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </ng-container>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    <div formArrayName="asignaturas">
+      <ng-container *ngFor="let asignatura of listaAsignaturas.controls; let asignaturaIndex = index">
+        <div [formGroupName]="asignaturaIndex" class="accordion accordion-flush accordionContenedorTotal"
+          [attr.id]="'accordion-' + asignaturaIndex">
+          <div class="accordion-item px-3">
+            <h2 class="accordion-header" [attr.id]="'heading-' + asignaturaIndex">
+              <button class="accordion-button asignacionCheck" [class.disabled]="isDisabled" type="button" [attr.data-bs-toggle]="'collapse'"
+                [attr.data-bs-target]="'#collapse-' + asignaturaIndex" [attr.aria-expanded]="false"
+                [attr.aria-controls]="'collapse-' + asignaturaIndex" (click)="abrirAsignatura(asignaturaIndex)">
+                
+                <div class="divOcultaChecks">
                 </div>
+                <input type="checkbox" class="checkbox" formControlName="checked" id="disabled">
+                <div class="titulo">
+                  <p>{{listaAsignaturas.value[asignaturaIndex].nombre}}</p>
+                </div>
+                <div class="input-wrapper">
+                  <input type="number" class="form_input"
+                    [value]="listaAsignaturas.value[asignaturaIndex].cantidad || 0">
+                </div>
+              </button>
+            </h2>
+            <div [attr.id]="'collapse-' + asignaturaIndex" class="accordion-collapse collapse"
+              [attr.aria-labelledby]="'heading-' + asignaturaIndex">
+              <div class="accordion-body">
+                <div formArrayName="grados">
+                  <ng-container *ngFor="let cargo of listaGrados(asignaturaIndex).controls; let gradoIndex = index">
+                    <div [formGroupName]="gradoIndex" class="accordion accordion-flush accordionContenedorTotal"
+                      [attr.id]="'accordion-' + asignaturaIndex+'-'+ gradoIndex">
+                      <div class="accordion-item px-3">
+                        <h2 class="accordion-header" [attr.id]="'heading-' + asignaturaIndex+'-'+ gradoIndex">
+                          <button class="accordion-button" type="button" [attr.data-bs-toggle]="'collapse'"
+                            [attr.data-bs-target]="'#collapse-' + asignaturaIndex+'-'+ gradoIndex"
+                            [attr.aria-expanded]="false"
+                            [attr.aria-controls]="'collapse-' + asignaturaIndex+'-'+ gradoIndex"
+                            (click)="abrirGrado(asignaturaIndex, gradoIndex,listaAsignaturas.value[asignaturaIndex].nombre,listaGrados(asignaturaIndex).value[gradoIndex].nombre)">
+                            <div class="divOcultaChecks">
+                            </div>
+                            <input type="checkbox" class="checkbox" formControlName="checked">
+                            <div class="titulo">
+                              <p>{{listaGrados(asignaturaIndex).value[gradoIndex].nombre}}
+                              </p>
+                            </div>
+                            <div class="input-wrapper">
+                              <input [disabled]="true" type="number" class="form_input"
+                                [value]="listaGrados(asignaturaIndex).value[gradoIndex].cantidad || 0">
+                            </div>
+                          </button>
+                        </h2>
+                        <div [attr.id]="'collapse-' + asignaturaIndex+'-'+ gradoIndex"
+                          class="accordion-collapse collapse"
+                          [attr.aria-labelledby]="'heading-' + asignaturaIndex+'-'+ gradoIndex">
+                          <div class="accordion-body" formArrayName="grupos">
+                            <div
+                              *ngFor="let grupos of listaGrupos(asignaturaIndex, gradoIndex).controls; let grupoIndex = index">
+                              <div [formGroupName]="grupoIndex" class="accordion accordion-flush"
+                                [attr.id]="'asignatura-' + asignaturaIndex + '-' + gradoIndex + '-' + grupoIndex">
+                                <div class="accordion-item">
+                                  <h2 class="accordion-header"
+                                    [attr.id]="'asignatura-heading-' +asignaturaIndex + '-' + gradoIndex + '-' + grupoIndex">
+                                    <button class="accordion-button collapsed claseTres" type="button"
+                                      [attr.data-bs-toggle]="'collapse'"
+                                      [attr.data-bs-target]="'#asignatura-collapse-' + asignaturaIndex + '-' + gradoIndex + '-' + grupoIndex"
+                                      [attr.aria-expanded]="false"
+                                      [attr.aria-controls]="'asignatura-collapse-' + asignaturaIndex + '-' + gradoIndex + '-' + grupoIndex">
+                                      <div class="divOcultaChecks">
+                                      </div>
+                                      <input type="checkbox"
+                                        class="checkbox" formControlName="checked">
+                                      <div class="error_valorHoras"
+                                        *ngIf="mensajeEnteros && indiceActualActualizando == grupoIndex">
+                                        <span>Solo numeros enteros</span>
+                                      </div>
+                                      <div class="titulo">
+                                        <p>{{listaGrupos(asignaturaIndex,
+                                          gradoIndex).value[grupoIndex].nombre}}
+                                        </p>
+                                      </div>
+                                      <div class="input-wrapper">
+                                        <input (ngModelChange)="inputTodosAsignaturas($event,asignaturaIndex, gradoIndex, grupoIndex)" type="number" class="form_input" formControlName="cantidad"
+                                          (keyup)="calcularTotales(asignaturaIndex, gradoIndex, grupoIndex)" [value]="0">
+                                      </div>
+                                    </button>
+                                  </h2>
+                                  <div
+                                    [attr.id]="'asignatura-collapse-' + asignaturaIndex + '-' + gradoIndex + '-' + grupoIndex"
+                                    class="accordion-collapse collapse"
+                                    [attr.aria-labelledby]="'asignatura-heading-' + asignaturaIndex + '-' + gradoIndex + '-' + grupoIndex">
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
 
-            </ng-container>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
+      </ng-container>
     </div>
-    <div class="contenedorHorasTotales">
-        <span class="material-symbols-outlined">timelapse</span> <span class="me-auto"> Horas asignadas </span> <span>
-            <div class="input-wrapper">
-                <input (ngModelChange)="validarHorasAsignadas()" type="text" class="form_input" formControlName="horas_asignadas">
-            </div>
-        </span>
-    </div>
-    <span class="col-12 error" *ngIf="errorHorarioAsignado">Total de horas semanales superadas</span>
-    <span class="col-12 error" *ngIf="errorHorasAsignadas">Valor maximo superado</span>
-    <span class="col-12 error" *ngIf="numeroConDecimales">Uno o mas valores son decimales</span>
 
-    
+  </div>
+  <div class="contenedorHorasTotales">
+    <span class="material-symbols-outlined">timelapse</span> <span class="me-auto"> Horas disponibles </span> <span>
+      <div class="input-wrapper">
+        <input (ngModelChange)="validarHorasAsignadas()" type="number" class="form_input"
+          formControlName="horas_asignadas">
+      </div>
+    </span>
+  </div>
+  <span class="col-12 error_total_horas" *ngIf="errorHorarioAsignado">
+    <div class="icono informacion">
+      <span class="material-symbols-outlined">
+        info
+      </span>
+    </div>
+    <div class="texto_error">
+      El total de horas asignadas excede el número de horas semanales disponibles del docente
+    </div>
+    <div class="icono cerrar">
+      <span class="material-symbols-outlined" (click)="cerrarAviso()">
+        close
+      </span>
+    </div>
+  </span>
+  <span class="col-12 error" *ngIf="errorHorasAsignadas">Valor maximo superado</span>
+  <span class="col-12 error" *ngIf="numeroConDecimales">Uno o mas valores son decimales</span>
+
+
 </form>
 <div *ngIf="!cargandoIntensidad" class="acciones">
-    <button (click)="cerrarModal()" class="btn boton_secundario">Cancelar</button>
-    <button  *ngIf="!guardandoMensaje" [disabled]="desHabilitarGuardar" class="btn boton_primario" (click)="guardar()">Guardar</button>
-    <button class="btn boton_primario d-flex align-items-center gap-2" *ngIf="guardandoMensaje">
-        <div>Guardando</div>
-        <div class="spinner-border float-end" role="status"></div>
-    </button>
+  <button (click)="cerrarModal()" class="btn boton_secundario">Cancelar</button>
+  <button *ngIf="!guardandoMensaje" [disabled]="desHabilitarGuardar" class="btn boton_primario"
+    (click)="guardar()">Guardar</button>
+  <button class="btn boton_primario d-flex align-items-center gap-2" *ngIf="guardandoMensaje">
+    <div>Guardando</div>
+    <div class="spinner-border float-end" role="status"></div>
+  </button>
 </div>
+
+
+<!-- <span>valor: {{formAsignacion.value}}</span> -->

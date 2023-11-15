@@ -90,12 +90,12 @@ export class UsuarioService {
     return this.http.post(`${environment.URL_API}/apoyo/seguridad/login`, credenciales);
   };
 
-  asignarCredenciales(credenciales:{usuario:string, contrasenia:string}){
-    this.credencialesUsuarios = credenciales;
+  async guardarCredenciales(credenciales:{usuario:string, contrasenia:string}) {
+    await sessionStorage.setItem("sap_creds", JSON.stringify(credenciales));
   }
 
-  obtenerCredenciales(){
-    return this.credencialesUsuarios;
+  async obtenerCredenciales(){
+    return await JSON.parse(sessionStorage.getItem('sap_creds'));
   }
 
   obtenerMenu(parametros: any) {

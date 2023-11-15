@@ -23,6 +23,30 @@
     font-weight: 500;
 }
 
+.error_total_horas{
+  display: flex;
+  padding: 1rem;
+  align-items: center;
+  gap: 1.2rem;
+  border-radius: 10px;
+  border: 1px solid #F5C2C7;
+  background: #F8D7DA;
+  .informacion{
+    font-weight: 700;
+    color: #58151C;
+  }
+  .cerrar{
+    cursor: pointer;
+  }
+  .icono{
+    width: 5%;
+    text-align: center;
+  }
+  .texto_error{
+    color: #58151C;
+    width: 90%;
+  }
+}
 .accordionContenedorTotal {
     width: 100%;
 }
@@ -135,7 +159,30 @@ div#contendorAsignacionesFuncionarios {
     top: -1rem;
 }
 
-@media (max-width: 767.98px) { 
+.divOcultaChecks {
+    width: 17px;
+    height: 17px;
+    margin: 0rem 1.6rem 0rem 1rem;
+    background-color: transparent;
+    border: none !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 3px;
+    font-weight: bolder;
+    position: absolute;
+}
+
+
+.divOcultaChecks .material-symbols-outlined {
+    font-size: 13px;
+    color: white;
+    font-weight: bold;
+}
+
+
+
+@media (max-width: 767.98px) {
 
     .asignacionMaterias .input-wrapper {
         display: flex;
@@ -143,5 +190,5 @@ div#contendorAsignacionesFuncionarios {
         align-items: center;
         margin-left: auto;
     }
-    
+
 }

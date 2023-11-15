@@ -11,7 +11,7 @@
           <div class="input-wrapper col-12 col-md-6" [class.invalid]="campoNoValido('contrasenaActual')">
             <label for="contrasenaActual">Contraseña actual*</label>
             <input [type]="verContraseniaActual ? 'text' : 'password'" placeholder="Escriba la contraseña actual"
-              formControlName="contrasenaActual" autocomplete="off" autocomplete="new-password"
+              formControlName="contrasenaActual" autocomplete="contrasenaActual"
               (ngModelChange)="validarContrasena($event)">
             <div (click)="mostrarContrasenia()" class="input-icon input_icon-password">
               <span class="material-symbols-outlined" *ngIf="!verContraseniaActual">
@@ -34,8 +34,11 @@
           </div>
           <div class="input-wrapper col-12 col-md-6" [class.invalid]="campoNoValido('contrasenaNueva')">
             <label for="contrasenaNueva">Contraseña nueva*</label>
-            <input [type]="verContraseniaNueva ? 'text' : 'password'" placeholder="Escriba la contraseña nueva"
-              formControlName="contrasenaNueva" (input)="validarContrasena($event)" (copy)="noCopiarPegar($event)">
+            <input [type]="verContraseniaNueva ? 'text' : 'password'"   placeholder="Escriba la contraseña nueva"
+              autocomplete="contrasenaNueva"
+              formControlName="contrasenaNueva"
+              (input)="validarContrasena($event)"
+              (copy)="noCopiarPegar($event)">
             <div (click)="mostrarContraseniaNueva()" class="input-icon input_icon-password">
               <span class="material-symbols-outlined" *ngIf="!verContraseniaNueva">
                 visibility
@@ -68,6 +71,8 @@
           <div class="input-wrapper col-12 col-md-6" [class.invalid]="campoNoValido('contrasenaConfirmada')">
             <label for="contrasenaConfirmada">Confirmar contraseña*</label>
             <input [type]="verConfirmarContrasenia ? 'text' : 'password'" placeholder="Confirme la contraseña nueva"
+            autocomplete="contrasenaConfirmada"
+
               formControlName="contrasenaConfirmada" (input)="validarContrasenasIguales($event)"
               (paste)="noCopiarPegar($event)">
             <div (click)="mostrarConfirmarContrasenia()" class="input-icon input_icon-password">

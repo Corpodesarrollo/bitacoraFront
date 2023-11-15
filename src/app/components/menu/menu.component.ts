@@ -27,6 +27,7 @@ export class MenuComponent {
   perfilId: number;
   rutactual: any = ''
 
+  datos_usuario: any ={};
   opcionActiva: any;
   opcionesMenu: any = []
   menuGeneral: any = []
@@ -52,9 +53,9 @@ export class MenuComponent {
     })
     this.esMicrosoft = this.authService.instance.getAllAccounts().length > 0;
     this.usuarioId = this.usuarioService.obtenerUsuario().id;
-    let datos_usuario = this.usuarioService.obtenerAccesoSeleccionado()
-    this.perfilId = datos_usuario?.perfil.id;
-    this.institucionId = datos_usuario?.colegio?.id;
+    this.datos_usuario = this.usuarioService.obtenerAccesoSeleccionado()
+    this.perfilId = this.datos_usuario?.perfil.id;
+    this.institucionId = this.datos_usuario?.colegio?.id;
     if (this.usuarioId) {
       this.cargarMenu()
     }
@@ -126,6 +127,45 @@ export class MenuComponent {
   }
 
   abrirUrl(opcion: any) {
+
+    let userId = Number(this.usuarioId !== null && this.usuarioId > 0 ? this.usuarioId : 0);
+    let sede = (this.datos_usuario.sede !== null && this.datos_usuario.sede.id > 0 ? this.datos_usuario.sede.id : 0);
+    let instituto = (this.datos_usuario.colegio !== null && this.datos_usuario.colegio.id > 0 ? this.datos_usuario.colegio.id : 0);
+    let jornada = (this.datos_usuario.jornada !== null && this.datos_usuario.jornada.id > 0 ? this.datos_usuario.jornada.id : 0);
+
+    // TODO validar de donde sacar estos tres datos
+    let nivel = this.datos_usuario.perfil.idPerfilNivel !== null ? this.datos_usuario.perfil.idPerfilNivel : -1;
+    let vigencia = 2023;
+    let municipio = 0;
+
+    opcion.serRecurso = opcion.serRecurso.replace(/{{domain}}/g, environment.DOMAIN);
+    opcion.serRecurso = opcion.serRecurso.replace(/{{userid}}/g, userId);
+    opcion.serRecurso = opcion.serRecurso.replace(/{{sede}}/g, sede);
+    opcion.serRecurso = opcion.serRecurso.replace(/{{inst}}/g, instituto);
+    opcion.serRecurso = opcion.serRecurso.replace(/{{jornada}}/g, jornada);
+
+    let recursoUrl = opcion.serRecurso;
+
+    if (recursoUrl.includes("http://") || recursoUrl.includes("https://")) {
+      if (recursoUrl.includes("ApoyoEscolarBE")) {
+        if (nivel === 0) recursoUrl = `${recursoUrl}?inst=0`
+        else if (nivel === 2) recursoUrl = `${recursoUrl}?inst=0`
+        else recursoUrl = `${recursoUrl}?inst=0&usuario=${userId}&vigencia=${vigencia}&sede=${sede}&jornada=${jornada}`
+      } else if (recursoUrl.includes("apex")) {
+        recursoUrl = `${instituto},${vigencia}`
+      } else if (recursoUrl.endsWith("students")) {
+        recursoUrl = recursoUrl + "/index/" + userId + "/" + instituto + "/" + sede + "/" + jornada;
+      } else if (recursoUrl.endsWith("administrative/photo/") || recursoUrl.includes("schools/photo")) {
+        recursoUrl = recursoUrl + userId + "/" + instituto + "/" + sede + "/" + jornada;
+      } else if (recursoUrl.includes("students/observersearch")) {
+        recursoUrl = recursoUrl + "/" + userId + "/" + instituto + "/" + sede + "/" + jornada;
+      } else {
+        if (nivel === 0) recursoUrl = recursoUrl + "?var=central";
+        else if (nivel === 2) recursoUrl = recursoUrl + "?var=" + municipio;
+        else recursoUrl = recursoUrl + "?var=" + userId + "-" + instituto + "-" + sede + "-" + jornada;
+      }
+    }
+
     if (window.innerWidth < 575.98) {
       this.utilsService.toggleMenuMobile();
     }
@@ -138,17 +178,14 @@ export class MenuComponent {
       this.cerrarSesion()
     }
     if (opcion.serTarget === "1") {
-      this.router.navigate(['/home/ver', environment.URL_APOYO_ESCOLAR + opcion.serRecurso])
-    }
-    else if (opcion.serTarget === "3") {
-      this.router.navigate([`${opcion.serRecurso}`]);
-    }
-    else if (opcion.serTarget === "4") {
-      this.router.navigate(['/home/ver', opcion.serRecurso])
-    }
-    else {
+      this.router.navigate(['/home/ver', environment.URL_APOYO_ESCOLAR + recursoUrl])
+    } else if (opcion.serTarget === "3") {
+      this.router.navigate([`${recursoUrl}`]);
+    } else if (opcion.serTarget === "4") {
+      this.router.navigate(['/home/ver', recursoUrl])
+    } else {
       this.opcionActiva = opcion;
-      this.router.navigate([`/home/${opcion.serRecurso}`]);
+      this.router.navigate([`/home/${recursoUrl}`]);
     }
   }
 

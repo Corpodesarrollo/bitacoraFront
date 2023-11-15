@@ -95,6 +95,7 @@ export class VistaNoInstitucionComponent implements OnInit {
 
   seleccionPerfil(perfil:Perfil){
     this.perfilSeleccionado = perfil;
+    this.seleccionarLocalidad = false;
     this.dependencias=[];
     this.localidades=[];
     for(let a=0; a<this.infoUsuario.length; a++){

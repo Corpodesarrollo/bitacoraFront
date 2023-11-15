@@ -18,7 +18,7 @@ export class AuthInterceptorService implements HttpInterceptor {
     private authService: MsalService,
     private router: Router,
     private usuarioService: UsuarioService,
-    private servicioModal: NgbModal
+    private serviciosModal: NgbModal
   ) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -44,22 +44,16 @@ export class AuthInterceptorService implements HttpInterceptor {
   }
 
   mensajeEliminado(){
-    this.cerrarTodosModales();
-    let infoMensaje: any = {}
-    infoMensaje.titulo = 'Su sesion ha caducado.';
-    infoMensaje.mensaje = 'Por favor, inicie sesión de nuevo.';
-    const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
-    modalRef.componentInstance.infoMensaje = infoMensaje;
-    // modalRef.result.then(() => {
-    //   console.log('cerrado modal');
-    // })
     setTimeout(()=>{
-      this.servicioModal.dismissAll();
-    },4000)
-  }
+      let infoMensaje: any = {}
+      infoMensaje.titulo = 'Su sesion ha caducado.';
+      infoMensaje.mensaje = 'Por favor, inicie sesión de nuevo.';
+      const modalRef = this.serviciosModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
+      modalRef.componentInstance.infoMensaje = infoMensaje;
+    },1000);
 
-  cerrarTodosModales(){
-    //this.activeModal.dismiss();
+    setTimeout(()=>{
+      this.serviciosModal.dismissAll();
+    },3000)
   }
-
 }

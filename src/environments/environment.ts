@@ -1,27 +1,32 @@
+const DOMAIN = "https://pruebas-sed.linktic.com";
 export const environment = {
+  DOMAIN: DOMAIN,
   production: false,
   URL_WEB_: "http://localhost:4200",
-  URL_WEB: "https://pruebas-sed.linktic.com/apoyo-ui",
   URL_DEV: "https://web-laf.s3-website-us-east-1.amazonaws.com",
-  URL_API: "https://pruebas-sed.linktic.com/apoyo-api/api",
-  URL_API_PERSONAL: "https://pruebas-sed.linktic.com/personal/api",
-  URL_API_REPORTE: "https://pruebas-sed.linktic.com/reportes-api/api",
-  URL_ESTUDIANTES: "https://pruebas-sed.linktic.com/#/students",
-  URL_BITACORAS: "http://20.237.244.76:8080/api",
-  URL_POLITICA_DATOS: 'https://www.educacionbogota.edu.co/portal_institucional/sites/default/files/inline-files/Politica_Tratamiento_Datos_Personales_SED.pdf',
-  URL_APOYO_ESCOLAR: "https://pruebas-sed.linktic.com/apoyo_escolar/",
+  URL_POLITICA_DATOS:  'https://www.educacionbogota.edu.co/portal_institucional/transparencia-politicas-lineamientos-manuales-sectoriales-institucionales',
+
+  URL_WEB: `${DOMAIN}/apoyo-ui` ,
+  URL_API: `${DOMAIN}/apoyo-api/api` ,
+  URL_API_PERSONAL: `${DOMAIN}/personal/api` ,
+  URL_API_REPORTE: `${DOMAIN}/reportes-api/api`,
+  URL_ESTUDIANTES: `${DOMAIN}/#/students`,
+  URL_BITACORAS: `${DOMAIN}/apoyo-api/api`,
+  URL_APOYO_ESCOLAR: `${DOMAIN}/apoyo_escolar/`,
+  URL_LOGIN_NARANJA:`${DOMAIN}/apoyo_escolar/autenticaPaginas?bandera=0&Hinicio=22&Hfin=6&ext=1&key={{key}}&cambio=&login={{usuario}}&password={{contrasenia}}&URLPag=${DOMAIN}/apoyo_escolar/bienvenida.do`,
+
   CONTENT_TYPE: 'application/json',
   CONTENT_TYPE_PDF: 'application/pdf',
-  VERSION: '5.12.0',
+  VERSION: '1.2.11',
   msalConfig: {
     auth: {
-        clientId: 'cb166727-5a4e-4e76-8e9b-4eaefcaddc23',
-        authority: 'https://login.microsoftonline.com/organizations'
+      clientId: 'cb166727-5a4e-4e76-8e9b-4eaefcaddc23',
+      authority: 'https://login.microsoftonline.com/organizations'
     }
   },
   apiConfig: {
-      scopes: ['user.read'],
-      uri: 'https://graph.microsoft.com/v1.0/me'
+    scopes: ['user.read'],
+    uri: 'https://graph.microsoft.com/v1.0/me'
   },
   formatos_imagen_validos: [
     'image/bmp',

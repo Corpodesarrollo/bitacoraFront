@@ -23,24 +23,35 @@
     </button>
   </div>
 
-  <div class="acciones" *ngIf="infoMensaje.ventanaEnviado === true">
-    <button type="button" class="btn boton_secundario" (click)="cerrarModal()">
-      Aceptar
+  <div class="acciones" *ngIf="infoMensaje.cerrarAviso === true">
+    <!-- boton_secundario -->
+    <button *ngIf="!eliminandoRegistro" type="button" class="btn boton_primario"
+      (click)="cerrarModal()">
+      Si
+    </button>
+    <button type="button" class="btn boton_secundario" (click)="cerrarModalHijo()">
+      no
     </button>
   </div>
 
-  <div class="acciones" *ngIf="infoMensaje.eliminarFuncionario === true">
+  <div class="acciones" *ngIf="infoMensaje.ventanaEnviado === false || infoMensaje.eliminarFuncionario === true">
     <!-- boton_secundario -->
-    <button *ngIf="!eliminandoRegistro" type="button" class="btn boton_primario"
+    <button *ngIf="eliminandoRegistro === false" type="button" class="btn boton_primario"
       (click)="confirmarEliminacionFuncionarios()">
       Si, continuar
     </button>
-    <button *ngIf="eliminandoRegistro" class="btn boton_primario d-flex align-items-center gap-2">
+    <button *ngIf="eliminandoRegistro === true" class="btn boton_primario d-flex align-items-center gap-2">
       <div>eliminando</div>
       <div class="spinner-border float-end" role="status"></div>
     </button>
-    <button *ngIf="!eliminandoRegistro" type="button" class="btn boton_secundario" (click)="cerrarModal()">
+    <button *ngIf="eliminandoRegistro === false" type="button" class="btn boton_secundario" (click)="cerrarModal()">
       Cancelar
+    </button>
+  </div>
+
+  <div class="acciones" *ngIf="infoMensaje.mostrarAceptar === true">
+    <button type="button" class="btn boton_secundario" (click)="cerrarModal()">
+      Aceptar
     </button>
   </div>
 

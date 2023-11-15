@@ -44,29 +44,15 @@ export class MensajeDescargarReporteComponent {
 
     if (tipo_exportacion == 'pdf') {
       this.exportandoRegistros = true;
-      this.personalService.exportReporteInstitucion(parametros).subscribe((response: HttpResponse<Blob>) => {
+      this.personalService.exportReporteInstitucion(parametros).subscribe((response: any) => {
         console.log(response)
         // Extraer la información necesaria de la respuesta
         if (response.status == 200) {
           this.exportandoRegistros = false;
-          const blob = response.body;
-          const filename = this.extractFilename(response, 'pdf');
 
-          // Crear una URL para el blob
-          const blobUrl = window.URL.createObjectURL(blob);
+          let salida = "data:application/octet-stream;base64," + response.data
+          saveAs(salida, "reporte" + ".pdf")
 
-          // Crear un enlace (<a>) para iniciar la descarga
-          const a = document.createElement('a');
-          a.href = blobUrl;
-          a.download = filename;
-
-          // Simular un clic en el enlace para iniciar la descarga
-          a.click();
-
-
-
-          // Liberar los recursos de la URL del blob
-          window.URL.revokeObjectURL(blobUrl);
         }
       },
         error => {
@@ -77,12 +63,12 @@ export class MensajeDescargarReporteComponent {
       this.exportandoRegistrosExcel = true;
       this.personalService.exportReporteInstitucionExcel(parametros).subscribe((response: any) => {
         // Extraer la información necesaria de la respuesta
-        console.log(response)
+        // console.log(response)
         if (response.status == 200) {
           this.exportandoRegistrosExcel = false;
-          
-          let salida = "data:application/octet-stream;base64,"+response.data
-          saveAs(salida,"reporte"+".xls")
+
+          let salida = "data:application/octet-stream;base64," + response.data
+          saveAs(salida, "reporte" + ".xls")
         }
       },
         error => {
@@ -115,41 +101,27 @@ export class MensajeDescargarReporteComponent {
 
     if (tipo_exportacion == 'pdf') {
       this.exportandoRegistros = true;
-      this.personalService.exportReporte(parametros, body).subscribe((response: HttpResponse<Blob>) => {
+      this.personalService.exportReporte(parametros, body).subscribe((response: any) => {
         //console.log(response)
         // Extraer la información necesaria de la respuesta
         this.exportandoRegistros = false;
-        const blob = response.body;
-        const filename = this.extractFilename(response, 'pdf');
-
-        // Crear una URL para el blob
-        const blobUrl = window.URL.createObjectURL(blob);
-
-        // Crear un enlace (<a>) para iniciar la descarga
-        const a = document.createElement('a');
-        a.href = blobUrl;
-        a.download = filename;
-
-        // Simular un clic en el enlace para iniciar la descarga
-        a.click();
-
-        // Liberar los recursos de la URL del blob
-        window.URL.revokeObjectURL(blobUrl);
+        let salida = "data:application/octet-stream;base64," + response.data
+          saveAs(salida, "reporte" + ".pdf")
       },
         error => {
           console.error('Error al descargar el archivo', error);
         })
     } else if (tipo_exportacion == 'excel') {
       this.exportandoRegistrosExcel = true;
-      this.personalService.exportReporteExcel(parametros, body).subscribe((response:any) => {
+      this.personalService.exportReporteExcel(parametros, body).subscribe((response: any) => {
         //console.log(response)
         // Extraer la información necesaria de la respuesta
         console.log(response)
         if (response.status == 200) {
           this.exportandoRegistrosExcel = false;
-          
-          let salida = "data:application/octet-stream;base64,"+response.data
-          saveAs(salida,"reporte"+".xls")
+
+          let salida = "data:application/octet-stream;base64," + response.data
+          saveAs(salida, "reporte" + ".xls")
         }
       },
         error => {

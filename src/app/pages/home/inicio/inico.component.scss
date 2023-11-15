@@ -66,8 +66,14 @@ iframe {
 
 @media (max-width: 991.98px) {
   .contenedor-mensajes {
-    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
   };
+  .mensajes{
+    order: 1
+  }
+  .datos_institucion{
+    order: 2;
+  }
 };
 
 @media (max-width: 1199.98px) {

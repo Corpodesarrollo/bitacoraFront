@@ -24,26 +24,27 @@ export class PoliticasService {
   }
 
   obtenerPolitica(id_politca:Number){
-    this.setearCabeceras()
+    this.setearCabeceras();
     const url = `${environment.URL_API}/apoyo/politicas/ver/${id_politca}`
-    return this.http.get(url, this.httpOptions)
+    return this.http.get(url, this.httpOptions);
   }
 
   obtenerPoliticaActiva(){
+    this.setearCabeceras();
     const url = `${environment.URL_API}/apoyo/politicas/lista/politicasActivas`
-    return this.http.get(url)
+    return this.http.get(url, this.httpOptions);
   }
 
   obtenerListaVersiones(){
     this.setearCabeceras()
     const url = `${environment.URL_API}/apoyo/politicas/lista`
-    return this.http.get(url, this.httpOptions)
+    return this.http.get(url, this.httpOptions);
   }
 
   obtenerListaAceptacion(){
     this.setearCabeceras()
     const url = `${environment.URL_API}/apoyo/politicas/listaAceptacion`
-    return this.http.get(url, this.httpOptions)
+    return this.http.get(url, this.httpOptions);
   }
 
   eliminarPolitica(parametros:any){
@@ -80,6 +81,7 @@ export class PoliticasService {
   }
 
   reenviarPoliticasDatos(){
+    this.setearCabeceras()
     const url = `${environment.URL_API}/apoyo/politicas/marcarReenviarPoliticaDatos`
     return this.http.post(url, {}, {
       ...this.httpOptions,
@@ -88,6 +90,7 @@ export class PoliticasService {
   }
 
   reenviarPoliticasUso(){
+    this.setearCabeceras()
     const url = `${environment.URL_API}/apoyo/politicas/marcarReenviarPoliticaUso`
     return this.http.post(url, {}, {
       ...this.httpOptions,

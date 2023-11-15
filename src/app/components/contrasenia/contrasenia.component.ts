@@ -62,11 +62,12 @@ export class ContraseniaComponent {
       this.idEnContrasenia = true;
     } else {
       this.idEnContrasenia = false
+      this.validarRepetidas()
     }
-    this.validarRepetidas()
   }
 
   validarRepetidas() {
+    this.contrasenaRepetida = false;
     let contrasenaNueva = this.formulario.controls['contrasenaNueva'].value;
     let contrasenaActual = this.formulario.controls['contrasenaActual'].value;
     if (contrasenaNueva === contrasenaActual) {

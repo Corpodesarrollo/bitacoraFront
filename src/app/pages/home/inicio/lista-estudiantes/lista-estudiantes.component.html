@@ -4,14 +4,14 @@
   <app-sin-registros *ngIf="!cargandoEstudiantes && estudiantes.length == 0"></app-sin-registros>
   <div class="lista_tabla" *ngIf="!cargandoEstudiantes && estudiantes.length > 0">
       <div id="titulos">
-          <div class="item_1">Grupo</div>
+          <div class="item_1">Grado</div>
           <div class="item_2">Jornada</div>
           <div class="item_3">Nombres</div>
           <div class="item_4">Apellidos</div>
       </div>
       <div id="filas" *ngFor="let estudiante of estudiantes">
           <div class="registro">
-              <div class="item_1">{{estudiante.grupo}}</div>
+              <div class="item_1">{{estudiante.grado}}</div>
               <div class="item_2">{{estudiante.jornadaNombre}}</div>
               <div class="item_3">{{estudiante.nombres}}</div>
               <div class="item_4">{{estudiante.apellidos}}</div>

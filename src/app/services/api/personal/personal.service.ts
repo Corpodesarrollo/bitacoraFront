@@ -229,11 +229,7 @@ export class PersonalService {
   
     const url = this.buildReportUrlInstitucion(parametros);
 
-    return this.http.get(url, {
-      ...this.httpOptions,
-      observe: 'response',
-      responseType: 'blob',
-    });
+    return this.http.get(url,this.httpOptions);
   }
 
   private buildReportUrlInstitucion(params: any): string {
@@ -256,14 +252,10 @@ export class PersonalService {
 
   exportReporte(parametros: any,body:any){
     
-    const url = this.buildReportUrl(parametros);
-
     this.setearCabeceras();
-    return this.http.post(url, body,  {
-      ...this.httpOptions,
-      observe: 'response',
-      responseType: 'blob',
-    });
+    const url = this.buildReportUrl(parametros);
+   
+    return this.http.post(url,body,this.httpOptions);
   }
 
   private buildReportUrl(params: any): string {

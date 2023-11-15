@@ -2,8 +2,7 @@
 <div id="contenedorInicio" class="container-lg" *ngIf="!cargandoPermisos && !esIframe && !cargandoIframe">
   <div class="titulo">BIENVENIDO AL SISTEMA DE APOYO ESCOLAR</div>
   <div class="row">
-    <div class="col-12" [ngClass]="{'col-lg-7': (puedeVerMensajes && puedeVerColegios) || (puedeVerMensajes && puedeVerEstudiantes),
-    'col-lg-12': (puedeVerColegios && puedeVerEstudiantes && puedeVerMensajes)
+    <div class="col-12 datos_institucion" [ngClass]="{'col-lg-7': (puedeVerMensajes && puedeVerColegios) || (puedeVerMensajes && puedeVerEstudiantes)
   }">
       <app-lista-estudiantes
         [idColegio]="idInstitucion"
@@ -14,11 +13,9 @@
       </app-lista-estudiantes>
       <app-lista-colegios *ngIf="puedeVerColegios"
       [localidad]="localidadId">
-
       </app-lista-colegios>
     </div>
-    <div class="col-12" [ngClass]="{'col-lg-5':   puedeVerEstudiantes || puedeVerColegios,
-    'col-lg-12': (puedeVerColegios && puedeVerEstudiantes && puedeVerMensajes)
+    <div class="col-12 mensajes" [ngClass]="{'col-lg-5':   puedeVerEstudiantes || puedeVerColegios,
   }" *ngIf="puedeVerMensajes">
       <div class="contenedor-mensajes">
         <div class="titulo_mensaje">Mensajes</div>

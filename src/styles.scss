@@ -722,6 +722,21 @@ button.nav-link.active {
   box-shadow: none !important;
 }
 
+.asignacionMaterias input[type="checkbox"]:disabled {
+  background-color: var(--alterno) !important;
+  border: none !important;
+}
+
+.asignacionMaterias input[type="checkbox"][disabled][checked] {
+  filter: saturate(200%) hue-rotate(180deg);
+  background-color: var(--alterno) !important;
+}
+
+.asignacionMaterias input[type="checkbox"][disabled] {
+  filter: saturate(200%) hue-rotate(180deg);
+  background-color: var(--alterno) !important;
+}
+
 .btn_acciones:hover {
   background-color: rgba(63, 72, 74, 0.08);
   border-radius: 50%;

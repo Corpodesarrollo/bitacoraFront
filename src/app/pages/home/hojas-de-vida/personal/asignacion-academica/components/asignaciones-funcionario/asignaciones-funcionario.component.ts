@@ -16,7 +16,6 @@ export class AsignacionesFuncionarioComponent implements OnInit {
   @Input() infoAsignacionFuncionario: any;
 
   formAsignacion!: FormGroup;
-  cargandoIntensidad: boolean = false;
 
   estructuraAcademica: any = [];
 
@@ -30,6 +29,9 @@ export class AsignacionesFuncionarioComponent implements OnInit {
     mensaje: '',
     emisor: ''
   }
+
+  cargandoIntensidad: boolean = false;
+  allChecked: boolean = false;
   errorHorasAsignadas: boolean = false;
   errorHorarioAsignado: boolean = false;
   desHabilitarGuardar: boolean = false;
@@ -37,6 +39,7 @@ export class AsignacionesFuncionarioComponent implements OnInit {
   indiceActualActualizando: any;
   mensajeEnteros: boolean = false;
   numeroConDecimales: boolean;
+  ocultarBotones: boolean;
 
   ngOnInit() {
     this.construirFormulario();
@@ -51,6 +54,10 @@ export class AsignacionesFuncionarioComponent implements OnInit {
     });
   }
 
+  get isDisabled(): boolean {
+    return true; // Coloca aquí tu lógica real
+  }
+
   get listaAsignaturas() {
     return this.formAsignacion.get('asignaturas') as FormArray;
   }
@@ -60,13 +67,17 @@ export class AsignacionesFuncionarioComponent implements OnInit {
   }
 
   listaGrupos(asignaturaIndex: number, gradoIndex: number) {
+    // const gruposFormArray: any = this.listaGrados(asignaturaIndex).at(gradoIndex).get('grupos');
+    // gruposFormArray.controls.forEach(element => {
+    //  element.get('checked').disable()
+    // });
     return this.listaGrados(asignaturaIndex).at(gradoIndex).get('grupos') as FormArray;
   }
 
   async obtenerIntensidadHoraria() {
     this.cargandoIntensidad = true;
     let datosUsuario = this.serviciosUsuario.obtenerAccesoSeleccionado();
-    //console.log("Asingacion: ", this.infoAsignacionFuncionario);
+    // console.log("Asingacion: ", this.infoAsignacionFuncionario);
     let parametros = {
       institucion_id: datosUsuario.colegio?.id,
       metodologia_id: this.infoAsignacionFuncionario.filtros.id_metodologia,
@@ -83,7 +94,7 @@ export class AsignacionesFuncionarioComponent implements OnInit {
           this.cargarAsignaturas();
           this.validarHorasAsignadas()
         } else {
-          this.infoMensaje.ventanaEnviado = true;
+          this.infoMensaje.mostrarAceptar = true;
           this.infoMensaje.titulo = '';
           this.infoMensaje.mensaje = respuesta.message;
           this.infoMensaje.botonesAsignacionErrorEliminar = true;
@@ -135,7 +146,6 @@ export class AsignacionesFuncionarioComponent implements OnInit {
     let asignaturaCantidad = 0;
     let identificacionDocente = "";
     let vigencia = "";
-    console.log(asignatura)
     if (asignatura) {
       asignaturaId = asignatura.codAsignatura;
       asignaturaNombre = asignatura.nombreAsignatura;
@@ -148,7 +158,8 @@ export class AsignacionesFuncionarioComponent implements OnInit {
       identificacion_docente: [identificacionDocente, [Validators.required]],
       vigencia: [vigencia, [Validators.required]],
       cantidad: [asignaturaCantidad, [Validators.required]],
-      grados: this.formBuilder.array([])
+      grados: this.formBuilder.array([]),
+      checked: [false, []]
     });
   }
 
@@ -167,7 +178,8 @@ export class AsignacionesFuncionarioComponent implements OnInit {
       nombre: [gradoNombre, [Validators.required]],
       codigo_jerarquico: [codigoJerarquico, [Validators.required]],
       cantidad: [gradoCantidad, [Validators.required]],
-      grupos: this.formBuilder.array([])
+      grupos: this.formBuilder.array([]),
+      checked: [false, []]
     });
   }
 
@@ -175,6 +187,7 @@ export class AsignacionesFuncionarioComponent implements OnInit {
     let gradoId = "";
     let graduNombre = "";
     let horasAsignadas = 0;
+    console.log(grupo.horasAsignadas)
     if (grupo) {
       gradoId = grupo.codGrupo;
       graduNombre = grupo.nombreGrupo;
@@ -184,6 +197,7 @@ export class AsignacionesFuncionarioComponent implements OnInit {
       id: [gradoId, [Validators.required]],
       nombre: [graduNombre, [Validators.required]],
       cantidad: [horasAsignadas, [Validators.required]],
+      checked: [!!Number(grupo.horasAsignadas), []],
     });
   }
 
@@ -252,6 +266,11 @@ export class AsignacionesFuncionarioComponent implements OnInit {
         }
       });
       asignatura.get('cantidad').setValue(horasAsignatura);
+      // asignatura.get('checked').disable();
+      if (horasAsignatura > 0) {
+        asignatura.get('checked').setValue(true);
+      }
+
     });
   }
 
@@ -260,7 +279,9 @@ export class AsignacionesFuncionarioComponent implements OnInit {
     this.listaAsignaturas.controls.forEach((asignatura: any) => {
       horasAsignadas += Number(asignatura.get('cantidad').value);
     });
-    this.formAsignacion.get('horas_asignadas').setValue(horasAsignadas);
+
+    let diferenciaEntreHoras = this.infoAsignacionFuncionario.horasAsignadas.horas - horasAsignadas;
+    this.formAsignacion.get('horas_asignadas').setValue(diferenciaEntreHoras);
   }
 
   calcularHorasGrados(asignaturaIndex: number) {
@@ -274,7 +295,12 @@ export class AsignacionesFuncionarioComponent implements OnInit {
         }
       });
       grado.get('cantidad').setValue(horasGrado);
+      // grado.get('checked').disable();
+      if(horasGrado > 0){
+        grado.get('checked').setValue(true);
+      }
     });
+    
   }
 
   abrirAsignatura(asignaturaIndex) {
@@ -319,12 +345,19 @@ export class AsignacionesFuncionarioComponent implements OnInit {
   }
 
   cerrarModal() {
-    this.infoMensaje.titulo = 'Confirmación de cierre';
-    this.infoMensaje.mensaje = '¿Está seguro de cerrar asignación académica?';
-    this.infoMensaje.ventanaEnviado = true
+    this.infoMensaje.titulo = 'Si cierra la ventana los cambios efectuados no se guardarán';
+    this.infoMensaje.mensaje = '¿Desea continuar?';
+    this.infoMensaje.cerrarAviso = true
     this.infoMensaje.botonesAsignacionFuncionarioConfirmarC = true;
     const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
     modalRef.componentInstance.infoMensaje = this.infoMensaje;
+    modalRef.result.then((resultados) => {
+      // console.log(resultados)
+      if (resultados == 'cerrado') { }
+      if (modalRef) {
+        modalRef.close();
+      }
+    })
   }
 
   obtenerAsignaciones() {
@@ -356,27 +389,27 @@ export class AsignacionesFuncionarioComponent implements OnInit {
   validarHorasAsignadas() {
     let horasAsignadas = this.formAsignacion.get('horas_asignadas').value;
 
-    console.log(Number(horasAsignadas) !== Math.floor(Number(horasAsignadas)))
+    // console.log(Number(horasAsignadas) !== Math.floor(Number(horasAsignadas)))
     if (Number(horasAsignadas) !== Math.floor(Number(horasAsignadas))) {
-      this.numeroConDecimales = true; 
+      this.numeroConDecimales = true;
       this.desHabilitarGuardar = true;
       console.log(this.numeroConDecimales)
       return
-    }else{
+    } else {
       this.desHabilitarGuardar = false;
       this.numeroConDecimales = false;
     }
     // console.log(Number(this.infoAsignacionFuncionario.horasAsignadas.horas), Number(horasAsignadas))
-    if (Number(this.infoAsignacionFuncionario.horasAsignadas.horas) < Number(horasAsignadas)) {
+    if (horasAsignadas < 0) {
 
       this.errorHorarioAsignado = true;
       this.desHabilitarGuardar = true;
-  
+
     } else {
       this.desHabilitarGuardar = false;
       this.errorHorarioAsignado = false;
 
-      if (horasAsignadas >= 99) {
+      if (horasAsignadas > 99) {
         this.formAsignacion.get('horas_asignadas').reset()
         this.errorHorasAsignadas = true;
       } else {
@@ -386,28 +419,116 @@ export class AsignacionesFuncionarioComponent implements OnInit {
 
   }
 
-  verificarValor(e,i){
+  inputTodosAsignaturas(e:any,asignaturaIndex?: any, gradoIndex?: any, grupoIndex?:any) {
+    console.log(e);
 
+    if(e == null){
+      const gruposFormArray: any = this.listaGrados(asignaturaIndex).at(gradoIndex).get('grupos');
+      gruposFormArray.controls[grupoIndex].patchValue({
+            horasAsignadas: 0
+      })
+    }
+ 
+
+    // console.log(this.formAsignacion)
+    if (e > 0 && this.formAsignacion.get('horas_asignadas').value > 0) {
+      // Si se marca la casilla, selecciona todas las casillas
+      this.seleccionarTodasLasAsignaturas(asignaturaIndex, gradoIndex);
+    } else {
+      // Si se desmarca la casilla, deselecciona todas las casillas
+      this.deseleccionarTodasLasAsignaturas(asignaturaIndex, gradoIndex);
+    }
+  }
+
+  seleccionarTodasLasAsignaturas(asignaturaIndex, gradoIndex) {
+
+    // const asignaturasFormArray = this.formAsignacion.get('asignaturas') as FormArray;
+    this.listaAsignaturas.controls[asignaturaIndex].patchValue({
+      checked: true
+    });
+
+    const gruposFormArray: any = this.listaGrados(asignaturaIndex).at(gradoIndex).get('grupos');
+    gruposFormArray.controls.forEach(element => {
+      // console.log(element)
+      if(element.value.cantidad > 0){
+        element.patchValue({
+          checked: true
+        })
+      }
+    });
+
+    const gradosFormArray: any = this.listaAsignaturas.at(asignaturaIndex).get('grados');
+    gradosFormArray.controls.forEach(element => {
+      // console.log(element)
+      // element.get('checked').disable();
+      if(element.value.cantidad > 0){
+        element.patchValue({
+          checked: true
+        })
+      }
+    });
+
+
+  }
+
+  deseleccionarTodasLasAsignaturas(asignaturaIndex, gradoIndex) {
+
+    this.listaAsignaturas.controls[asignaturaIndex].patchValue({
+      checked: false
+    });
+    // this.listaAsignaturas.at(asignaturaIndex).get('grados');
+    const gradosFormArray: any = this.listaAsignaturas.at(asignaturaIndex).get('grados');
+    gradosFormArray.controls.forEach(element => {
+      // console.log(element)
+      element.patchValue({
+        checked: false
+      })
+    });
+
+    // console.log(asignaturaIndex, gradoIndex)
+    const gruposFormArray: any = this.listaGrados(asignaturaIndex).at(gradoIndex).get('grupos');
+    gruposFormArray.controls.forEach(element => {
+      // console.log(element)
+      element.patchValue({
+        checked: false
+      })
+    });
+  }
+
+
+
+  toggleAll() {
+    this.allChecked = !this.allChecked;
+    // this.listadosFuncionarios.forEach(element => element.checked = this.allChecked);
   }
 
   guardar() {
     this.guardandoMensaje = true;
 
     let horasAsignadas = this.formAsignacion.get('horas_asignadas').value;
-    if (Number(this.infoAsignacionFuncionario.horasAsignadas) < Number(horasAsignadas)) {
+    if (horasAsignadas < 0) {
       this.desHabilitarGuardar = true;
       this.guardandoMensaje = false;
       // return
     } else {
       this.desHabilitarGuardar = false;
-      let asignaciones = this.obtenerAsignaciones();
-      // console.log("Asingaciones a guardar: ", asignaciones)
-      if (asignaciones) {
-        this.asignacionAcademicaService.guardarAsignacionAcademica(asignaciones).subscribe((resp: any) => {
+      let asignaciones:any = this.obtenerAsignaciones();
+      const nuevoAsignaciones = asignaciones.map(item => {
+        return {
+            ...item,
+            horasAsignadas: item.horasAsignadas !== null ? parseInt(item.horasAsignadas) : 0
+        };
+    });
+    
+      console.log("Asingaciones a guardar: ", nuevoAsignaciones)
+      if (nuevoAsignaciones) {
+        this.asignacionAcademicaService.guardarAsignacionAcademica(nuevoAsignaciones).subscribe((resp: any) => {
           console.log(resp)
           if (resp.status == 200) {
             this.guardandoMensaje = false;
             this.infoMensaje.ventanaEnviado = true;
+            this.infoMensaje.cerradoTemporizador = true;
+            this.infoMensaje.cerrarAviso = false;
             this.infoMensaje.titulo = '';
             this.infoMensaje.mensaje = resp.data;
             this.infoMensaje.botonesAsignacionErrorEliminar = true;
@@ -415,7 +536,9 @@ export class AsignacionesFuncionarioComponent implements OnInit {
             modalRef.componentInstance.infoMensaje = this.infoMensaje;
           } else {
             this.guardandoMensaje = false;
+            this.infoMensaje.cerrarAviso = false;
             this.infoMensaje.ventanaEnviado = true;
+            this.infoMensaje.cerradoTemporizador = true;
             this.infoMensaje.titulo = '';
             this.infoMensaje.mensaje = resp.data;
             this.infoMensaje.botonesAsignacionErrorEliminar = true;
@@ -423,11 +546,14 @@ export class AsignacionesFuncionarioComponent implements OnInit {
             modalRef.componentInstance.infoMensaje = this.infoMensaje;
           }
         })
-      }else{
+      } else {
         this.guardandoMensaje = false;
       }
     }
+  }
 
+  cerrarAviso() {
+    this.errorHorarioAsignado = false;
   }
 
 }

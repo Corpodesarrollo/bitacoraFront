@@ -217,6 +217,9 @@ export class FiltrosAsignacionComponent {
         this.infoMensaje.ventanaEnviado = true;
         const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
         modalRef.componentInstance.infoMensaje = this.infoMensaje;
+        setTimeout(()=>{
+          this.servicioModal.dismissAll();
+        },2000)
       }
 
   }

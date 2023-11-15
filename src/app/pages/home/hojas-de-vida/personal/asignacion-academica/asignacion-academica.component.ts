@@ -38,7 +38,7 @@ export class AsignacionAcademicaComponent {
   cargandoRegistros: any;
   columnaOrden: string = 'primerNombre';
   formulario: any;
-  funcionarioSeleccionado!: funcionario;
+  funcionarioSeleccionado!: funcionario | any;
 
   totalPaginas!: number;
   totalResultados!: number;
@@ -69,7 +69,7 @@ export class AsignacionAcademicaComponent {
   parametrosFiltros: any = {
     sort: "primerapellido,asc",
     size: 10,
-    page: 0
+    page: 0,
   }
   datos_usuario: AccesoPerfil;
   cargandoDocentes: boolean;
@@ -84,18 +84,25 @@ export class AsignacionAcademicaComponent {
 
 
   /**Permisos */
-  cargandoPermisos:boolean = true;
-  permisoEliminar:boolean = false;
-  permisoCopiar:boolean = false;
-  peermisoExportar:boolean = false;
-  permisoExportarInstitucion:boolean = false;
-  permisoEditarHoras:boolean = false;
-  permisoEditarAsignacion:boolean = false;
-  permisoAsigVer:boolean = false;
+  cargandoPermisos: boolean = true;
+  permisoEliminar: boolean = false;
+  permisoCopiar: boolean = false;
+  peermisoExportar: boolean = false;
+  permisoExportarInstitucion: boolean = false;
+  permisoEditarHoras: boolean = false;
+  permisoEditarAsignacion: boolean = false;
+  permisoAsigVer: boolean = false;
+  checkedsArray: any[] = [];
+  funcionariosSeleccionados: any[] = [];
+  conHorasAsignadas: boolean = true;
+  habilitarBotonoEliminar: boolean;
+  desHabilitarBotonCopiado: boolean;
+  intensidadHoraria: any[] ;
 
   toggleAll() {
     this.allChecked = !this.allChecked;
     this.listadosFuncionarios.forEach(element => element.checked = this.allChecked);
+    console.log(this.listadosFuncionarios)
   }
 
   constructor(
@@ -114,30 +121,28 @@ export class AsignacionAcademicaComponent {
   /**
    * Metood para cargar permisos
    */
-  cargarPermisos(){
-      this.usuarioService.permisosActualizados$.subscribe((permisosActualizados) => {
-        if (permisosActualizados) {
-          this.permisoEliminar = this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.PERSONAL_ASIG_ACAD_ELIMINAR),
+  cargarPermisos() {
+    this.usuarioService.permisosActualizados$.subscribe((permisosActualizados) => {
+      if (permisosActualizados) {
+        this.permisoEliminar = this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.PERSONAL_ASIG_ACAD_ELIMINAR),
           this.permisoCopiar = this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.PERSONAL_ASIG_ACAD_COPIAR),
           this.peermisoExportar = this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.PERSONAL_ASIG_ACAD_EXPORTAR)
-          this.permisoExportarInstitucion = this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.PERSONAL_ASIG_ACAD_EXPORTARINSTITUCIÓN)
-          this.permisoEditarHoras = this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.PERSONAL_ASIG_ACAD_EDITARTOTALHORASSEMANALES)
-          this.permisoEditarAsignacion = this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.PERSONAL_ASIG_ACAD_EDITARASIGNACIÓNACADÉMICA)
-          this.permisoAsigVer = this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.PERSONAL_ASIG_ACAD_VER)
-          this.cargandoPermisos = false;
-        }
-      });
+        this.permisoExportarInstitucion = this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.PERSONAL_ASIG_ACAD_EXPORTARINSTITUCIÓN)
+        this.permisoEditarHoras = this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.PERSONAL_ASIG_ACAD_EDITARTOTALHORASSEMANALES)
+        this.permisoEditarAsignacion = this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.PERSONAL_ASIG_ACAD_EDITARASIGNACIÓNACADÉMICA)
+        this.permisoAsigVer = this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.PERSONAL_ASIG_ACAD_VER)
+        this.cargandoPermisos = false;
+      }
+    });
   }
 
   construirFormulario() {
 
     this.formulario = this.formBuilder.group({
-      infoHoras: this.formBuilder.array([null,[]]),
+      infoHoras: this.formBuilder.array([null, []]),
       // infoHoras: [],
       seleccionFuncionario: []
     });
-
-
 
   }
 
@@ -155,7 +160,7 @@ export class AsignacionAcademicaComponent {
   }
 
   agregarHoras(horas: any = null) {
-    this.listaHoras.push(this.formBuilder.control(horas, [Validators.max(99),this.enteroValidator]))
+    this.listaHoras.push(this.formBuilder.control(horas, [Validators.max(99), this.enteroValidator]))
   }
 
   /**
@@ -184,6 +189,7 @@ export class AsignacionAcademicaComponent {
       this.ocultarBotones = true;
       this.confirmarCheckboxSeleccionado = true;
     } else {
+      this.funcionariosSeleccionados = []
       this.ocultarBotones = false;
       this.toggleAll();
       this.confirmarCheckboxSeleccionado = false;
@@ -191,6 +197,32 @@ export class AsignacionAcademicaComponent {
   }
 
   inputCheck(e: any, infoFuncionario: any, i: any) {
+
+
+    let parametros = {
+      institucion_id: this.datos_usuario.colegio?.id,
+      metodologia_id: this.parametrosFiltros.id_metodologia,
+      vigencia: this.parametrosFiltros.id_vigencia,
+      sede_id: this.parametrosFiltros.id_sede,
+      jornada_id: this.parametrosFiltros.id_jornada,
+      documento_docente: Number(this.listadosFuncionarios[i].identificacion)
+    }
+
+
+    if (e) {
+      // this.habilitarBotonoEliminar = true;
+      this.asignacionAcademicaService.obtenerintensidadHoraria(parametros).subscribe({
+        next: (respuesta: any) => {
+          if (respuesta.status == "200") {
+            this.intensidadHoraria = respuesta.data;
+          }
+        },
+        error: (error: any) => {
+          console.error("Hubo un error al recuperar la intensidad horaria: ", error);
+        }
+      });
+    }
+
 
     const objetoFuncionario = {
       "institucion": Number(infoFuncionario.institucion),
@@ -203,8 +235,25 @@ export class AsignacionAcademicaComponent {
 
 
     this.funcionarioSeleccionado = infoFuncionario;
-    // console.log(i)
+
     if (e) {
+      this.funcionariosSeleccionados.push(infoFuncionario);
+    } else if(!e){
+      this.funcionariosSeleccionados.splice(i, 1);
+    }
+
+    console.log(this.funcionariosSeleccionados)
+
+    this.checkedsArray[i] = ['checked:', e || false]
+
+    const contadorTrue = this.checkedsArray.reduce((count, item) => {
+      if (item[0] === "checked:" && item[1] === true) {
+        return count + 1;
+      }
+      return count;
+    }, 0);
+
+    if (contadorTrue > 0) {
       this.ocultarBotones = true;
       this.confirmarCheckboxSeleccionado = true;
       this.arrayFuncionarios.push(objetoFuncionario)
@@ -227,16 +276,19 @@ export class AsignacionAcademicaComponent {
 
   gestionarAsignacionAcademica(index: any, horasAsignadas) {
 
-    if(this.permisoEditarAsignacion){
+    if (this.permisoEditarAsignacion) {
       let docente = this.listadosFuncionarios[index];
 
       if (this.listaHoras.value[index].horas <= 0) {
         this.infoMensaje.ventanaEnviado = true;
+        this.infoMensaje.eliminarFuncionario = false;
         this.infoMensaje.titulo = 'Funcionario sin horas asignadas';
         this.infoMensaje.mensaje = 'El funcionario seleccionado no tiene cargado un valor para el total de horas semanales. Por favor, indique un valor para el número de horas semanales que dictará el funcionario.';
         this.infoMensaje.botonesAsignacionErrorEliminar = true;
+        this.infoMensaje.mostrarAceptar = true;
         const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
         modalRef.componentInstance.infoMensaje = this.infoMensaje;
+
 
       } else {
         this.infoAsignacionFuncionario.filtros = this.parametrosFiltros
@@ -249,8 +301,8 @@ export class AsignacionAcademicaComponent {
         modalRef.componentInstance.infoAsignacionFuncionario = this.infoAsignacionFuncionario;
       }
     }
-    else{
-      const modalRef = this.servicioModal.open(ModalInformacionComponent, {size:'md', centered: true, backdrop: 'static'})
+    else {
+      const modalRef = this.servicioModal.open(ModalInformacionComponent, { size: 'md', centered: true, backdrop: 'static' })
       modalRef.componentInstance.informacion = {
         esExitoso: 'warning',
         titulo: '¡Advertencia!',
@@ -261,7 +313,7 @@ export class AsignacionAcademicaComponent {
   }
 
   cargarVigencias(): any {
-    let datos_usuario:AccesoPerfil  = this.usuarioService.obtenerAccesoSeleccionado();
+    let datos_usuario: AccesoPerfil = this.usuarioService.obtenerAccesoSeleccionado();
     this.asignacionAcademicaService.obtenerVigencias(datos_usuario.colegio.id).subscribe((resp: any) => {
       if (resp.status == 200) {
         this.vigencias = resp.data;
@@ -278,31 +330,53 @@ export class AsignacionAcademicaComponent {
       vigencia: this.parametrosFiltros.id_vigencia,
       metodologia_id: this.parametrosFiltros.id_metodologia,
     }
-    this.infoMensaje.funcionarioSeleccionado = this.funcionarioSeleccionado;
-    this.infoMensaje.listadosFuncionarios = this.listadosFuncionarios;
-    this.infoMensaje.ventanaEnviado = true;
-    const modalRef = this.servicioModal.open(CopiarAsignacionAcademicaComponent, { size: 'lg', centered: true, backdrop: 'static' });
-    modalRef.componentInstance.informacionDocente = this.infoMensaje.funcionarioSeleccionado;
-    modalRef.componentInstance.parametrosUsuario = parametros;
-    modalRef.result.then((result) => {
-      this.obtenerDatos()
-    })
+    if (this.funcionariosSeleccionados.length <= 1) {
+      this.infoMensaje.funcionarioSeleccionado = this.funcionarioSeleccionado;
+      this.infoMensaje.listadosFuncionarios = this.listadosFuncionarios;
+      this.infoMensaje.ventanaEnviado = true;
+      const modalRef = this.servicioModal.open(CopiarAsignacionAcademicaComponent, { size: 'lg', centered: true, backdrop: 'static' });
+      modalRef.componentInstance.informacionDocente = this.infoMensaje.funcionarioSeleccionado;
+      modalRef.componentInstance.parametrosUsuario = parametros;
+      modalRef.result.then((result) => {
+        this.obtenerDatos()
+      })
+    }else{
+      this.habiliarCopiar = false;
+    }
 
   }
 
   eliminarRegistro() {
 
-    // this.listadosFuncionarios.forEach((element: any) => {
-    //   //console.log(element)
-    // })
+    // console.log(this.conHorasAsignadas)
+    for (let intencidad of this.intensidadHoraria) {
+      console.log(intencidad.horasAsignadas)
+      if (Number(intencidad.horasAsignadas) <= 0) {
+        this.conHorasAsignadas = false;
+        this.habilitarBotonoEliminar = false;
+          this.infoMensaje.titulo = 'Uno o mas de los funcionarios seleccionados no tiene asignación académica cargada';
+          this.infoMensaje.mensaje = 'Por favor valide la información e intente de nuevo';
+          this.infoMensaje.mostrarAceptar = true;
+          this.infoMensaje.eliminarFuncionario = false;
+          this.infoMensaje.botonesAsignacionEliminar = false;
+          this.infoMensaje.ventanaEnviado = true;
+          const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
+          modalRef.componentInstance.infoMensaje = this.infoMensaje;
+          return
+      } else {
+        this.conHorasAsignadas = true;
+        this.habilitarBotonoEliminar = true;
+      }
+      // console.log(this.conHorasAsignadas)
+    }
+
 
     if (!this.confirmarCheckboxSeleccionado) {
 
       this.infoMensaje.titulo = 'Error al eliminar registro';
       this.infoMensaje.mensaje = 'Debe seleccionar al menos un registro a eliminar';
       this.infoMensaje.botonesAsignacionErrorEliminar = true;
-      this.infoMensaje.botonesAsignacionEliminar = false;
-      this.infoMensaje.ventanaEnviado = true;
+      this.infoMensaje.mostrarAceptar = true;
       const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
       modalRef.componentInstance.infoMensaje = this.infoMensaje;
 
@@ -337,8 +411,9 @@ export class AsignacionAcademicaComponent {
         this.infoMensaje.ventanaEnviado = true;
         const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
         modalRef.componentInstance.infoMensaje = this.infoMensaje;
-
-
+        setTimeout(() => {
+          this.servicioModal.dismissAll();
+        }, 2000)
       }
 
     }
@@ -372,20 +447,20 @@ export class AsignacionAcademicaComponent {
     }
   }
 
-  exportarRegistroInstitucion(){
-      this.infoMensaje.idFuncionario = 'id';
-      this.infoMensaje.ventanaEnviado = true;
-      this.parametrosFiltros.institucion = this.datos_usuario.colegio.id;
-      this.infoMensaje.parametros = this.parametrosFiltros
-      this.infoMensaje.exportePorinstitucion = true;
-      const modalRef = this.servicioModal.open(MensajeDescargarReporteComponent, { size: 'md', centered: true, backdrop: 'static' });
-      modalRef.componentInstance.infoMensaje = this.infoMensaje;
+  exportarRegistroInstitucion() {
+    this.infoMensaje.idFuncionario = 'id';
+    this.infoMensaje.ventanaEnviado = true;
+    this.parametrosFiltros.institucion = this.datos_usuario.colegio.id;
+    this.infoMensaje.parametros = this.parametrosFiltros
+    this.infoMensaje.exportePorinstitucion = true;
+    const modalRef = this.servicioModal.open(MensajeDescargarReporteComponent, { size: 'md', centered: true, backdrop: 'static' });
+    modalRef.componentInstance.infoMensaje = this.infoMensaje;
   }
 
 
   verDocente(funcionario: any, index) {
     // console.log(funcionario)
-    if(this.permisoAsigVer){
+    if (this.permisoAsigVer) {
       let infoFuncionario: any = {}
       infoFuncionario.funcionario = funcionario;
       infoFuncionario.metodologia = this.parametrosFiltros.id_metodologia;
@@ -396,8 +471,8 @@ export class AsignacionAcademicaComponent {
       const modalRef = this.servicioModal.open(AsignacionDocenteComponent, { size: 'xl', centered: true, backdrop: 'static' });
       modalRef.componentInstance.infoFuncionario = infoFuncionario;
     }
-    else{
-      const modalRef = this.servicioModal.open(ModalInformacionComponent, {size:'md', centered: true, backdrop: 'static'})
+    else {
+      const modalRef = this.servicioModal.open(ModalInformacionComponent, { size: 'md', centered: true, backdrop: 'static' })
       modalRef.componentInstance.informacion = {
         esExitoso: 'warning',
         titulo: '¡Advertencia!',
@@ -410,13 +485,13 @@ export class AsignacionAcademicaComponent {
   filtrar(event: any) {
 
     this.mensajeEnteros = false;
-     this.listadosFuncionarios = []
+    this.listadosFuncionarios = []
 
     if (event.limpiarListado) {
       this.listadosFuncionarios = [];
       return
     }
-  
+
 
     this.cargandoDocentes = true;
     //console.log(event)
@@ -453,6 +528,7 @@ export class AsignacionAcademicaComponent {
 
   obtenerDocentes() {
 
+    this.funcionariosSeleccionados = [];
     this.cargandoDocentes = true;
 
     const institucion_id = this.datos_usuario.colegio.id;
@@ -463,11 +539,12 @@ export class AsignacionAcademicaComponent {
       //Reinicio
       this.formulario.get('infoHoras').controls = []
 
-      // console.log(resp)
+      console.log("Respuesta: ", resp);
       if (resp.status == 200) {
         this.listadosFuncionarios = resp.data.content;
 
         this.totalPaginas = resp.data.totalPages;
+        this.totalResultados = resp.data.totalElements;
         // console.log(resp)
         // console.log(this.listadosFuncionarios)
 
@@ -514,7 +591,7 @@ export class AsignacionAcademicaComponent {
       formArray.controls.forEach((control, index) => {
         (this.formulario.get('infoHoras') as FormArray).at(index).disable();
         control.disable();
-        console.log(control)
+        // console.log(control)
       });
       this.listaHoras.disable();
     } else {
@@ -553,7 +630,14 @@ export class AsignacionAcademicaComponent {
       this.infoMensaje.titulo = ``;
       this.infoMensaje.mensaje = `El valor debe estar entre 1 y 99`;
       this.infoMensaje.botonesAsignacionErrorEliminar = true;
+      this.infoMensaje.ventanaEnviado = true;
+      this.infoMensaje.eliminarFuncionario = false;
       this.infoMensaje.botonesAsignacionEliminar = false;
+
+      this.listaHoras.controls[i].patchValue({
+        horas: 0
+      })
+
       // this.infoMensaje.ventanaEnviado = true;
       const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
       modalRef.componentInstance.infoMensaje = this.infoMensaje;
@@ -574,26 +658,17 @@ export class AsignacionAcademicaComponent {
       }
 
       // console.log(this.listaHoras.controls[i].status )
-      if(this.listaHoras.controls[i].status != "INVALID"){
+      if (this.listaHoras.controls[i].status != "INVALID") {
         this.asignacionAcademicaService.actualizarIntensidadHorario(body).subscribe((resp: any) => {
           // console.log(resp)
           if (resp.status == 200) {
             this.actualizandoHoras = false;
-            setTimeout(() => {
-              this.formulario.controls['infoHoras'].enable();
-              this.servicioModal.dismissAll();
-            }, 3000)
           }
         })
       }
 
 
     }
-
-    setTimeout(() => {
-      this.servicioModal.dismissAll();
-    }, 3000)
-
 
   }
 
@@ -622,23 +697,41 @@ export class AsignacionAcademicaComponent {
   }
 
 
+
+
   /**
    * Metodo que ordena la columna del indique acorde a los
    * datos visualizados en pantalla
    */
   ordenarColumna(columna: string) {
     this.ordenadaAscendente = Object.keys(this.ordenadaAscendente).reduce((acc, col) => {
-        acc[col] = col === columna ? !this.ordenadaAscendente[col] : false;
-        return acc;
+      acc[col] = col === columna ? !this.ordenadaAscendente[col] : false;
+      return acc;
     }, {} as { [key: string]: boolean });
 
     this.columnaOrden = columna;
 
     this.listadosFuncionarios.sort((a: any, b: any) => {
-        const comparison = this.ordenadaAscendente[columna] ? 1 : -1;
-        return a.indice > b.indice ? comparison : -comparison;
+      const comparison = this.ordenadaAscendente[columna] ? 1 : -1;
+      return a.indice > b.indice ? comparison : -comparison;
     });
-}
+  }
+
+  /**
+    * Nos permite actualizar el tamaño de la vista de la lista
+    */
+  actualizarTamano(valor: any) {
+    this.parametrosFiltros.size = valor;
+    let nuevoTotalPaginas = Math.round(this.totalResultados / valor);
+    if (this.pagina >= nuevoTotalPaginas) {
+      this.pagina = Math.max(nuevoTotalPaginas - 1, 0)
+      this.parametrosFiltros.pagina = this.pagina;
+      this.obtenerDatos()
+    }
+    else {
+      this.obtenerDatos();
+    }
+  }
 
 
 

@@ -1,32 +1,53 @@
 <div class="col-12 mt-4 mb-3">
-  <h3 class="titulo_personal">
-    Asignación Académica
-  </h3>
+    <h3 class="titulo_personal">
+        Asignación Académica
+    </h3>
 </div>
 <div *ngIf="mostrarFiltros && tipoUsuario === 'funcionario'">
-    <app-filtros-asignacion (filtros)="filtrar($event)" [cargandoRegistros]="cargandoRegistros"></app-filtros-asignacion>
+    <app-filtros-asignacion (filtros)="filtrar($event)"
+        [cargandoRegistros]="cargandoRegistros"></app-filtros-asignacion>
 </div>
 
 <app-cargando *ngIf="cargandoRegistros && !mostrarFiltros" class="cargando"></app-cargando>
 
 <div *ngIf="tipoUsuario == 'funcionario' && listadosFuncionarios.length > 0" class="accionesBoton col-12">
-    <button *ngIf="ocultarBotones == true && !deshabilitarInput && permisoCopiar" [disabled]="!habiliarCopiar"  (click)="copiarRegistro()" type="button" class="btn boton_secundario" >
+    <button *ngIf="ocultarBotones == true && !deshabilitarInput && permisoCopiar" [disabled]="!habiliarCopiar"
+        (click)="copiarRegistro()" type="button" class="btn boton_secundario">
         Copiar
-      </button>
-    <button *ngIf="ocultarBotones == true && !deshabilitarInput && permisoEliminar"  (click)="eliminarRegistro()" type="button" class="btn boton_secundario">
+    </button>
+    <button [disabled]="habilitarBotonoEliminar" *ngIf="!deshabilitarInput && permisoEliminar" (click)="eliminarRegistro()"
+        type="button" class="btn boton_secundario">
         Eliminar
-      </button>
-    <button *ngIf="ocultarBotones == true && peermisoExportar"  (click)="exportarRegistro()" type="button" class="btn boton_secundario">
+    </button>
+    <button *ngIf="ocultarBotones == true && peermisoExportar" (click)="exportarRegistro()" type="button"
+        class="btn boton_secundario">
         Exportar
-      </button>
-    <button (click)="exportarRegistroInstitucion()" type="button" class="btn boton_secundario"  *ngIf="permisoExportarInstitucion">
-      Exportar Institución
+    </button>
+    <button (click)="exportarRegistroInstitucion()" type="button" class="btn boton_secundario"
+        *ngIf="permisoExportarInstitucion"  
+        placement="bottom" 
+        ngbTooltip="Aquí puedes exportar la asignación académica de la institución completa">
+        Exportar Institución
     </button>
 </div>
 
-<form [formGroup]="formulario" >
 
-    <div *ngIf="tipoUsuario == 'funcionario' && cargandoDocentes == false && listadosFuncionarios.length > 0" class="col-12 contenedorTablas">
+<div class="contenedor_titulo col-12 row mb-3 mt-4" *ngIf="tipoUsuario == 'funcionario' && cargandoDocentes == false && listadosFuncionarios.length > 0">
+  <div class="titulo_contador col-12 col-md-6">Se encontraron {{ totalResultados}} resultados</div>
+  <div class="mostrar col-12 col-md-6">
+      <span>Mostrar</span>
+      <ng-select [(ngModel)]="pageSize" [clearable]="false" [searchable]="false" class="select_lista"
+          (change)="actualizarTamano($event)">
+          <ng-option [value]="10">10</ng-option>
+          <ng-option [value]="20">20</ng-option>
+      </ng-select>
+      <span>Resultados por página</span>
+  </div>
+</div>
+
+<form [formGroup]="formulario">
+<div *ngIf="tipoUsuario == 'funcionario' && cargandoDocentes == false && listadosFuncionarios.length > 0"
+  class="col-12 contenedorTablas ">
 
         <div class="tabla">
             <div class="row titulos">
@@ -40,15 +61,18 @@
                     <p>Seleccionar todos:</p>
                 </div>
 
-                <div class="nomenclatura titulo" (click)="ordenarColumna('n')" [class.no_ordenada]="columnaOrden !== 'n'">
+                <div class="nomenclatura titulo" (click)="ordenarColumna('n')"
+                    [class.no_ordenada]="columnaOrden !== 'n'">
                     Nº
                     <span *ngIf="ordenadaAscendente.n" class="material-symbols-outlined">arrow_drop_down</span>
-                    <span *ngIf="!ordenadaAscendente.n" class="material-symbols-outlined" >arrow_drop_up
+                    <span *ngIf="!ordenadaAscendente.n" class="material-symbols-outlined">arrow_drop_up
                     </span>
                 </div>
-                <div class="funcionario titulo" (click)="ordenarDatos('primerNombre')" [class.no_ordenada]="columnaOrden !== 'primerNombre'">Funcionario
-                    <span *ngIf="ordenadaAscendente.primerNombre" class="material-symbols-outlined">arrow_drop_down</span>
-                    <span *ngIf="!ordenadaAscendente.primerNombre" class="material-symbols-outlined" >arrow_drop_up
+                <div class="funcionario titulo" (click)="ordenarDatos('primerNombre')"
+                    [class.no_ordenada]="columnaOrden !== 'primerNombre'">Funcionario
+                    <span *ngIf="ordenadaAscendente.primerNombre"
+                        class="material-symbols-outlined">arrow_drop_down</span>
+                    <span *ngIf="!ordenadaAscendente.primerNombre" class="material-symbols-outlined">arrow_drop_up
                     </span>
                 </div>
                 <div class="totalHorasSemanales titulo">Total horas semanales</div>
@@ -57,10 +81,11 @@
 
             <!-- <hr class="hrTabla"> -->
 
-            <div  *ngFor="let infoFuncionario of listadosFuncionarios; let i = index" class="row contenidoTabla">
+            <div *ngFor="let infoFuncionario of listadosFuncionarios; let i = index" class="row contenidoTabla">
                 <div class="tituloMobile">Seleccionar:</div>
                 <div class="infoTabla checkboxTodos">
-                    <input (ngModelChange)="inputCheck($event, infoFuncionario,i)" [(ngModel)]="infoFuncionario.checked"  formControlName="seleccionFuncionario" type="checkbox" class="checkboxInfo">
+                    <input (ngModelChange)="inputCheck($event, infoFuncionario,i)" [(ngModel)]="infoFuncionario.checked"
+                        formControlName="seleccionFuncionario" type="checkbox" class="checkboxInfo">
                 </div>
                 <div class="tituloMobile">Nº:</div>
                 <div class="nomenclatura infoTabla">
@@ -68,13 +93,17 @@
                 </div>
                 <div class="tituloMobile">Funcionario:</div>
                 <div class="funcionario infoTabla">
-                   {{infoFuncionario.primerApellido}} {{infoFuncionario.segundoApellido}} {{infoFuncionario.primerNombre}} {{infoFuncionario.segundoNombre}}
+                    {{infoFuncionario.primerApellido}} {{infoFuncionario.segundoApellido}}
+                    {{infoFuncionario.primerNombre}} {{infoFuncionario.segundoNombre}}
                 </div>
                 <div class="tituloMobile">Total horas semanales:</div>
                 <div class="totalHorasSemanales infoTabla" [class.deshabilitarInput]="deshabilitarInput">
                     <div [ngClass]="{indiceActualActualizando:desHabilitarInfoHoras}" class="input-wrapper">
                         <!-- infoFuncionario.horas -->
-                        <input [disabled]="deshabilitarInput || !permisoEditarHoras" type="number" step="1" inputmode="none" maxlength="99" formArrayName="infoHoras" class="form_input" [value]="listaHoras.controls[i].value.horas || 0" (change)="actualizarHorasAsignadas($event,infoFuncionario,i)">
+                        <input [disabled]="deshabilitarInput || !permisoEditarHoras" type="number" step="1"
+                            inputmode="none" maxlength="99" formArrayName="infoHoras" class="form_input"
+                            [value]="listaHoras.controls[i].value.horas || 0"
+                            (change)="actualizarHorasAsignadas($event,infoFuncionario,i)">
                         <div class="guardando_horas" *ngIf="actualizandoHoras && indiceActualActualizando == i">
                             <span>Guardando</span>
                             <div class="spinner-border float-end" role="status"></div>
@@ -86,29 +115,33 @@
                 </div>
                 <div class="tituloMobile">Acciones:</div>
                 <div class="acciones accionesInfo">
-                    <span *ngIf="!deshabilitarInput" (click)="gestionarAsignacionAcademica(i,listaHoras.controls[i].value)" class="material-symbols-outlined">
+                    <span *ngIf="!deshabilitarInput"
+                        (click)="gestionarAsignacionAcademica(i,listaHoras.controls[i].value)"
+                        class="material-symbols-outlined">
                         time_auto
                         <span class="etiqueta_hoverAsignacion">
                             Asignación académica </span>
                     </span>
                     <span (click)="verDocente(infoFuncionario,i)" class="material-symbols-outlined">
                         visibility
-                        <span  class="etiqueta_hoverVer">Ver </span>
+                        <span class="etiqueta_hoverVer">Ver </span>
                     </span>
                 </div>
             </div>
 
             <div class="paginacion">
                 <div class="d-flex flex-nowrap align-items-center">
-                    <span class="text-nowrap px-2">Página {{pagina + 1  }}&nbsp;-&nbsp;{{totalPaginas}}</span>
-                    <div class="control_paginacion" [class.pagina_deshabilitada]="pagina === 0" (click)="cambiarPagina()">
-                      <span class="material-symbols-outlined">
-                        chevron_left
-                      </span>
-                    </div>
-                    <div [class.pagina_deshabilitada]="pagina >= totalPaginas - 1" class="control_paginacion" (click)="cambiarPagina('siguiente')">
+                    <span class="text-nowrap px-2">Página {{pagina + 1 }}&nbsp;-&nbsp;{{totalPaginas}}</span>
+                    <div class="control_paginacion" [class.pagina_deshabilitada]="pagina === 0"
+                        (click)="cambiarPagina()">
                         <span class="material-symbols-outlined">
-                          chevron_right
+                            chevron_left
+                        </span>
+                    </div>
+                    <div [class.pagina_deshabilitada]="pagina >= totalPaginas - 1" class="control_paginacion"
+                        (click)="cambiarPagina('siguiente')">
+                        <span class="material-symbols-outlined">
+                            chevron_right
                         </span>
                     </div>
                 </div>
@@ -120,7 +153,7 @@
     <app-cargando *ngIf="cargandoDocentes"></app-cargando>
 
 </form>
- <!-- <hr>
+<!-- <hr>
 <pre>
     EStado del formulario: {{formulario.valid}}
     <br />
