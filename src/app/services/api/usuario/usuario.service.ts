@@ -113,6 +113,7 @@ export class UsuarioService {
   }
 
   guardarAcceso(acceso:AccesoPerfil) {
+    this.setearCabeceras();
     sessionStorage.setItem('sap_acc_sel', JSON.stringify(acceso));
     let data: any = {
       "usuario": this.obtenerUsuario().id,
@@ -125,7 +126,7 @@ export class UsuarioService {
       "perfil": acceso.perfil.id,
       "descripcion": "{\"Inicio de sesi&oacute;n\":\"\"}"
     };
-    this.http.post(`${environment.URL_BITACORAS}/apoyo/consultas/insertarBitacora`, data).subscribe((response:any) => {});
+    this.http.post(`${environment.URL_BITACORAS}/apoyo/consultas/insertarBitacora`, data, this.httpOptions).subscribe((response:any) => {});
   }
 
   borrarSeleccionColegio() {
