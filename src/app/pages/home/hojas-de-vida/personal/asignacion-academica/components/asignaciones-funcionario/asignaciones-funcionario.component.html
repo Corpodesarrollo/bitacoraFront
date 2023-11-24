@@ -23,7 +23,7 @@
                   <p>{{listaAsignaturas.value[asignaturaIndex].nombre}}</p>
                 </div>
                 <div class="input-wrapper">
-                  <input type="number" class="form_input"
+                  <input [disabled]="true" type="number" class="form_input"
                     [value]="listaAsignaturas.value[asignaturaIndex].cantidad || 0">
                 </div>
               </button>
@@ -85,8 +85,8 @@
                                         </p>
                                       </div>
                                       <div class="input-wrapper">
-                                        <input (ngModelChange)="inputTodosAsignaturas($event,asignaturaIndex, gradoIndex, grupoIndex)" type="number" class="form_input" formControlName="cantidad"
-                                          (keyup)="calcularTotales(asignaturaIndex, gradoIndex, grupoIndex)" [value]="0">
+                                        <input  type="number" class="form_input" formControlName="cantidad"
+                                          (keyup)="calcularTotales(asignaturaIndex, gradoIndex, grupoIndex)">
                                       </div>
                                     </button>
                                   </h2>
@@ -152,6 +152,5 @@
     <div class="spinner-border float-end" role="status"></div>
   </button>
 </div>
-
 
 <!-- <span>valor: {{formAsignacion.value}}</span> -->

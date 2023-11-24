@@ -11,13 +11,15 @@
 <app-cargando *ngIf="cargandoRegistros && !mostrarFiltros" class="cargando"></app-cargando>
 
 <div *ngIf="tipoUsuario == 'funcionario' && listadosFuncionarios.length > 0" class="accionesBoton col-12">
-    <button *ngIf="ocultarBotones == true && !deshabilitarInput && permisoCopiar" [disabled]="!habiliarCopiar"
+    <button *ngIf="ocultarBotones == true && !deshabilitarInput && permisoCopiar" [disabled]="!habiliarCopiar || habilitarBotonoCopiar"
         (click)="copiarRegistro()" type="button" class="btn boton_secundario">
         Copiar
+        <div *ngIf="cargandoCopiado" class="spinner-border float-end" role="status"></div>
     </button>
-    <button [disabled]="habilitarBotonoEliminar" *ngIf="!deshabilitarInput && permisoEliminar" (click)="eliminarRegistro()"
+    <button [disabled]="habilitarBotonoEliminar" *ngIf="!deshabilitarInput && permisoEliminar" (click)="eliminarRegistros()"
         type="button" class="btn boton_secundario">
         Eliminar
+        <div *ngIf="cargandoEliminar" class="spinner-border float-end" role="status"></div>
     </button>
     <button *ngIf="ocultarBotones == true && peermisoExportar" (click)="exportarRegistro()" type="button"
         class="btn boton_secundario">
@@ -80,52 +82,52 @@
             </div>
 
             <!-- <hr class="hrTabla"> -->
-
-            <div *ngFor="let infoFuncionario of listadosFuncionarios; let i = index" class="row contenidoTabla">
-                <div class="tituloMobile">Seleccionar:</div>
-                <div class="infoTabla checkboxTodos">
-                    <input (ngModelChange)="inputCheck($event, infoFuncionario,i)" [(ngModel)]="infoFuncionario.checked"
-                        formControlName="seleccionFuncionario" type="checkbox" class="checkboxInfo">
-                </div>
-                <div class="tituloMobile">Nº:</div>
-                <div class="nomenclatura infoTabla">
-                    {{infoFuncionario.indice}}
-                </div>
-                <div class="tituloMobile">Funcionario:</div>
-                <div class="funcionario infoTabla">
-                    {{infoFuncionario.primerApellido}} {{infoFuncionario.segundoApellido}}
-                    {{infoFuncionario.primerNombre}} {{infoFuncionario.segundoNombre}}
-                </div>
-                <div class="tituloMobile">Total horas semanales:</div>
-                <div class="totalHorasSemanales infoTabla" [class.deshabilitarInput]="deshabilitarInput">
-                    <div [ngClass]="{indiceActualActualizando:desHabilitarInfoHoras}" class="input-wrapper">
-                        <!-- infoFuncionario.horas -->
-                        <input [disabled]="deshabilitarInput || !permisoEditarHoras" type="number" step="1"
-                            inputmode="none" maxlength="99" formArrayName="infoHoras" class="form_input"
-                            [value]="listaHoras.controls[i].value.horas || 0"
-                            (change)="actualizarHorasAsignadas($event,infoFuncionario,i)">
-                        <div class="guardando_horas" *ngIf="actualizandoHoras && indiceActualActualizando == i">
-                            <span>Guardando</span>
-                            <div class="spinner-border float-end" role="status"></div>
-                        </div>
-                        <div class="error_valorHoras" *ngIf="mensajeEnteros && indiceActualActualizando == i">
-                            <span>Solo numeros enteros</span>
+            <div formArrayName="infoHoras">
+                <div *ngFor="let infoFuncionario of listadosFuncionarios; let i = index" class="row contenidoTabla" [formGroupName]="i">
+                    <div class="tituloMobile">Seleccionar:</div>
+                    <div class="infoTabla checkboxTodos">
+                        <input (ngModelChange)="inputCheck($event, infoFuncionario,i)"
+                            formControlName="checked" type="checkbox" class="checkboxInfo" >
+                    </div>
+                    <div class="tituloMobile">Nº:</div>
+                    <div class="nomenclatura infoTabla">
+                        {{i + 1}}
+                    </div>
+                    <div class="tituloMobile">Funcionario:</div>
+                    <div class="funcionario infoTabla">
+                        {{listaHoras.controls[i].value.funcionario}}
+                    </div>
+                    <div class="tituloMobile">Total horas semanales:</div>
+                    <div class="totalHorasSemanales infoTabla" [class.deshabilitarInput]="deshabilitarInput">
+                        <div [ngClass]="{indiceActualActualizando:desHabilitarInfoHoras}" class="input-wrapper">
+                            <!-- infoFuncionario.horas -->
+                            <input [disabled]="deshabilitarInput || !permisoEditarHoras" type="number" step="1"
+                                inputmode="none" maxlength="99"  class="form_input"
+                                [value]="listaHoras.controls[i].value.hora || 0"
+                                (change)="actualizarHorasAsignadas($event,infoFuncionario,i)">
+                            <div class="guardando_horas" *ngIf="actualizandoHoras && indiceActualActualizando == i">
+                                <span>Guardando</span>
+                                <div class="spinner-border float-end" role="status"></div>
+                            </div>
+                            <div class="error_valorHoras" *ngIf="mensajeEnteros && indiceActualActualizando == i">
+                                <span>Solo numeros enteros</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="tituloMobile">Acciones:</div>
-                <div class="acciones accionesInfo">
-                    <span *ngIf="!deshabilitarInput"
-                        (click)="gestionarAsignacionAcademica(i,listaHoras.controls[i].value)"
-                        class="material-symbols-outlined">
-                        time_auto
-                        <span class="etiqueta_hoverAsignacion">
-                            Asignación académica </span>
-                    </span>
-                    <span (click)="verDocente(infoFuncionario,i)" class="material-symbols-outlined">
-                        visibility
-                        <span class="etiqueta_hoverVer">Ver </span>
-                    </span>
+                    <div class="tituloMobile">Acciones:</div>
+                    <div class="acciones accionesInfo">
+                        <span *ngIf="!deshabilitarInput"
+                            (click)="gestionarAsignacionAcademica(i,listaHoras.controls[i].value)"
+                            class="material-symbols-outlined">
+                            time_auto
+                            <span class="etiqueta_hoverAsignacion">
+                                Asignación académica </span>
+                        </span>
+                        <span (click)="verDocente(infoFuncionario,i)" class="material-symbols-outlined">
+                            visibility
+                            <span class="etiqueta_hoverVer">Ver </span>
+                        </span>
+                    </div>
                 </div>
             </div>
 
@@ -162,4 +164,9 @@
 
 <pre>
     {{formulario.value | json}}
+</pre> -->
+
+
+<!-- <pre>
+    boton eliminar: {{habilitarBotonoEliminar | json}} boton copiar: {{habilitarBotonoCopiar | json}}
 </pre> -->

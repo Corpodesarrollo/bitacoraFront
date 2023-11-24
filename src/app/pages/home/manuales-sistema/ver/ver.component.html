@@ -21,7 +21,7 @@
             </div>
             <div id="manual" class="row">
                 <div *ngFor="let manual of categoriaManual.manuales" class="col-12 col-md-12 col-lg-6">
-                    <div class="manual">
+                    <div class="manual" tabindex="0">
                         <div class="info_manual">
                             <div class="icono archivo" (click)="verManual(manual.id)">
                                 <img src="assets/iconos/archivo_icono.svg" alt="">
@@ -34,17 +34,17 @@
                         </div>
                         <div class="opcionesCRUD">
                             <div class="eliminar" (click)="abrirConfirmarBorrado()" (click)="obtenerId(manual.id)"
-                                *ngIf="esAdmin">
-                                <div class="icono descarga">
+                                *ngIf="esAdmin" >
+                                <div class="icono descarga" tabindex="0">
                                     <span class="material-symbols-outlined">
                                         delete
                                     </span>
                                 </div>
                                 <p>Eliminar</p>
                             </div>
-                            <div class="descargar">
-                                <a class="descargar" (click)="descargarManual(manual.id)">
-                                    <div class="icono descarga">
+                            <div class="descargar" >
+                                <a class="descargar" (click)="descargarManual(manual.id)" >
+                                    <div class="icono descarga" tabindex="0">
                                         <span class="material-symbols-outlined">
                                             download
                                         </span>

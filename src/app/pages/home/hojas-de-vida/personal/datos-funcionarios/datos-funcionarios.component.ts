@@ -430,6 +430,13 @@ export class DatosFuncionariosComponent {
     modalDesasociar.componentInstance.identificacion = identificacion
     modalDesasociar.result.then((result) => {
       if (result == true) {
+        const modalInformacion = this.modalService.open(ModalInformacionComponent, { size:'md', backdrop: 'static', animation: false, centered: true})
+        modalInformacion.componentInstance.informacion = {
+          error: false,
+          esExitoso: 'done',
+          titulo: '¡Exito!',
+          mensaje: 'Funcionario desasociado correctamente'
+        }
         this.obtenerDatos()
       }
     })

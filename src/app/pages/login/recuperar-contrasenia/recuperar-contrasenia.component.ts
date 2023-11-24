@@ -43,11 +43,12 @@ export class RecuperarContraseniaComponent {
     const idUsuario = this.formulario.get('numeroUsuario')?.value;
     this.contrasenaService.recuperarContrasenia(idUsuario).subscribe(
       response => {
-        if (response.code === 204) {
+        console.log(response);
+        if (response.code === 200) {
           this.hayRespuesta = true;
           if(response.message === this.mensajeError) {
             this.mensajeNoExiste = response.message;
-            this.noExiste = true; 
+            this.noExiste = true;
             this.ingresando = false;
           } else if (response.message !== this.mensajeError) {
             this.mensajeExiste = response.message;
@@ -64,7 +65,7 @@ export class RecuperarContraseniaComponent {
             if (correoEncontrado) {
               this.parrafo1 = this.parrafo1.replace(correoEncontrado[0], `<strong>${correoEncontrado[0]}</strong>`);
           }
-          }          
+          }
         }
       },
       error => {

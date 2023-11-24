@@ -23,16 +23,16 @@
         <div class="col-apellidos">{{registro.apellidos}}</div>
         <div class="titulo_movil">Politica de datos personales</div>
         <div class="col-politicas-datos">
-          <div class="estado" [ngClass]="registro.politicas_datos ? 'aceptado' : 'no_aceptado'">
-            <span *ngIf="registro.politicas_datos">Aceptado</span>
-            <span *ngIf="!registro.politicas_datos">No aceptado</span>
+          <div class="estado" [ngClass]="registro.aceptaPoliticaDatos ? 'aceptado' : 'no_aceptado'">
+            <span *ngIf="registro.aceptaPoliticaDatos">Aceptado</span>
+            <span *ngIf="!registro.aceptaPoliticaDatos">No aceptado</span>
           </div>
         </div>
         <div class="titulo_movil">Politica de uso</div>
         <div class="col-politicas-uso">
-          <div class="estado" [ngClass]="registro.politicas_uso ? 'aceptado' : 'no_aceptado'">
-            <span *ngIf="registro.politicas_uso">Aceptado</span>
-            <span *ngIf="!registro.politicas_uso">No aceptado</span>
+          <div class="estado" [ngClass]="registro.aceptaPoliticaUso ? 'aceptado' : 'no_aceptado'">
+            <span *ngIf="registro.aceptaPoliticaUso">Aceptado</span>
+            <span *ngIf="!registro.aceptaPoliticaUso">No aceptado</span>
           </div>
         </div>
       </div>

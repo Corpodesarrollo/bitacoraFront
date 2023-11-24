@@ -78,12 +78,12 @@
     </div>
     <!-- <button type="button" (click)="enviarFijos()">Mandar Datos</button> -->
     <app-cargando *ngIf="cargandoPerfiles"></app-cargando>
-    <app-sin-registros *ngIf="cargandoPerfiles && listaPerfiles.controls.length ==0 "></app-sin-registros>
+    <app-sin-registros *ngIf="!cargandoPerfiles && listaPerfiles.controls.length == 0 && listaPerfiles "></app-sin-registros>
     <ng-container *ngIf="!cargandoPerfiles && listaPerfiles.controls.length > 0">
       <div formArrayName="lista_perfiles"  *ngFor="let perfil of listaPerfiles.controls; let p = index">
         <div class="perfil" [formGroupName]="p">
           <div class="contenedor_checkbox">
-            <input type="checkbox" formControlName="seleccionado" [disabled]="estaInactivo">
+            <input type="checkbox" formControlName="seleccionado" >
           </div>
           <div class="contenedor_perfiles row w-100">
             <div class="campo col-12 mb-3" [class.invalid]="campoNoValidoEnFormArray('cod_sede',p)">
@@ -110,7 +110,7 @@
                   Jornada:
                 </label>
                 <ng-select [clearable]="false" [items]="perfil.get('jornadas')?.value"  formControlName="cod_jornada" bindValue="id"
-                (change)="limpiarPerfil(p)"
+                (change)="seleccionarJornada(p)"
                   bindLabel="nombre" class="select" placeholder="Seleccione la jornada" name="jornada"
                   [searchable]="false"
                   >

@@ -31,8 +31,8 @@
         <div class="my-3" style="color: var(--error)" *ngIf="errorCategoria">
           ¡Debe seleccionar una categoría!
         </div>
-        <div class="boton my-3" (click)="eventoClick()">
-          <label for="archivo" class="btn boton_primario" *ngIf="!cargandoArchivo">
+        <div class="boton my-3" (click)="eventoClick()" >
+          <label for="archivo" class="btn boton_primario" *ngIf="!cargandoArchivo"  tabindex="0">
             <span class="material-symbols-outlined">
               upload
             </span>
@@ -48,6 +48,7 @@
             style="display: none;" accept=".pdf" [disabled]="!categoriaSeleccionada">
         </div>
         <div class="info my-3">
+          <p>Soporte para archivos "pdf".</p>
           <p>Tamaño máximo de archivo 10 MB.</p>
         </div>
       </form>

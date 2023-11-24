@@ -158,7 +158,7 @@ export class PersonalService {
       }
     }
     this.setearCabeceras();
-    const url = `${environment.URL_API_PERSONAL}/personal/simple${queryString}`;
+    const url = `${environment.URL_API_PERSONAL}/personal/simple/${parametros.identificacion}?${queryString}`;
     return this.http.get(url, this.httpOptions)
   }
 

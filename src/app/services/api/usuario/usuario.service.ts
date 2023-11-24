@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { MsalService } from '@azure/msal-angular';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, Subject, of } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, of, from } from 'rxjs';
 import { TokenService } from '../token/token.service';
 import { AccesoPerfil } from 'src/app/interfaces/acceso_perfil.interface';
 import { Permiso } from 'src/app/interfaces/permiso.interface';
@@ -120,13 +120,16 @@ export class UsuarioService {
       "modulo": null,
       "submodulo": null,
       "tipoLog": 5,
-      "colegio": acceso.colegio.id,
-      "jornada": acceso.jornada.id,
-      "sede": acceso.sede.id,
-      "perfil": acceso.perfil.id,
+      "colegio": acceso.colegio?.id,
+      "jornada": acceso.jornada?.id,
+      "sede": acceso.sede?.id,
+      "perfil": acceso.perfil?.id,
       "descripcion": "{\"Inicio de sesi&oacute;n\":\"\"}"
     };
     this.http.post(`${environment.URL_BITACORAS}/apoyo/consultas/insertarBitacora`, data, this.httpOptions).subscribe((response:any) => {});
+
+
+
   }
 
   borrarSeleccionColegio() {
@@ -202,5 +205,8 @@ export class UsuarioService {
       return result;
     }
 
-
+    obtenerParametrosServMenu(codServicio:number,urlRecurso:string) {
+      this.setearCabeceras();
+      return this.http.get(`${environment.URL_API}/menu/getParamServicios/${codServicio}/${urlRecurso}`, this.httpOptions);
+    }
 }

@@ -153,8 +153,8 @@ export class BitacoraComponent implements OnInit {
     this.nPag = nPag;
     let datos:any = this.filtrosFormGroup.getRawValue();
     if(datos.fechaInicio && datos.fechaFin) {
-      datos.fechaInicio = new Date(datos.fechaInicio.year,datos.fechaInicio.month-1,datos.fechaInicio.day);
-      datos.fechaFin = new Date(datos.fechaFin.year,datos.fechaFin.month-1,datos.fechaFin.day);
+      datos.fechaInicio = new Date(datos.fechaInicio.year,datos.fechaInicio.month-1,datos.fechaInicio.day,-5,0,0);
+      datos.fechaFin = new Date(datos.fechaFin.year,datos.fechaFin.month-1,datos.fechaFin.day,18,59,59);
       datos.colegio = datos?.colegio?.codigo;
       let filtros:DatosFiltrados = datos;
       filtros.paginaActual = nPag;

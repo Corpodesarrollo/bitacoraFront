@@ -19,7 +19,8 @@ export class MensajeModal implements OnDestroy, OnInit {
     arrayFuncionario:false,
     ventanaEnviado:false,
     eliminarFuncionario:false,
-    cerrarAviso:false
+    cerrarAviso:false,
+    mostrarAceptar:false
   };
   eliminandoRegistro: boolean = false;
 

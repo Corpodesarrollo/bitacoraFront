@@ -9,9 +9,12 @@
             <input type="number" pattern="[0-9]*" formControlName="numeroUsuario">
           </div>
           <div class="input-wrapper col-12 col-md-6" [class.invalid]="campoNoValido('contrasenaActual')">
+            <input type="text" name="usuario" [value]="''" style="display:none" aria-hidden="true" autocomplete="username">
             <label for="contrasenaActual">Contraseña actual*</label>
-            <input [type]="verContraseniaActual ? 'text' : 'password'" placeholder="Escriba la contraseña actual"
-              formControlName="contrasenaActual" autocomplete="contrasenaActual"
+            <input [type]="verContraseniaActual ? 'text' : 'password'"
+              autocomplete="new-password"
+              placeholder="Escriba la contraseña actual"
+              formControlName="contrasenaActual"
               (ngModelChange)="validarContrasena($event)">
             <div (click)="mostrarContrasenia()" class="input-icon input_icon-password">
               <span class="material-symbols-outlined" *ngIf="!verContraseniaActual">
@@ -35,7 +38,7 @@
           <div class="input-wrapper col-12 col-md-6" [class.invalid]="campoNoValido('contrasenaNueva')">
             <label for="contrasenaNueva">Contraseña nueva*</label>
             <input [type]="verContraseniaNueva ? 'text' : 'password'"   placeholder="Escriba la contraseña nueva"
-              autocomplete="contrasenaNueva"
+              autocomplete="off"
               formControlName="contrasenaNueva"
               (input)="validarContrasena($event)"
               (copy)="noCopiarPegar($event)">
@@ -71,7 +74,7 @@
           <div class="input-wrapper col-12 col-md-6" [class.invalid]="campoNoValido('contrasenaConfirmada')">
             <label for="contrasenaConfirmada">Confirmar contraseña*</label>
             <input [type]="verConfirmarContrasenia ? 'text' : 'password'" placeholder="Confirme la contraseña nueva"
-            autocomplete="contrasenaConfirmada"
+            autocomplete="off"
 
               formControlName="contrasenaConfirmada" (input)="validarContrasenasIguales($event)"
               (paste)="noCopiarPegar($event)">

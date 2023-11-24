@@ -97,12 +97,30 @@ export class AsignacionAcademicaComponent {
   conHorasAsignadas: boolean = true;
   habilitarBotonoEliminar: boolean;
   desHabilitarBotonCopiado: boolean;
-  intensidadHoraria: any[] ;
+  intensidadHoraria: any[] = [];
+  bloquearBotonEliminando: boolean;
+  habilitarBotonoCopiar: boolean;
+  cargandoCopiado: boolean = false;
+  cargandoEliminar: boolean;
 
   toggleAll() {
+
     this.allChecked = !this.allChecked;
-    this.listadosFuncionarios.forEach(element => element.checked = this.allChecked);
-    console.log(this.listadosFuncionarios)
+
+    if (this.allChecked) {
+      this.listaHoras.controls.forEach((lista: any) => {
+        lista.patchValue({
+          checked: true
+        })
+      })
+    } else {
+      this.listaHoras.controls.forEach((lista: any) => {
+        lista.patchValue({
+          checked: false
+        })
+      })
+    }
+
   }
 
   constructor(
@@ -159,8 +177,29 @@ export class AsignacionAcademicaComponent {
     return this.formulario.get('infoHoras') as FormArray;
   }
 
-  agregarHoras(horas: any = null) {
-    this.listaHoras.push(this.formBuilder.control(horas, [Validators.max(99), this.enteroValidator]))
+  agregarHoras(estructuraHorasAsignadas: any = null) {
+    this.listaHoras.push(this.nuevasEstructuraHoras(estructuraHorasAsignadas))
+  }
+
+  nuevasEstructuraHoras(estructuraHorasAsignadas: any = null) {
+    let hora = "";
+    let cedula = "";
+    let funcionario = "";
+    let checked = false;
+    // console.log(estructuraHorasAsignadas)
+    if (estructuraHorasAsignadas) {
+      hora = estructuraHorasAsignadas.horas;
+      funcionario: estructuraHorasAsignadas.funcionario;
+      cedula = estructuraHorasAsignadas.cedula;
+      checked = false;
+    }
+    return this.formBuilder.group({
+      hora: [hora, [Validators.required]],
+      cedula: [cedula, [Validators.required]],
+      funcionario: [estructuraHorasAsignadas.funcionario, [Validators.required]],
+      checked: [false, []],
+      // !!Number(grupo.horasAsignadas)
+    });
   }
 
   /**
@@ -196,32 +235,10 @@ export class AsignacionAcademicaComponent {
     }
   }
 
-  inputCheck(e: any, infoFuncionario: any, i: any) {
+  async inputCheck(e: any, infoFuncionario: any, i: any) {
 
 
-    let parametros = {
-      institucion_id: this.datos_usuario.colegio?.id,
-      metodologia_id: this.parametrosFiltros.id_metodologia,
-      vigencia: this.parametrosFiltros.id_vigencia,
-      sede_id: this.parametrosFiltros.id_sede,
-      jornada_id: this.parametrosFiltros.id_jornada,
-      documento_docente: Number(this.listadosFuncionarios[i].identificacion)
-    }
-
-
-    if (e) {
-      // this.habilitarBotonoEliminar = true;
-      this.asignacionAcademicaService.obtenerintensidadHoraria(parametros).subscribe({
-        next: (respuesta: any) => {
-          if (respuesta.status == "200") {
-            this.intensidadHoraria = respuesta.data;
-          }
-        },
-        error: (error: any) => {
-          console.error("Hubo un error al recuperar la intensidad horaria: ", error);
-        }
-      });
-    }
+    // this.habilitarBotonoEliminar = true;
 
 
     const objetoFuncionario = {
@@ -238,11 +255,11 @@ export class AsignacionAcademicaComponent {
 
     if (e) {
       this.funcionariosSeleccionados.push(infoFuncionario);
-    } else if(!e){
+    } else if (!e) {
       this.funcionariosSeleccionados.splice(i, 1);
     }
 
-    console.log(this.funcionariosSeleccionados)
+    // console.log(this.funcionariosSeleccionados)
 
     this.checkedsArray[i] = ['checked:', e || false]
 
@@ -291,8 +308,9 @@ export class AsignacionAcademicaComponent {
 
 
       } else {
+        console.log(this.listaHoras.value[index])
         this.infoAsignacionFuncionario.filtros = this.parametrosFiltros
-        this.infoAsignacionFuncionario.horasAsignadas = horasAsignadas
+        this.infoAsignacionFuncionario.horasAsignadas = this.listaHoras.value[index].hora
         this.infoAsignacionFuncionario.funcionario = `${docente.primerApellido} ${docente.segundoApellido} ${docente.primerNombre} ${docente.segundoNombre}
         `;
         this.infoAsignacionFuncionario.numeroDocumento = docente.identificacion;
@@ -322,129 +340,224 @@ export class AsignacionAcademicaComponent {
   }
 
   copiarRegistro() {
-    // console.log(this.infoMensaje);
-    let parametros = {
+    this.cargandoCopiado = true;
+
+    const parametros = {
       institucion_id: this.datos_usuario.colegio.id,
       sede_id: this.parametrosFiltros.id_sede,
       jornada_id: this.parametrosFiltros.id_jornada,
       vigencia: this.parametrosFiltros.id_vigencia,
       metodologia_id: this.parametrosFiltros.id_metodologia,
-    }
-    if (this.funcionariosSeleccionados.length <= 1) {
-      this.infoMensaje.funcionarioSeleccionado = this.funcionarioSeleccionado;
-      this.infoMensaje.listadosFuncionarios = this.listadosFuncionarios;
-      this.infoMensaje.ventanaEnviado = true;
-      const modalRef = this.servicioModal.open(CopiarAsignacionAcademicaComponent, { size: 'lg', centered: true, backdrop: 'static' });
-      modalRef.componentInstance.informacionDocente = this.infoMensaje.funcionarioSeleccionado;
-      modalRef.componentInstance.parametrosUsuario = parametros;
-      modalRef.result.then((result) => {
-        this.obtenerDatos()
-      })
-    }else{
-      this.habiliarCopiar = false;
-    }
+    };
 
+    let sumatoria: number = 0;
+    
+    const funcionariosSeleccionados = this.listaHoras.controls.filter((funcionario: any) => funcionario.value.checked);
+
+    for (const funcionario of funcionariosSeleccionados) {
+
+      if (funcionariosSeleccionados.length > 1) {
+          this.mostrarError('Solo se puede seleccionar un funcionario a copiar');
+          return;
+        }
+
+        const parametrosIntensidad = {
+          institucion_id: this.datos_usuario.colegio?.id,
+          metodologia_id: this.parametrosFiltros.id_metodologia,
+          vigencia: this.parametrosFiltros.id_vigencia,
+          sede_id: this.parametrosFiltros.id_sede,
+          jornada_id: this.parametrosFiltros.id_jornada,
+          documento_docente: Number(funcionario.value.cedula)
+        };
+
+        this.asignacionAcademicaService.obtenerintensidadHoraria(parametrosIntensidad)
+          .subscribe(
+            async (respuesta: any) => {
+              if (respuesta.status === 200) {
+                await this.intensidadHoraria.push([...respuesta.data]);
+
+                for (const intencidad of this.intensidadHoraria) {
+                  for (const intencidadRecorrida of intencidad) {
+                    sumatoria += Number(intencidadRecorrida.horasAsignadas);
+                  }
+                }
+
+                if (sumatoria <= 0) {
+                  this.mostrarError('El funcionario seleccionado no tiene asignación académica cargada');
+                } else {
+                  this.intensidadHoraria = [];
+                  this.infoMensaje.funcionarioSeleccionado = this.funcionarioSeleccionado;
+                  this.infoMensaje.listadosFuncionarios = this.listadosFuncionarios;
+                  this.infoMensaje.ventanaEnviado = true;
+                  const modalRef = this.servicioModal.open(CopiarAsignacionAcademicaComponent, { size: 'lg', centered: true, backdrop: 'static' });
+                  modalRef.componentInstance.informacionDocente = this.infoMensaje.funcionarioSeleccionado;
+                  modalRef.componentInstance.parametrosUsuario = parametros;
+                  modalRef.result.then(() => this.obtenerDatos());
+                }
+              } else {
+                this.mostrarError('Hubo un error al recuperar la intensidad horaria');
+              }
+              this.cargandoCopiado = false;
+            },
+            (err) => {
+              console.error('Hubo un error al recuperar la intensidad horaria: ', err);
+              this.cargandoCopiado = false;
+              this.mostrarError('Hubo un error al recuperar la intensidad horaria');
+            }
+          );
+
+        break; // Termina la iteración después de encontrar un funcionario seleccionado
+      
+    }
   }
 
-  eliminarRegistro() {
+  mostrarError(mensaje: string): void {
+    this.cargandoCopiado = false;
+    this.infoMensaje.titulo = 'Error';
+    this.infoMensaje.mensaje = mensaje;
+    this.infoMensaje.mostrarAceptar = true;
+    this.infoMensaje.eliminarFuncionario = false;
+    this.infoMensaje.botonesAsignacionEliminar = false;
+    this.infoMensaje.ventanaEnviado = true;
+    const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
+    modalRef.componentInstance.infoMensaje = this.infoMensaje;
+  }
 
-    // console.log(this.conHorasAsignadas)
-    for (let intencidad of this.intensidadHoraria) {
-      console.log(intencidad.horasAsignadas)
-      if (Number(intencidad.horasAsignadas) <= 0) {
-        this.conHorasAsignadas = false;
-        this.habilitarBotonoEliminar = false;
-          this.infoMensaje.titulo = 'Uno o mas de los funcionarios seleccionados no tiene asignación académica cargada';
-          this.infoMensaje.mensaje = 'Por favor valide la información e intente de nuevo';
-          this.infoMensaje.mostrarAceptar = true;
-          this.infoMensaje.eliminarFuncionario = false;
-          this.infoMensaje.botonesAsignacionEliminar = false;
-          this.infoMensaje.ventanaEnviado = true;
-          const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
-          modalRef.componentInstance.infoMensaje = this.infoMensaje;
-          return
-      } else {
-        this.conHorasAsignadas = true;
-        this.habilitarBotonoEliminar = true;
-      }
-      // console.log(this.conHorasAsignadas)
+
+  eliminarRegistros() {
+    this.cargandoEliminar = true;
+
+    const funcionariosSeleccionados = this.listaHoras.controls.filter((funcionario: any) => funcionario.value.checked);
+
+    if (funcionariosSeleccionados.length === 0) {
+      this.mostrarErrorEliminar('Debe seleccionar al menos un registro a eliminar');
+      return;
     }
 
+    const cantidadFuncionariosSeleccionados = funcionariosSeleccionados.length;
 
-    if (!this.confirmarCheckboxSeleccionado) {
+    // Obtener intensidad horaria para cada funcionario seleccionado
+    Promise.all(funcionariosSeleccionados.map(funcionario => this.obtenerIntensidadHoraria(funcionario)))
+      .then(intensidades => {
+        this.cargandoEliminar = false;
 
-      this.infoMensaje.titulo = 'Error al eliminar registro';
-      this.infoMensaje.mensaje = 'Debe seleccionar al menos un registro a eliminar';
-      this.infoMensaje.botonesAsignacionErrorEliminar = true;
-      this.infoMensaje.mostrarAceptar = true;
-      const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
-      modalRef.componentInstance.infoMensaje = this.infoMensaje;
+        for (const intensidad of intensidades) {
+          const sumatoria = intensidad.reduce((total, actual) => total + Number(actual.horasAsignadas), 0);
 
-
-    } else {
-
-      if (this.siFuncionarioSeleccionado) {
-
-        this.infoMensaje.titulo = 'Confirmación de eliminación de registros';
-        this.infoMensaje.mensaje = '¿Está seguro de eliminar los registros seleccionados?';
-        this.infoMensaje.botonesAsignacionEliminar = true;
-        this.infoMensaje.botonesAsignacionErrorEliminar = false;
-        this.infoMensaje.arrayFuncionario = this.arrayFuncionarios;
-        this.infoMensaje.eliminarFuncionario = true;
-        const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
-        modalRef.componentInstance.infoMensaje = this.infoMensaje;
-        modalRef.result.then((resultados) => {
-          if (resultados == 'cerrado') {
-            setTimeout(() => {
-              this.listadosFuncionarios = [];
-              this.obtenerDocentes();
-            }, 1000)
+          if (sumatoria <= 0) {
+            this.mostrarErrorEliminar('Uno o más de los funcionarios seleccionados no tiene asignación académica cargada. Por favor, valide la información e inténtelo de nuevo.');
+            return;
           }
-        })
+        }
 
-      } else {
+        // Mostrar confirmación para eliminar registros
+        this.mostrarConfirmacionEliminar(cantidadFuncionariosSeleccionados);
+      })
+      .catch(error => {
+        console.error('Hubo un error al recuperar la intensidad horaria: ', error);
+        this.cargandoEliminar = false;
+      });
+  }
 
-        this.infoMensaje.titulo = 'Error al eliminar registro';
-        this.infoMensaje.mensaje = 'Uno o mas de los funcionarios seleccionados no tiene asignación académica cargada. Por favor valide la información e intente de nuevo.';
-        this.infoMensaje.botonesAsignacionEliminar = false;
-        this.infoMensaje.botonesAsignacionErrorEliminar = true;
-        this.infoMensaje.ventanaEnviado = true;
-        const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
-        modalRef.componentInstance.infoMensaje = this.infoMensaje;
+  obtenerIntensidadHoraria(funcionario: any): Promise<any[]> {
+    const parametrosIntensidad = {
+      institucion_id: this.datos_usuario.colegio?.id,
+      metodologia_id: this.parametrosFiltros.id_metodologia,
+      vigencia: this.parametrosFiltros.id_vigencia,
+      sede_id: this.parametrosFiltros.id_sede,
+      jornada_id: this.parametrosFiltros.id_jornada,
+      documento_docente: Number(funcionario.value.cedula)
+    };
+
+    return new Promise((resolve, reject) => {
+      this.asignacionAcademicaService.obtenerintensidadHoraria(parametrosIntensidad)
+        .subscribe(
+          (respuesta: any) => {
+            if (respuesta.status === 200) {
+              resolve(respuesta.data);
+            } else {
+              reject('Error en la respuesta del servicio');
+            }
+          },
+          error => {
+            reject(error);
+          }
+        );
+    });
+  }
+
+  mostrarErrorEliminar(mensaje: string): void {
+    this.cargandoEliminar = false;
+    this.infoMensaje.titulo = 'Error al eliminar registro';
+    this.infoMensaje.mensaje = mensaje;
+    this.infoMensaje.eliminarFuncionario = false;
+    this.infoMensaje.mostrarAceptar = true;
+    const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
+    modalRef.componentInstance.infoMensaje = this.infoMensaje;
+  }
+
+  mostrarConfirmacionEliminar(cantidadFuncionariosSeleccionados: number): void {
+    this.intensidadHoraria = [];
+
+    this.infoMensaje.titulo = 'Confirmación de eliminación de registros';
+    this.infoMensaje.mensaje = `¿Está seguro de eliminar los ${cantidadFuncionariosSeleccionados} registros seleccionados?`;
+    this.infoMensaje.botonesAsignacionEliminar = true;
+    this.infoMensaje.botonesAsignacionErrorEliminar = false;
+    this.infoMensaje.arrayFuncionario = this.arrayFuncionarios;
+    this.infoMensaje.eliminarFuncionario = true;
+    this.infoMensaje.mostrarAceptar = false;
+
+    const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
+    modalRef.componentInstance.infoMensaje = this.infoMensaje;
+
+    modalRef.result.then((resultados) => {
+      if (resultados === 'cerrado') {
         setTimeout(() => {
-          this.servicioModal.dismissAll();
-        }, 2000)
+          this.listadosFuncionarios = [];
+          this.obtenerDocentes();
+        }, 1000);
       }
-
-    }
-
+    });
   }
 
   exportarRegistro() {
-    // console.log(this.listaHoras)
-    if (!this.confirmarCheckboxSeleccionado) {
 
-      this.infoMensaje.titulo = 'Error al exportar registro';
-      this.infoMensaje.mensaje = 'Debe seleccionar al menos un registro a exportar';
-      this.infoMensaje.botonesAsignacionErrorEliminar = true;
-      this.infoMensaje.botonesAsignacionEliminar = false;
-      this.infoMensaje.ventanaEnviado = true;
-      const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
-      modalRef.componentInstance.infoMensaje = this.infoMensaje;
+    let cantidadFuncionariosSeleccionados = 0;
+    let arrayFuncionarios: any[] = [];
 
+    this.listaHoras.controls.forEach((funcionario: any) => {
 
-    } else {
-      this.parametrosFiltros.institucion = this.datos_usuario.colegio.id;
-      this.infoMensaje.parametros = this.parametrosFiltros;
-      this.infoMensaje.funcionarios = this.arrayFuncionarios;
-      this.infoMensaje.idFuncionario = 'id';
-      this.infoMensaje.exportePorinstitucion = false;
-      this.infoMensaje.ventanaEnviado = true;
-      const modalRef = this.servicioModal.open(MensajeDescargarReporteComponent, { size: 'md', centered: true, backdrop: 'static' });
-      modalRef.componentInstance.infoMensaje = this.infoMensaje;
+      if (funcionario.value.checked) {
 
+        arrayFuncionarios.push(funcionario.value.cedula);
+        cantidadFuncionariosSeleccionados++;
 
-    }
+        if (cantidadFuncionariosSeleccionados <= 0) {
+
+          this.infoMensaje.titulo = 'Error al exportar registro';
+          this.infoMensaje.mensaje = 'Debe seleccionar al menos un registro a exportar';
+          this.infoMensaje.botonesAsignacionErrorEliminar = true;
+          this.infoMensaje.botonesAsignacionEliminar = false;
+          this.infoMensaje.mostrarAceptar = true;
+          const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
+          modalRef.componentInstance.infoMensaje = this.infoMensaje;
+
+        } else {
+
+          this.parametrosFiltros.institucion = this.datos_usuario.colegio.id;
+          this.infoMensaje.parametros = this.parametrosFiltros;
+          this.infoMensaje.funcionarios = arrayFuncionarios;
+          this.infoMensaje.idFuncionario = 'id';
+          this.infoMensaje.exportePorinstitucion = false;
+          this.infoMensaje.ventanaEnviado = true;
+          const modalRef = this.servicioModal.open(MensajeDescargarReporteComponent, { size: 'md', centered: true, backdrop: 'static' });
+          modalRef.componentInstance.infoMensaje = this.infoMensaje;
+
+        }
+
+      }
+
+    })
   }
 
   exportarRegistroInstitucion() {
@@ -555,10 +668,16 @@ export class AsignacionAcademicaComponent {
           index = index + 1
           funcionario.indice = index;
           // console.log(index,funcionario)
+          let funcionarioActual = `${funcionario.primerApellido} ${funcionario.segundoApellido} ${funcionario.primerNombre} ${funcionario.segundoNombre}`
           nuevaListaFuncionarios.push(funcionario)
           let EstructuraHorasAsignadas = {
-            "horas": funcionario.horasAsignadas
+            "horas": funcionario.horasAsignadas,
+            "cedula": funcionario.identificacion,
+            "funcionario": funcionarioActual
           }
+          //        hora = estructuraHorasAsignadas.horas;
+          // cedula = estructuraHorasAsignadas.cedula;
+          // funcionario: estructuraHorasAsignadas.funcionario; 
           this.agregarHoras(EstructuraHorasAsignadas)
         })
 
@@ -612,14 +731,16 @@ export class AsignacionAcademicaComponent {
     }
 
     this.mensajeEnteros = false;
-
+    // console.log( this.listaHoras.controls[i])
     this.listaHoras.controls[i].patchValue({
-      horas: e.target.value
+      hora: e.target.value
     })
+
+    // this.listaHoras.controls[i].disable()
 
     this.actualizandoHoras = true;
     // Deshabilita el FormArray 'infoHoras'
-    (this.formulario.get('infoHoras') as FormArray).disable();
+    // (this.formulario.get('infoHoras') as FormArray).disable();
 
     this.indiceActualActualizando = i;
     // console.log(funcionario)
@@ -633,18 +754,19 @@ export class AsignacionAcademicaComponent {
       this.infoMensaje.ventanaEnviado = true;
       this.infoMensaje.eliminarFuncionario = false;
       this.infoMensaje.botonesAsignacionEliminar = false;
+      this.infoMensaje.mostrarAceptar = true;
 
       this.listaHoras.controls[i].patchValue({
-        horas: 0
+        hora: 0
       })
 
       // this.infoMensaje.ventanaEnviado = true;
       const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
       modalRef.componentInstance.infoMensaje = this.infoMensaje;
 
-      (this.formulario.get('infoHoras') as FormArray).at(i).reset();
-      (this.formulario.get('infoHoras') as FormArray).at(i).disable();
-      (this.formulario.get('infoHoras') as FormArray).at(i).setValue(0);
+      // (this.formulario.get('infoHoras') as FormArray).at(i).reset();
+      // (this.formulario.get('infoHoras') as FormArray).at(i).disable();
+      // (this.formulario.get('infoHoras') as FormArray).at(i).setValue(0);
       // this.formulario.get('infoHoras').reset();
 
     } else {

@@ -183,7 +183,7 @@ export class EditarDatosComponent {
     perfil.get('cod_jornada')?.setValue(null);
     perfil.get('cod_jornada')?.enable();
     perfil.get('cod_jornada')?.setErrors({noSede: false});
-    this.limpiarPerfil(perfilIndex);
+    this.listaPerfiles.at(perfilIndex).get('cod_perfil')?.setValue(null)
 
     const jornadasArray = perfil.get('jornadas') as FormArray;
     while (jornadasArray.length > 0) {
@@ -353,7 +353,7 @@ export class EditarDatosComponent {
           error: true,
           esExitoso: 'error',
           titulo: '¡Error!',
-          mensaje: 'No se puede agregar el perfil, debido a que este perfil ya se encuentra asociadio en esta sede y/o jornada'
+          mensaje: 'No se puede agregar el perfil debido a que este perfil ya se encuentra asociado en esta sede y/o jornada'
         }
         this.listaPerfiles.at(perfilIndex).get('cod_perfil')?.setValue(null)
       }
@@ -364,8 +364,50 @@ export class EditarDatosComponent {
    * Metodo que limpia el perfil al momento
    * de seleccionar la jornad para que no se repita
    */
-  limpiarPerfil(perfilIndex: any) {
+  seleccionarJornada(perfilIndex: any) {
     this.listaPerfiles.at(perfilIndex).get('cod_perfil')?.setValue(null)
+    let perfil = this.listaPerfiles.at(perfilIndex)?.value
+    console.log(perfil);
+    if(this.sedeYJornadaRepetida(perfil)){
+      const modalError = this.modalService.open(ModalInformacionComponent, { size: 'lg', animation: false, backdrop: 'static', centered: true })
+      modalError.componentInstance.informacion = {
+        error: true,
+        esExitoso: 'error',
+        titulo: '¡Error!',
+        mensaje: 'No se puede seleccionar una jornada debido a que ya cuenta con un perfil asociado.'
+      }
+      this.listaPerfiles.at(perfilIndex).get('cod_jornada')?.setValue(null)
+    }
+  }
+
+  /**
+   * Metodo para validar si ya tieen selecicionada la sede y jornada.
+   */
+   /**
+ * Metodo que valida si ya existe un perfil
+ * @param jornada
+ * @returns
+ */
+   sedeYJornadaRepetida(perfil: any) {
+    if (this.contarJornadasYSedes(perfil) > 1) {
+      return true
+    }
+    else {
+      return false
+    }
+  }
+
+  contarJornadasYSedes(perfil:any ) {
+    let conteo = 0;
+    this.listaPerfiles.controls.forEach((item: any) => {
+      if (
+        item.controls.cod_jornada.value == perfil.cod_jornada &&
+        item.controls.cod_sede.value == perfil.cod_sede
+      ) {
+        conteo++
+      }
+    });
+    return conteo;
   }
 
   /**
@@ -613,8 +655,8 @@ export class EditarDatosComponent {
         cambios_sin_guardar = true;
       }
     });
-
-    if(estan_todos === this.listaPerfiles.length){
+    //console.log("Perfil: ", );
+    if(estan_todos === this.listaPerfiles.length && this.formDatosUsuario.get('cargo').value!='RECTOR(A)'){
       const modalError = this.modalService.open(ModalInformacionComponent, { size: 'md', animation: false, backdrop: 'static', centered: true })
       modalError.componentInstance.informacion = {
         esExitoso: 'feedback',

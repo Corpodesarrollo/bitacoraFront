@@ -38,8 +38,10 @@ export class AgregarComponent {
     defaultParagraphSeparator: 'p',
     defaultFontName: 'Arial',
     toolbarHiddenButtons: [
-      ['bold']
-      ],
+      ['backgroundColor'],
+      ['insertImage', 'insertVideo'],
+      ['insertLink', 'unlink']
+    ],
     customClasses: []
   };
 
@@ -73,7 +75,7 @@ export class AgregarComponent {
           modalInformacion.componentInstance.informacion = {
             error: false,
             esExitoso: 'done',
-            titulo: 'Exito',
+            titulo: 'Éxito',
             mensaje: respuesta.message
           }
           this.activeModal.close(true)

@@ -67,10 +67,6 @@ export class AsignacionesFuncionarioComponent implements OnInit {
   }
 
   listaGrupos(asignaturaIndex: number, gradoIndex: number) {
-    // const gruposFormArray: any = this.listaGrados(asignaturaIndex).at(gradoIndex).get('grupos');
-    // gruposFormArray.controls.forEach(element => {
-    //  element.get('checked').disable()
-    // });
     return this.listaGrados(asignaturaIndex).at(gradoIndex).get('grupos') as FormArray;
   }
 
@@ -187,7 +183,7 @@ export class AsignacionesFuncionarioComponent implements OnInit {
     let gradoId = "";
     let graduNombre = "";
     let horasAsignadas = 0;
-    console.log(grupo.horasAsignadas)
+    // console.log(grupo.horasAsignadas)
     if (grupo) {
       gradoId = grupo.codGrupo;
       graduNombre = grupo.nombreGrupo;
@@ -280,7 +276,8 @@ export class AsignacionesFuncionarioComponent implements OnInit {
       horasAsignadas += Number(asignatura.get('cantidad').value);
     });
 
-    let diferenciaEntreHoras = this.infoAsignacionFuncionario.horasAsignadas.horas - horasAsignadas;
+    // console.log(this.infoAsignacionFuncionario.horasAsignadas.horas,horasAsignadas)
+    let diferenciaEntreHoras = this.infoAsignacionFuncionario.horasAsignadas - horasAsignadas;
     this.formAsignacion.get('horas_asignadas').setValue(diferenciaEntreHoras);
   }
 
@@ -296,11 +293,11 @@ export class AsignacionesFuncionarioComponent implements OnInit {
       });
       grado.get('cantidad').setValue(horasGrado);
       // grado.get('checked').disable();
-      if(horasGrado > 0){
+      if (horasGrado > 0) {
         grado.get('checked').setValue(true);
       }
     });
-    
+
   }
 
   abrirAsignatura(asignaturaIndex) {
@@ -322,6 +319,8 @@ export class AsignacionesFuncionarioComponent implements OnInit {
   }
 
   calcularTotales(asignaturaIndex: number, gradoIndex: number, grupoIndex: number) {
+    let cantidad = this.listaGrupos(asignaturaIndex, gradoIndex).at(grupoIndex).get('cantidad').value;
+    this.listaGrupos(asignaturaIndex, gradoIndex).at(grupoIndex).get('checked').setValue(cantidad>0?true:false);
     this.recalcularGrado(asignaturaIndex, gradoIndex);
     this.recalcularAsignatura(asignaturaIndex);
     this.calcularHorasAsignadas();
@@ -334,14 +333,17 @@ export class AsignacionesFuncionarioComponent implements OnInit {
       cantidadGrado += Number(controlGrupo.get('cantidad').value);
     })
     this.listaGrados(asignaturaIndex).at(gradoIndex).get('cantidad').setValue(cantidadGrado);
+    this.listaGrados(asignaturaIndex).at(gradoIndex).get('checked').setValue(cantidadGrado>0?true:false);
   }
 
   recalcularAsignatura(asignaturaIndex: number) {
+    console.log(asignaturaIndex)
     let cantidadAsignatura = 0;
     this.listaGrados(asignaturaIndex).controls.forEach((cantidadGrado: any) => {
       cantidadAsignatura += Number(cantidadGrado.get('cantidad').value);
     })
     this.listaAsignaturas.at(asignaturaIndex).get('cantidad').setValue(cantidadAsignatura);
+    this.listaAsignaturas.at(asignaturaIndex).get('checked').setValue(cantidadAsignatura>0?true:false);
   }
 
   cerrarModal() {
@@ -390,10 +392,10 @@ export class AsignacionesFuncionarioComponent implements OnInit {
     let horasAsignadas = this.formAsignacion.get('horas_asignadas').value;
 
     // console.log(Number(horasAsignadas) !== Math.floor(Number(horasAsignadas)))
+    // console.log(horasAsignadas)
     if (Number(horasAsignadas) !== Math.floor(Number(horasAsignadas))) {
       this.numeroConDecimales = true;
       this.desHabilitarGuardar = true;
-      console.log(this.numeroConDecimales)
       return
     } else {
       this.desHabilitarGuardar = false;
@@ -419,19 +421,10 @@ export class AsignacionesFuncionarioComponent implements OnInit {
 
   }
 
-  inputTodosAsignaturas(e:any,asignaturaIndex?: any, gradoIndex?: any, grupoIndex?:any) {
-    console.log(e);
-
-    if(e == null){
-      const gruposFormArray: any = this.listaGrados(asignaturaIndex).at(gradoIndex).get('grupos');
-      gruposFormArray.controls[grupoIndex].patchValue({
-            horasAsignadas: 0
-      })
-    }
- 
+  inputTodosAsignaturas(e: any, asignaturaIndex?: any, gradoIndex?: any, grupoIndex?: any) {
 
     // console.log(this.formAsignacion)
-    if (e > 0 && this.formAsignacion.get('horas_asignadas').value > 0) {
+    if (Number(e) > 0 && this.formAsignacion.get('horas_asignadas').value > 0) {
       // Si se marca la casilla, selecciona todas las casillas
       this.seleccionarTodasLasAsignaturas(asignaturaIndex, gradoIndex);
     } else {
@@ -450,7 +443,7 @@ export class AsignacionesFuncionarioComponent implements OnInit {
     const gruposFormArray: any = this.listaGrados(asignaturaIndex).at(gradoIndex).get('grupos');
     gruposFormArray.controls.forEach(element => {
       // console.log(element)
-      if(element.value.cantidad > 0){
+      if (element.value.cantidad > 0) {
         element.patchValue({
           checked: true
         })
@@ -459,40 +452,48 @@ export class AsignacionesFuncionarioComponent implements OnInit {
 
     const gradosFormArray: any = this.listaAsignaturas.at(asignaturaIndex).get('grados');
     gradosFormArray.controls.forEach(element => {
-      // console.log(element)
-      // element.get('checked').disable();
-      if(element.value.cantidad > 0){
+
+      if (element.value.cantidad > 0) {
         element.patchValue({
           checked: true
         })
       }
-    });
 
+    });
 
   }
 
   deseleccionarTodasLasAsignaturas(asignaturaIndex, gradoIndex) {
 
-    this.listaAsignaturas.controls[asignaturaIndex].patchValue({
-      checked: false
-    });
-    // this.listaAsignaturas.at(asignaturaIndex).get('grados');
-    const gradosFormArray: any = this.listaAsignaturas.at(asignaturaIndex).get('grados');
-    gradosFormArray.controls.forEach(element => {
-      // console.log(element)
-      element.patchValue({
-        checked: false
-      })
+
+    let arrayCantidad: any[] = [];
+    // console.log(asignaturaIndex, gradoIndex)
+    const gruposFormArray = this.listaGrados(asignaturaIndex).at(gradoIndex).get('grupos') as FormArray;
+
+    gruposFormArray.controls.forEach(grupoControl => {
+      const cantidad = grupoControl.value.cantidad;
+
+      arrayCantidad.push(grupoControl.value.cantidad);
+      console.log(arrayCantidad)
+
+      const todosCerosONulos = arrayCantidad.every(valor => valor === 0 || valor === null);
+      
+      console.log(todosCerosONulos)
+
+      
+      if (todosCerosONulos) {
+        this.listaAsignaturas.controls[asignaturaIndex].get('checked').setValue(false);
+
+        const gradosFormArray = this.listaAsignaturas.at(asignaturaIndex).get('grados') as FormArray;
+        gradosFormArray.controls.forEach(gradoControl => {
+          gradoControl.get('checked').setValue(false);
+        });
+
+      }
+
+      grupoControl.get('checked').setValue(false);
     });
 
-    // console.log(asignaturaIndex, gradoIndex)
-    const gruposFormArray: any = this.listaGrados(asignaturaIndex).at(gradoIndex).get('grupos');
-    gruposFormArray.controls.forEach(element => {
-      // console.log(element)
-      element.patchValue({
-        checked: false
-      })
-    });
   }
 
 
@@ -512,17 +513,17 @@ export class AsignacionesFuncionarioComponent implements OnInit {
       // return
     } else {
       this.desHabilitarGuardar = false;
-      let asignaciones:any = this.obtenerAsignaciones();
-      const nuevoAsignaciones = asignaciones.map(item => {
-        return {
-            ...item,
-            horasAsignadas: item.horasAsignadas !== null ? parseInt(item.horasAsignadas) : 0
-        };
-    });
-    
-      console.log("Asingaciones a guardar: ", nuevoAsignaciones)
-      if (nuevoAsignaciones) {
-        this.asignacionAcademicaService.guardarAsignacionAcademica(nuevoAsignaciones).subscribe((resp: any) => {
+      let asignaciones: any = this.obtenerAsignaciones();
+
+      const asignacionesModificado = asignaciones.map(asignacion => ({
+        ...asignacion,
+        horasAsignadas: asignacion.horasAsignadas === null ? 0 : asignacion.horasAsignadas
+      }));
+      // console.log(asignacionesModificado)
+      // console.log(asignaciones)
+      if (asignacionesModificado) {
+        this.asignacionAcademicaService.guardarAsignacionAcademica(asignacionesModificado).subscribe((resp: any) => {
+          // console.log("Asingaciones a guardar: ", asignacionesModificado)
           console.log(resp)
           if (resp.status == 200) {
             this.guardandoMensaje = false;

@@ -428,26 +428,13 @@
         }
     }
 
-    .contenedor_cabecera {
-        min-height: 100px !important;
-        background-color: var(--header_alterno);
+    .institucional {
+        display: block;
     }
 
-    .institucional {
-        display: flex;
-        padding: 0;
-        margin: auto;
-        justify-content: center;
-
-        .logo_medium {
-            display: none;
-        }
-
-        .logo_small {
-            display: flex;
-            height: 6.25rem;
-            margin: auto;
-        }
+    .contenedor_cabecera {
+        min-height: 84px !important;
+        background-color: var(--header_alterno);
     }
 
     .contenedor_inicio, .contenedor_salir {
@@ -482,8 +469,25 @@
     }
 
     .institucional {
+        display: flex;
+        padding: 0;
+        margin: auto;
+        justify-content: center;
         min-width: 50%;
         max-width: 51%;
+        .logo_medium {
+            display: none;
+        }
+
+        .logo_small {
+            display: flex;
+            height: 6.25rem;
+            margin: auto;
+        }
+    }
+
+    .contenedor_cabecera {
+        min-height: 100px !important;
     }
 
     .usuario_info {

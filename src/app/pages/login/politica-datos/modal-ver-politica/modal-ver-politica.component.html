@@ -1,5 +1,5 @@
 <app-cabecera></app-cabecera>
-<div class="container" id="PoliticasSistema">
+<div id="PoliticasSistema">
   <div class="cabecera">
     <div class="titulos">
       <div *ngIf="politica">
@@ -8,7 +8,7 @@
     </div>
   </div>
   <app-cargando *ngIf="cargandoVersion"></app-cargando>
-  <div *ngIf="!cargandoVersion && politica">
+  <div *ngIf="!cargandoVersion && politica" class="ver_politica">
     <div class="titulo">Fecha de entrada en vigencia: {{politica.fecha}}</div>
     <div class="parrafo"  [innerHTML]="contenido">
     </div>

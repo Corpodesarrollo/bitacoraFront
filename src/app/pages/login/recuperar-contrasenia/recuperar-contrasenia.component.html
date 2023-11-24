@@ -20,12 +20,12 @@
                     formControlName="numeroUsuario" (blur)="validarTocado()">
             </div>
             <div class="contenedor_errores">
-                <span class="campo_requerido" *ngIf="formulario.controls['numeroUsuario'].hasError('maxlength')">Debe tener la
-                    longitud menor a 15 dígitos.</span>
-                <span class="campo_requerido" *ngIf="formulario.controls['numeroUsuario'].hasError('pattern')">Debe digitar
-                    únicamente números.</span>
+              <span class="campo_requerido" *ngIf="formulario.controls['numeroUsuario'].hasError('maxlength')">Debe tener la
+                longitud menor a 15 dígitos.</span>
+              <span class="campo_requerido" *ngIf="formulario.controls['numeroUsuario'].hasError('pattern')">Debe digitar
+              únicamente números.</span>
+              <span class="requerido" *ngIf="formulario.controls['numeroUsuario'].hasError('required')">Requerido</span>
             </div>
-            <p class="requerido">Requerido</p>
         </form>
         <form [formGroup]="formulario" *ngIf="hayRespuesta && noExiste"
             [ngClass]="{'error': !formulario.controls['numeroUsuario'].touched  || !formulario.invalid || !campoNumericoTocado}">

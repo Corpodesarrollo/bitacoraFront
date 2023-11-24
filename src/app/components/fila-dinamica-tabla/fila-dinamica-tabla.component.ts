@@ -23,6 +23,7 @@ export class FilaDinamicaTablaComponent implements OnInit {
 
   getDetalle(): void {
     let columnasDetalleNuevo: ColumnaTabla[] = [];
+    let filaDetalleNuevo: any;
     const fila = this.fila;
     const keys = Object.keys(fila);
     keys.forEach((key) => {
@@ -44,6 +45,7 @@ export class FilaDinamicaTablaComponent implements OnInit {
       } catch (e) {}
     });
     this.columnasDetalle = columnasDetalleNuevo;
+    this.filaDetalle = filaDetalleNuevo;
   }
   exportar(tipo: string, fila: any): void {
     let datos: any = { tipo: tipo, fila: fila };

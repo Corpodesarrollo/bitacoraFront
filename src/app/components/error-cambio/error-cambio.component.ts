@@ -7,9 +7,10 @@ import { NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./error-cambio.component.scss']
 })
 export class ErrorCambioComponentC {
+
+  mensaje:string
   ngModal = inject(NgbActiveModal);
   esMicrosoft: boolean = false;
-  usuarioNoEncontrado: boolean = false;
   cambioExitoso: boolean = false;
 
   constructor() { };

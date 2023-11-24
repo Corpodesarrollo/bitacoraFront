@@ -10,29 +10,29 @@ import { PoliticasService } from 'src/app/services/api/politicas/politicas.servi
 })
 export class ListarComponent {
 
-  sinRegistros:boolean = false;
-  cargandoListado:boolean = false;
-  reenviando:boolean = false;
-  reenviandoUso:boolean = false;
+  sinRegistros: boolean = false;
+  cargandoListado: boolean = false;
+  reenviando: boolean = false;
+  reenviandoUso: boolean = false;
 
 
-  listadoPersonas:any = []
+  listadoPersonas: any = []
 
   constructor(
     private serviciosPoliticas: PoliticasService,
     private servicioModal: NgbModal,
-  ){
+  ) {
     this.cargarListas()
   }
 
-  cargarListas(){
+  cargarListas() {
     this.cargandoListado = true;
     this.listadoPersonas = []
     this.serviciosPoliticas.obtenerListaAceptacion().subscribe({
       next: (respuesta: any) => {
         if (respuesta.code === 200) {
           this.listadoPersonas = respuesta.data
-          if(this.listadoPersonas.length <= 0){
+          if (this.listadoPersonas.length <= 0) {
             this.sinRegistros = true;
           }
           this.cargandoListado = false;
@@ -53,7 +53,7 @@ export class ListarComponent {
     })
   }
 
-  reenviarPoliticasDatos(){
+  reenviarPoliticasDatos() {
     if (this.reenviando) {
       return;
     }
@@ -65,10 +65,11 @@ export class ListarComponent {
           modalInformacion.componentInstance.informacion = {
             error: false,
             esExitoso: 'done',
-            titulo: 'Exito',
-            mensaje: 'Politicas reenviadas'
+            titulo: 'Éxito',
+            mensaje: 'Política de datos reenviada'
           }
           this.reenviando = false
+          this.cargarListas();
         }
         else {
           const modalInformacion = this.servicioModal.open(ModalInformacionComponent, { size: 'md', centered: true, animation: false, backdrop: 'static' })
@@ -76,7 +77,7 @@ export class ListarComponent {
             error: true,
             esExitoso: 'error',
             titulo: 'Error',
-            mensaje: 'No se pudo enviar politicas'
+            mensaje: 'No se pudo reenviar política de datos'
           }
           this.reenviando = false
         }
@@ -88,7 +89,7 @@ export class ListarComponent {
     })
   }
 
-  reenviarPoliticasUso(){
+  reenviarPoliticasUso() {
     if (this.reenviandoUso) {
       return;
     }
@@ -100,10 +101,11 @@ export class ListarComponent {
           modalInformacion.componentInstance.informacion = {
             error: false,
             esExitoso: 'done',
-            titulo: 'Exito',
-            mensaje: 'Politicas reenviadas'
+            titulo: 'Éxito',
+            mensaje: 'Política de uso reenviada'
           }
-    this.reenviandoUso = false;
+          this.reenviandoUso = false;
+          this.cargarListas();
 
         }
         else {
@@ -112,15 +114,15 @@ export class ListarComponent {
             error: true,
             esExitoso: 'error',
             titulo: 'Error',
-            mensaje: 'No se pudo enviar politicas'
+            mensaje: 'No se pudo reenviar política de uso'
           }
-    this.reenviandoUso = false;
+          this.reenviandoUso = false;
 
         }
       },
       error: (error) => {
         console.log(error);
-    this.reenviandoUso = false;
+        this.reenviandoUso = false;
 
       }
     })

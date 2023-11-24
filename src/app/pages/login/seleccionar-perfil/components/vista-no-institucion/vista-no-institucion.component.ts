@@ -94,22 +94,31 @@ export class VistaNoInstitucionComponent implements OnInit {
   }
 
   seleccionPerfil(perfil:Perfil){
+    
     this.perfilSeleccionado = perfil;
     this.seleccionarLocalidad = false;
     this.dependencias=[];
     this.localidades=[];
-    for(let a=0; a<this.infoUsuario.length; a++){
-      if(this.infoUsuario[a].perfil.nombre==perfil?.nombre){
-        if(this.infoUsuario[a].dependencia)
-          this.agregarDependencia(this.infoUsuario[a].dependencia);
+    if(perfil.idPerfilNivel==niveles.nivel_central_poa){
+      for(let a=0; a<this.infoUsuario.length; a++){
+        if(this.infoUsuario[a].perfil.nombre==perfil?.nombre){
+          if(this.infoUsuario[a].dependencia)
+            this.agregarDependencia(this.infoUsuario[a].dependencia);
+        }
       }
+    }else{
+      this.seleccionarDependencia=false;
     }
 
-    for(let a=0; a<this.infoUsuario.length; a++){
-      if(this.infoUsuario[a].perfil.nombre==perfil.nombre){
-        if(this.infoUsuario[a].localidad)
-          this.agregarLocalidad(this.infoUsuario[a].localidad);
+    if(perfil.idPerfilNivel==niveles.localidad){
+      for(let a=0; a<this.infoUsuario.length; a++){
+        if(this.infoUsuario[a].perfil.nombre==perfil.nombre){
+          if(this.infoUsuario[a].localidad)
+            this.agregarLocalidad(this.infoUsuario[a].localidad);
+        }
       }
+    }else{
+      this.seleccionarLocalidad=false;
     }
   }
 

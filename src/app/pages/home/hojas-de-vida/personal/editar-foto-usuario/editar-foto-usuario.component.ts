@@ -19,7 +19,7 @@ export class EditarFotoUsuarioComponent {
   registroUsuario:any
   esFotografia:boolean | any
   urlFotoUsuario!:string
-  mensajeModal:string = 'No se pudo actulizar la fotografía correctamente.'
+  mensajeModal:string = 'No se pudo actualizar la fotografía correctamente.'
 
   constructor(
     private modalActivo: NgbActiveModal,

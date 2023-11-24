@@ -35,12 +35,6 @@ export class VerComponent {
     this.mensaje = "Un momento, estamos cargando la información";
     const accesoSel  = this.serviciosUsuario.obtenerAccesoSeleccionado();
     let url = ruta;
-    if(niveles.institucion==accesoSel.perfil.idPerfilNivel){
-      url += `?inst=${accesoSel.colegio.id}&sede=${accesoSel.sede.id}&jornada=${accesoSel.jornada.id}&inst_=${encodeURIComponent(accesoSel.colegio.nombre)}&sede_=${encodeURIComponent(accesoSel.sede.nombre)}&jornada_=${encodeURIComponent(accesoSel.jornada.nombre)}`
-    }
-    if(niveles.institucion_sede_jornada==accesoSel.perfil.idPerfilNivel){
-      url += `?perfilPedido=${accesoSel.perfil.codJerarquia}|${accesoSel.perfil.id}`
-    }
     
     //console.log("URL: ", url);
     this.urlIframe = this.sanitizer.bypassSecurityTrustResourceUrl(url)
@@ -48,4 +42,5 @@ export class VerComponent {
       this.cargandoIframe = false
     }, 1500)
   }
+
 }

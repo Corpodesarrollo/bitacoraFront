@@ -73,8 +73,6 @@ export class PoliticaDatosComponent {
 
     let aceptoPoliticas = politicas_recibidas.every((politica:any) => politica.aceptada == true)
 
-
-
     if(!tienenReenviar && this.cambioPolitica){
       politicas_recibidas.forEach( (politica:any) => {
         if(politica && politica.reenviar == true && politica.tipoPolitica == politicas.POLITICA_DATOS){
@@ -82,7 +80,7 @@ export class PoliticaDatosComponent {
           this.formProteccion.controls['politica_uso'].clearValidators();
         }
         else if(politica &&  politica.reenviar == true && politica.tipoPolitica == politicas.POLITICA_USO){
-          this.mostrarSoloPoliticaDatos = true;
+          this.mostrarSoloPoliticaUso = true;
           this.formProteccion.controls['politica_datos'].clearValidators()
         }
       })
@@ -156,18 +154,23 @@ export class PoliticaDatosComponent {
     else {
       this.guardandoPoliticas = true;
       const observables: any[] = [];
-      let politicas_uso = {
-        usuario: this.idUsuario,
-        idPolitica:this.idPoliticaUso,
-        aceptada: true
+      if(this.formProteccion.get('politica_uso').value){
+        let politicas_uso = {
+          usuario: this.idUsuario,
+          idPolitica:this.idPoliticaUso,
+          aceptada: this.formProteccion.get('politica_uso').value
+        }
+        observables.push(this.politicasServices.aceptarPoliticas(politicas_uso));
       }
-      let politicas_datos = {
-        usuario: this.idUsuario,
-        idPolitica:this.idPoliticaDatos,
-        aceptada: true
+      if(this.formProteccion.get('politica_datos').value){
+        let politicas_datos = {
+          usuario: this.idUsuario,
+          idPolitica:this.idPoliticaDatos,
+          aceptada: this.formProteccion.get('politica_datos').value
+        }
+        observables.push(this.politicasServices.aceptarPoliticas(politicas_datos));
       }
-      observables.push(this.politicasServices.aceptarPoliticas(politicas_uso));
-      observables.push(this.politicasServices.aceptarPoliticas(politicas_datos));
+      console.log(observables);
       if (observables.length > 0) {
         forkJoin(observables).subscribe({
         next: (respuestas: any[]) => {

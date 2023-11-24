@@ -91,6 +91,19 @@
     }
 }
 
+.manual:focus-visible{
+  outline: none;
+  border: 2px solid #F4B53F;
+  outline: none;
+  border-radius: 0.625rem;
+}
+.icono:focus-visible{
+  outline: none;
+  border: 2px solid #F4B53F !important;
+  outline: none;
+  border-radius: 50%;
+}
+
 #manual {
     margin-left: 0;
     margin-right: auto;

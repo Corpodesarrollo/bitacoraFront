@@ -1,10 +1,7 @@
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NgSelectComponent } from '@ng-select/ng-select';
 import { MsalService } from '@azure/msal-angular';
 import { UsuarioService } from 'src/app/services/api/usuario/usuario.service';
-import { ErrorInicioComponent } from '../error-inicio/error-inicio.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmarCerrarSesionComponent } from 'src/app/components/confirmar-cerrar-sesion/confirmar-cerrar-sesion.component';
 import { environment } from 'src/environments/environment';
@@ -12,7 +9,6 @@ import { AccesoPerfil } from 'src/app/interfaces/acceso_perfil.interface';
 import { InfoUsuario } from 'src/app/interfaces/infoUsuario.interface';
 import { Perfil } from 'src/app/interfaces/perfil.interface';
 import { niveles } from 'src/app/enums/niveles.enum';
-import { Permiso } from 'src/app/interfaces/permiso.interface';
 import { ModalInformacionComponent } from 'src/app/components/modal-informacion/modal-informacion.component';
 import { forkJoin } from 'rxjs';
 import { PoliticasService } from 'src/app/services/api/politicas/politicas.service';
@@ -114,20 +110,27 @@ export class SeleccionarPerfilComponent implements OnInit {
   }
 
   async abrirSesionAE(nivelPerfilId:number){
+    const accesoSel  = this.serviciosUsuario.obtenerAccesoSeleccionado();
+
     let url = environment.URL_LOGIN_NARANJA;
     let credenciales = await this.serviciosUsuario.obtenerCredenciales();
     url = url.replace("{{usuario}}", credenciales.usuario).replace("{{contrasenia}}", credenciales.contrasenia);
+
+    // SE IDENTIFICA EL NIVEL DEL PERFIL PARA AGREGAR VARIABLES NECESARIAS
+    // TIPOS PERFIL ADMINSEC
     if(niveles.distrito==nivelPerfilId || niveles.nivel_central_poa==nivelPerfilId || niveles.localidad==nivelPerfilId){
       url = url.replace("{{key}}", "0")
     }
+    // TIPOS PERFIL RECTOR
     if(niveles.institucion==nivelPerfilId){
       url = url.replace("{{key}}", "2")
+      url += `&inst=${accesoSel.colegio.id}&sede=${accesoSel.sede.id}&jornada=${accesoSel.jornada.id}&inst_=${encodeURIComponent(accesoSel.colegio.nombre)}&sede_=${encodeURIComponent(accesoSel.sede.nombre)}&jornada_=${encodeURIComponent(accesoSel.jornada.nombre)}`
     }
-    //console.log("Este es el nivel perfil: ", nivelPerfilId, url);
+    // TIPOS VARIOS PERFILES
     if(niveles.institucion_sede_jornada==nivelPerfilId){
       url = url.replace("{{key}}", "1")
+      url += `&perfilPedido=${accesoSel.perfil.codJerarquia}|${accesoSel.perfil.id}`;
     }
-    //console.log("URL LOGIN NARANJA: ", url);
     var nuevaVentana =window.open(url,'_blank','toolbar=no,status=no,menubar=no,scrollbars=no,resizable=no,left=20000, top=20000, width=2, height=2, visible=none');
     nuevaVentana.resizeTo(0, 0);
     nuevaVentana.moveTo(10000, 10000);

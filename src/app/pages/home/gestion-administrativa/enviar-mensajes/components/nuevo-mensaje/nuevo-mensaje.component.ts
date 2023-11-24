@@ -34,7 +34,9 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
     defaultParagraphSeparator: 'p',
     defaultFontName: 'Arial',
     toolbarHiddenButtons: [
-      ['bold', 'backgroundColor']
+      ['backgroundColor'],
+      ['insertImage', 'insertVideo'],
+      ['insertLink', 'unlink'] 
     ],
     customClasses: []
   };
@@ -883,8 +885,12 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
 
 
 
+        if(this.desHabilitarJornada){
+          return
+        }
         this.listadoJornadas.map((jornada: any) => {
           if (this.jornada_id == jornada.id) {
+            // console.log('jornada 1' , this.jornada_id , 'jornada 2' ,  jornada.id)
             // let elementoEnArray = this.jornadasGuardados.includes(jornada);
             let elementoEnArray = this.verificarSiExisteEnArray(this.jornadasGuardados, jornada, 'nombre')
 
@@ -898,10 +904,14 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
                 this.listadoJornadas.splice(indexJornada, 1);
 
                 this.jornadasGuardados = this.listadoJornadas;
+                this.formularioMensajes.get('jornada_id').reset(); 
+               
+
 
               } else {
 
                 this.jornadasGuardados.push(jornada)
+                this.formularioMensajes.get('jornada_id').reset();
 
               }
 
@@ -1009,15 +1019,17 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
           let indexSede = this.sedesGuardados.findIndex(x => x.id === id);
           this.sedesGuardados.splice(indexSede, 1);
 
-          if (this.tipoUsuario == 'Admin') {
-            if (this.datosUsuario.perfil.id == 110) {
+          // if (this.tipoUsuario == 'Admin') {
+            // if (this.datosUsuario.perfil.id == 110) {
               if (this.sedesGuardados.length <= 0) {
                 this.desHabilitarJornada = true;
                 this.formularioMensajes.controls['jornada_id'].disable();
                 this.formularioMensajes.get('jornada_id').reset();
+              }else{
+                this.desHabilitarJornada = true;
               }
-            }
-          }
+            // }
+          // }
 
           // this.formularioMensajes.get('sede_id').reset();
 
@@ -1142,8 +1154,18 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
           "jornadas": this.crearArrayId(this.jornadasGuardados)  // listo
         }
 
-        // console.log(informacionMensaje)
+        if(this.formularioMensajes.get('info_asunto').status === "INVALID"){
 
+          this.formularioMensajes.markAllAsTouched();
+          this.enviarMensaje = false;
+          let infoMensaje: any = {}
+          infoMensaje.ventanaEnviado = true;
+          infoMensaje.titulo = 'Error';
+          infoMensaje.mensaje = 'El campo asunto no está diligenciado';
+          const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
+          modalRef.componentInstance.infoMensaje = infoMensaje;
+          return
+        }
 
         if (this.diasDiferencia > 0) {
           if (mensajeHtml!) {
@@ -1202,7 +1224,7 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
               let infoMensaje: any = {}
               infoMensaje.ventanaEnviado = true;
               infoMensaje.titulo = 'Error';
-              infoMensaje.mensaje = 'Verifique que el formulario este bien diligenciado';
+              infoMensaje.mensaje = 'No ha agregado ningún perfil';
               const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
               modalRef.componentInstance.infoMensaje = infoMensaje;
               // modalRef.result.then(() => {
@@ -1216,7 +1238,7 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
             let infoMensaje: any = {}
             infoMensaje.ventanaEnviado = true;
             infoMensaje.titulo = 'Error';
-            infoMensaje.mensaje = 'Campo mensajes obligatorio ';
+            infoMensaje.mensaje = 'Campo mensaje obligatorio ';
             const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
             modalRef.componentInstance.infoMensaje = infoMensaje;
             // modalRef.result.then(() => {
@@ -1368,7 +1390,7 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
         let infoMensaje: any = {}
         infoMensaje.ventanaEnviado = true;
         infoMensaje.titulo = 'Error';
-        infoMensaje.mensaje = 'Campo mensajes obligatorio ';
+        infoMensaje.mensaje = 'Campo mensajes obligatorio. ';
         const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
         modalRef.componentInstance.infoMensaje = infoMensaje;
         // modalRef.result.then(() => {

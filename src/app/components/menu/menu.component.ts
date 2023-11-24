@@ -27,10 +27,12 @@ export class MenuComponent {
   perfilId: number;
   rutactual: any = ''
 
-  datos_usuario: any ={};
+  datos_usuario: any = {};
   opcionActiva: any;
-  opcionesMenu: any = []
-  menuGeneral: any = []
+  opcionesMenu: any = [];
+  menuGeneral: any = [];
+  listaParamServicio: any[] = [];
+  recursoUrl: String;
 
   constructor(
     private authService: MsalService,
@@ -135,7 +137,7 @@ export class MenuComponent {
 
     // TODO validar de donde sacar estos tres datos
     let nivel = this.datos_usuario.perfil.idPerfilNivel !== null ? this.datos_usuario.perfil.idPerfilNivel : -1;
-    let vigencia = 2023;
+    let vigencia = (this.datos_usuario.colegio !== null && this.datos_usuario.colegio.vigencia > 0 ? this.datos_usuario.colegio.vigencia : 0);
     let municipio = 0;
 
     opcion.serRecurso = opcion.serRecurso.replace(/{{domain}}/g, environment.DOMAIN);
@@ -144,49 +146,79 @@ export class MenuComponent {
     opcion.serRecurso = opcion.serRecurso.replace(/{{inst}}/g, instituto);
     opcion.serRecurso = opcion.serRecurso.replace(/{{jornada}}/g, jornada);
 
-    let recursoUrl = opcion.serRecurso;
+    this.recursoUrl = opcion.serRecurso;
 
-    if (recursoUrl.includes("http://") || recursoUrl.includes("https://")) {
-      if (recursoUrl.includes("ApoyoEscolarBE")) {
-        if (nivel === 0) recursoUrl = `${recursoUrl}?inst=0`
-        else if (nivel === 2) recursoUrl = `${recursoUrl}?inst=0`
-        else recursoUrl = `${recursoUrl}?inst=0&usuario=${userId}&vigencia=${vigencia}&sede=${sede}&jornada=${jornada}`
-      } else if (recursoUrl.includes("apex")) {
-        recursoUrl = `${instituto},${vigencia}`
-      } else if (recursoUrl.endsWith("students")) {
-        recursoUrl = recursoUrl + "/index/" + userId + "/" + instituto + "/" + sede + "/" + jornada;
-      } else if (recursoUrl.endsWith("administrative/photo/") || recursoUrl.includes("schools/photo")) {
-        recursoUrl = recursoUrl + userId + "/" + instituto + "/" + sede + "/" + jornada;
-      } else if (recursoUrl.includes("students/observersearch")) {
-        recursoUrl = recursoUrl + "/" + userId + "/" + instituto + "/" + sede + "/" + jornada;
+    if (this.recursoUrl.includes("http://") || this.recursoUrl.includes("https://")) {
+      if (this.recursoUrl.toLowerCase().includes("apoyoescolarbe")) {
+        if (nivel === 0) this.recursoUrl = `${this.recursoUrl}?inst=0`
+
+        else if (nivel === 2) this.recursoUrl = `${this.recursoUrl}?inst=0`
+
+        else this.recursoUrl = `${this.recursoUrl}?inst=${instituto}&amp;usuario=${userId}&amp;vigencia=${vigencia}&amp;sede=${sede}&amp;jornada=${jornada}`
+
+      } else if (this.recursoUrl.toLowerCase().includes("apex")) {
+        this.recursoUrl = `${instituto},${vigencia}`
+
+      } else if (this.recursoUrl.toLowerCase().endsWith("students")) {
+        this.recursoUrl = `${this.recursoUrl}/index/${userId}/${instituto}/${sede}/${jornada}`;
+
+      } else if (this.recursoUrl.toLowerCase().endsWith("administrative/photo/") || this.recursoUrl.toLowerCase().includes("schools/photo")) {
+        this.recursoUrl = `${this.recursoUrl}${userId}/${instituto}/${sede}/${jornada}`;
+
+      } else if (this.recursoUrl.toLowerCase().includes("students/observersearch")) {
+        this.recursoUrl = `${this.recursoUrl}/${userId}/${instituto}/${sede}/${jornada}`;
+
       } else {
-        if (nivel === 0) recursoUrl = recursoUrl + "?var=central";
-        else if (nivel === 2) recursoUrl = recursoUrl + "?var=" + municipio;
-        else recursoUrl = recursoUrl + "?var=" + userId + "-" + instituto + "-" + sede + "-" + jornada;
+        if (nivel === 0) this.recursoUrl = `${this.recursoUrl}?var=central`;
+
+        else if (nivel === 2) this.recursoUrl = `${this.recursoUrl}?var=${municipio}`;
+
+        else this.recursoUrl = `${this.recursoUrl}?var=${userId}-${instituto}-${sede}-${jornada}`;
       }
     }
 
-    if (window.innerWidth < 575.98) {
-      this.utilsService.toggleMenuMobile();
+    if (opcion !== null && opcion.serCodigo !== null && opcion.serCodigo.length > 0 && opcion.serTarget != 3) {
+      // Se crea logica para agregar parametros a URL desde base de datos (Logica aplicativo NARANJA)
+      this.usuarioService.obtenerParametrosServMenu(Number(opcion.serCodigo), null).subscribe(datos =>{
+        let resultadoLocal: any = datos;
+        if (resultadoLocal.code == 200) {
+          console.log(resultadoLocal);
+          this.listaParamServicio = resultadoLocal.data;
+          if (this.listaParamServicio.length > 0) {
+            this.listaParamServicio.forEach((reg) => {
+              this.recursoUrl += (this.recursoUrl.includes("?"))? `&${reg.nombre}=${reg.valor}` : `?${reg.nombre}=${reg.valor}`;
+            });
+          }
+          console.log("this.recursoUrl ==> ", this.recursoUrl);
+        }
+
+        if (window.innerWidth < 575.98) {
+          this.utilsService.toggleMenuMobile();
+        }
+        let resolucion = window.innerWidth > 575.98 && window.innerWidth < 1199.98
+        if (this.mostrarMenu && resolucion) {
+          this.mostrarMenu = false
+        }
+        this.opcionActiva = opcion
+        if (opcion.serCodigo == 2) {
+          this.cerrarSesion()
+        }
+        if (opcion.serTarget === "1") {
+          this.router.navigate(['/home/ver', environment.URL_APOYO_ESCOLAR + this.recursoUrl])
+        } else if (opcion.serTarget === "4") {
+          this.router.navigate(['/home/ver', this.recursoUrl])
+        } else {
+          this.opcionActiva = opcion;
+          this.router.navigate([`/home/${this.recursoUrl}`]);
+        }
+      },);
     }
-    let resolucion = window.innerWidth > 575.98 && window.innerWidth < 1199.98
-    if (this.mostrarMenu && resolucion) {
-      this.mostrarMenu = false
+    // Rederije a las rutas locales del aplativo azul
+    else if (opcion.serTarget === "3") {
+      this.router.navigate([`${this.recursoUrl}`]);
     }
-    this.opcionActiva = opcion
-    if (opcion.serCodigo == 2) {
-      this.cerrarSesion()
-    }
-    if (opcion.serTarget === "1") {
-      this.router.navigate(['/home/ver', environment.URL_APOYO_ESCOLAR + recursoUrl])
-    } else if (opcion.serTarget === "3") {
-      this.router.navigate([`${recursoUrl}`]);
-    } else if (opcion.serTarget === "4") {
-      this.router.navigate(['/home/ver', recursoUrl])
-    } else {
-      this.opcionActiva = opcion;
-      this.router.navigate([`/home/${recursoUrl}`]);
-    }
+
+
   }
 
 
@@ -210,5 +242,4 @@ export class MenuComponent {
       })
     }
   }
-
 }

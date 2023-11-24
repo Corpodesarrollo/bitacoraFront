@@ -1,4 +1,4 @@
-const DOMAIN = "https://pruebas-sed.linktic.com";
+const DOMAIN = "https://apoyofab.educacionbogota.edu.co:7733";
 export const environment = {
   production: true,
   DOMAIN: DOMAIN,
@@ -17,7 +17,7 @@ export const environment = {
   URL_APOYO_ESCOLAR: `${DOMAIN}/apoyo_escolar/`,
   URL_LOGIN_NARANJA:`${DOMAIN}/apoyo_escolar/autenticaPaginas?bandera=0&Hinicio=22&Hfin=6&ext=1&key={{key}}&cambio=&login={{usuario}}&password={{contrasenia}}&URLPag=${DOMAIN}/apoyo_escolar/bienvenida.do`,
 
-  VERSION: '1.2.11',
+  VERSION: '1.2.20',
   msalConfig: {
     auth: {
       clientId: 'cb166727-5a4e-4e76-8e9b-4eaefcaddc23',

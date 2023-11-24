@@ -1,4 +1,4 @@
-const DOMAIN = "https://pruebas-sed.linktic.com";
+const DOMAIN = "https://apoyofab.educacionbogota.edu.co:7733";
 export const environment = {
   DOMAIN: DOMAIN,
   production: false,
@@ -17,7 +17,7 @@ export const environment = {
 
   CONTENT_TYPE: 'application/json',
   CONTENT_TYPE_PDF: 'application/pdf',
-  VERSION: '1.2.11',
+  VERSION: '1.2.20',
   msalConfig: {
     auth: {
       clientId: 'cb166727-5a4e-4e76-8e9b-4eaefcaddc23',

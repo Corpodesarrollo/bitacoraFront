@@ -785,6 +785,14 @@ input[type="number"]::-webkit-outer-spin-button {
     margin: 0;
 }
 
+button#link- {
+  display: none;
+}
+
+.ql-tooltip {
+  display: none !important;
+}
+
 @media (max-width:575.98px) {
   .modal-correo {
     min-width: 13.125rem;

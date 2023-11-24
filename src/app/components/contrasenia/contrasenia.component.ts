@@ -92,19 +92,24 @@ export class ContraseniaComponent {
     this.actualizando = true;
 
     this.contrasenaService.cambiarContrasenia(this.idUsuario, this.contraseniaActual, this.contraseniaNueva, this.confirmacionContrasenia).subscribe(
-      res => {
-        if (res.message === this.respuestaErronea) {
-          this.servicioModal.open(ErrorCambioComponentC, { size: '600px', centered: true, animation: false, backdrop: 'static' });
+      {
+        next:(respuesta) => {
+          if(respuesta.code == 200){
+            this.servicioModal.open(ExitoCambioComponentC, { size: '600px', centered: true, animation: false, backdrop: 'static' });
+            this.actualizando = false;
+          }
+          else{
+            const modalRef = this.servicioModal.open(ErrorCambioComponentC, { size: '600px', centered: true, animation: false, backdrop: 'static' });
+            this.actualizando = false;
+            modalRef.componentInstance.mensaje = respuesta.message
+          }
+        },
+        error: (error) => {
+          const modalRef = this.servicioModal.open(ErrorCambioComponentC, { size: '600px', centered: true, animation: false, backdrop: 'static' });
           this.actualizando = false;
-        } else {
-          this.servicioModal.open(ExitoCambioComponentC, { size: '600px', centered: true, animation: false, backdrop: 'static' });
-          this.actualizando = false;
+          modalRef.componentInstance.mensaje = error.message
+
         }
-      },
-      err => {
-        console.error(err);
-        this.servicioModal.open(ErrorCambioComponentC, { size: '600px', centered: true, animation: false, backdrop: 'static' });
-        this.actualizando = false;
       }
     );
   }

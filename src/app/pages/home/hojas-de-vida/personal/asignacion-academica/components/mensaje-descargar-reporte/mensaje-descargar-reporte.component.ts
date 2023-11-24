@@ -94,8 +94,9 @@ export class MensajeDescargarReporteComponent {
 
     let body = []
 
+    console.log(this.infoMensaje)
     this.infoMensaje.funcionarios.forEach((funcionario) => {
-      body.push({ "identificacion": funcionario.identifacion })
+      body.push({ "identificacion": funcionario })
       // console.log(body)
     })
 
