@@ -174,6 +174,7 @@ export class BitacoraComponent implements OnInit {
           else
             registro.submodulo = "";
           registro.tipoLog = this.listaTiposLog?.find(tipo => tipo.id === registro.tipoLog)?.nombre;
+          registro.detalle = decodeURIComponent(registro.detalle);
         })
       });
     }

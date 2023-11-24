@@ -14,7 +14,8 @@
       <div class="datos-detalle">
         <label class="titulo-detalle"><strong>Descripcion</strong></label>
         <div class="items-datos-detalle" *ngFor="let columna of columnasDetalle">
-          <div class="item"><strong>{{columna.titulo}}</strong>:{{filaDetalle[columna.campo]}}</div>
+          <div class="item" *ngIf="columna.titulo!=='***' && columna.campo!=='***'"><strong>{{columna.titulo}}</strong>:{{columna.campo[columna.titulo]}}</div>
+          <div class="item" *ngIf="columna.titulo=='***' && columna.campo=='***'"><hr/></div>
         </div>
       </div>
       <div class="opciones-exportacion d-flex flex-column">

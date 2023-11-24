@@ -23,20 +23,27 @@ export class FilaDinamicaTablaComponent implements OnInit {
 
   getDetalle(): void {
     let columnasDetalleNuevo: ColumnaTabla[] = [];
-    let filaDetalleNuevo: any;
     const fila = this.fila;
     const keys = Object.keys(fila);
     keys.forEach((key) => {
       try {
-        const detalleKeys = Object.keys(JSON.parse(fila[key]));
-        detalleKeys.forEach((detalle) => {
-          columnasDetalleNuevo.push({ titulo: detalle, campo: detalle });
-          filaDetalleNuevo = JSON.parse(fila[key]);
-        });
+        if(JSON.parse(fila[key])?.length>0){
+          JSON.parse(fila[key]).forEach((row) => {
+            const detalleKeys = Object.keys(row);
+            detalleKeys.forEach((detalle) => {
+              columnasDetalleNuevo.push({ titulo: detalle, campo: row });
+            });
+            columnasDetalleNuevo.push({titulo:"***", campo: "***"});
+          });
+        } else { 
+          const detalleKeys = Object.keys(JSON.parse(fila[key]));
+          detalleKeys.forEach((detalle) => {
+            columnasDetalleNuevo.push({ titulo: detalle, campo: JSON.parse(fila[key]) });
+          });
+        }
       } catch (e) {}
     });
     this.columnasDetalle = columnasDetalleNuevo;
-    this.filaDetalle = filaDetalleNuevo;
   }
   exportar(tipo: string, fila: any): void {
     let datos: any = { tipo: tipo, fila: fila };
