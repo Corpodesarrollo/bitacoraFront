@@ -6,27 +6,28 @@ import { MensajesService } from 'src/app/services/api/mensajes/mensajes.service'
 import { UsuarioService } from 'src/app/services/api/usuario/usuario.service';
 import { MensajeModal } from '../mensaje-modal/mensaje-modal';
 import { PersonalService } from 'src/app/services/api/personal/personal.service';
+import { AccesoPerfil } from 'src/app/interfaces/acceso_perfil.interface';
 
 
 @Injectable()
 export class CustomDateParserFormatter extends NgbDateParserFormatter {
-	readonly DELIMITER = '/';
+  readonly DELIMITER = '/';
 
-	parse(value: string): NgbDateStruct | null {
-		if (value) {
-			const date = value.split(this.DELIMITER);
-			return {
-				day: parseInt(date[0], 10),
-				month: parseInt(date[1], 10),
-				year: parseInt(date[2], 10),
-			};
-		}
-		return null;
-	}
+  parse(value: string): NgbDateStruct | null {
+    if (value) {
+      const date = value.split(this.DELIMITER);
+      return {
+        day: parseInt(date[0], 10),
+        month: parseInt(date[1], 10),
+        year: parseInt(date[2], 10),
+      };
+    }
+    return null;
+  }
 
-	format(date: NgbDateStruct | null): string {
-		return date ? date.day + this.DELIMITER + date.month + this.DELIMITER + date.year : '';
-	}
+  format(date: NgbDateStruct | null): string {
+    return date ? date.day + this.DELIMITER + date.month + this.DELIMITER + date.year : '';
+  }
 }
 
 @Component({
@@ -49,17 +50,21 @@ export class FiltrosComponent {
   listadoColegios: any[] = [];
 
   colegio_id: any;
+  datosUsuario: AccesoPerfil;
 
   diasDiferencia!: number;
 
   parametrosFiltros = {
-    perfilId:"",
-    localidad_id:"",
-    colegio_id:"",
-    fecha_inicio:"",
-    fecha_final:""
+    perfilId: "",
+    localidad_id: "",
+    colegio_id: "",
+    fecha_inicio: "",
+    fecha_final: ""
   }
   deshabilitarSelectColegio: boolean;
+  infoUsuariologueado: any;
+  infoLocalidadId: any;
+  deshabilitarSelectLocalidad: boolean;
 
 
   constructor(private mensajesService: MensajesService,
@@ -67,8 +72,13 @@ export class FiltrosComponent {
     private formBuilder: FormBuilder,
     private personalService: PersonalService,
     private servicioModal: NgbModal) {
+    this.datosUsuario = this.usuarioService.obtenerAccesoSeleccionado();
+    this.infoUsuariologueado = this.usuarioService.obtenerUsuarioPerCol();
     this.construirFormulario();
     this.cargarListados();
+    if (this.datosUsuario.perfil.id == 410 || this.datosUsuario.perfil.id == 460 || this.datosUsuario.perfil.id == 423 || this.datosUsuario.perfil.id == 421 || this.datosUsuario.perfil.id == 422 || this.datosUsuario.perfil.id == 420 || this.datosUsuario.perfil.id == 424) {
+      this.cargarInfoRector()
+    }
   }
 
   construirFormulario() {
@@ -82,14 +92,48 @@ export class FiltrosComponent {
   }
 
 
-    /**
- * Verifica si un campo es valido del formulario de plan
- * @param campo
- * @returns
- */
-    campoNoValido(campo: string) {
-      return this.formularioFiltros.get(campo)?.invalid && this.formularioFiltros.get(campo)?.touched;
+  /**
+* Verifica si un campo es valido del formulario de plan
+* @param campo
+* @returns
+*/
+  campoNoValido(campo: string) {
+    return this.formularioFiltros.get(campo)?.invalid && this.formularioFiltros.get(campo)?.touched;
+  }
+
+  async cargarInfoRector() {
+    try {
+      // this.cargandoDatosRector = true;      
+      this.formularioFiltros.patchValue({
+        colegio_id: this.infoUsuariologueado.colegio.id,
+        localidad_id: this.infoUsuariologueado.localidad.id
+      });
+
+      console.log(this.infoLocalidadId)
+      if (this.infoLocalidadId) {
+        this.obtenerListadoColegios(this.infoLocalidadId);
+      }
+
+      this.mensajesService.obtenerColegios(this.infoUsuariologueado.localidad.id).subscribe((resp: any) => {
+        if (resp.data.length == 0) {
+          this.listadoColegios = [{
+            id: 0, nombre: 'SIN INFORMACION'
+          }]
+        } else {
+          this.listadoColegios = resp.data;
+        }
+      })
+      
+      this.formularioFiltros.controls['localidad_id'].disable();
+      this.formularioFiltros.controls['colegio_id'].disable();
+      this.deshabilitarSelectColegio = false;
+      this.deshabilitarSelectLocalidad = false;
+
+
+    } catch (error) {
+      // this.cargandoDatosRector = false;
     }
+  }
 
   cargarListados() {
 
@@ -131,11 +175,12 @@ export class FiltrosComponent {
   }
 
   localidadSeleccionado(infoLocalidad: any) {
-    //console.log(infoLocalidad)
+    // console.log(infoLocalidad)
+    this.infoLocalidadId = infoLocalidad
     this.formularioFiltros.controls['colegio_id'].enable();
     this.deshabilitarSelectColegio = false;
-    if(infoLocalidad){
-      this.obtenerListadoColegios(infoLocalidad.id);
+    if (infoLocalidad) {
+      this.obtenerListadoColegios(infoLocalidad);
     }
   }
 
@@ -150,32 +195,29 @@ export class FiltrosComponent {
     //console.log(this.diasDiferencia)
   }
 
-  buscar(){
+  buscar() {
     const inicio = this.formularioFiltros.get('fecha_inicio')?.value;
     const final = this.formularioFiltros.get('fecha_final')?.value;
 
-    if(!inicio && !final){
-
+    if (!inicio || !final) {
       this.formularioFiltros.markAllAsTouched();
       let infoMensaje: any = {}
-      infoMensaje.ventanaEnviado = true;
       infoMensaje.titulo = 'Error';
-      infoMensaje.mensaje = 'Verifique que las fechas esten bien diligenciado';
+      infoMensaje.ventanaEnviado = true;
+      infoMensaje.mensaje = 'Verifique que el formulario este bien diligenciado';
       const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
       modalRef.componentInstance.infoMensaje = infoMensaje;
-
-      return
     }
 
     let fecha_inicio = `${inicio.year}-${(inicio.month < 10 ? '0' : '').concat(inicio.month)}-${(inicio.day < 10 ? '0' : '').concat(inicio.day)}`;
     let fecha_final = `${final.year}-${(final.month < 10 ? '0' : '').concat(final.month)}-${(final.day < 10 ? '0' : '').concat(final.day)}`;
     //console.log(fecha_inicio, fecha_final)
-    
+
     this.obtenerDistaniaFechas(fecha_inicio, fecha_final);
 
-    if(fecha_inicio == "null-0null-0null"){
+    if (fecha_inicio == "null-0null-0null") {
       fecha_inicio = "";
-    }else if(fecha_final == "null-0null-0null"){
+    } else if (fecha_final == "null-0null-0null") {
       fecha_final = "";
     }
 
@@ -184,22 +226,23 @@ export class FiltrosComponent {
     this.parametrosFiltros.colegio_id = this.formularioFiltros.get('colegio_id')?.value;
     this.parametrosFiltros.localidad_id = this.formularioFiltros.get('localidad_id')?.value;
     this.parametrosFiltros.perfilId = this.formularioFiltros.get('perfil_id')?.value;
-    
-    if(this.formularioFiltros.status == "VALID"){
-      if (this.diasDiferencia > 0){
+
+    if (this.formularioFiltros.status == "VALID") {
+      if (this.diasDiferencia > 0) {
         this.obtenerDistaniaFechas(fecha_inicio, fecha_final);
         this.filtros.emit(this.parametrosFiltros);
-      }else{
+      } else {
         // this.actualizando = false;
-        this.formularioFiltros.markAllAsTouched();
-        let infoMensaje: any = {}
-        infoMensaje.ventanaEnviado = true;
-        infoMensaje.titulo = 'Error';
-        infoMensaje.mensaje = 'Verifique que las fechas esten bien diligenciado';
-        const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
-        modalRef.componentInstance.infoMensaje = infoMensaje;
+       
+      this.formularioFiltros.markAllAsTouched();
+      let infoMensaje: any = {}
+      infoMensaje.ventanaEnviado = true;
+      infoMensaje.titulo = 'Error';
+      infoMensaje.mensaje = 'La fecha finalización es menor a la fecha inicio.';
+      const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
+      modalRef.componentInstance.infoMensaje = infoMensaje;
       }
-    }else{
+    } else {
       this.formularioFiltros.markAllAsTouched();
       let infoMensaje: any = {}
       infoMensaje.titulo = 'Error';

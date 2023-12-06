@@ -3,21 +3,14 @@
     Agregar nueva versión
   </div>
 </div>
-<app-cargando *ngIf="cargandoHtml"></app-cargando>
-<form [formGroup]="formNuevaVersion" *ngIf="!cargandoHtml">
+<form [formGroup]="formNuevaVersion" >
   <div class="modal-body">
     <!-- <editor id="politicaHTML" formControlName="version_html" apiKey="blmj7kklnecm3r1747lstm3r23x1k4hgv7j36y8dyxmgls90"
       [init]="initTiny">
     </editor> -->
-    <angular-editor id="politicaHTML" [placeholder]="'Escriba un mensaje'" formControlName="version_html" [config]="editorConfig" ></angular-editor>
-    <div class="campo_estado mt-3">
-      <label>Estado:</label>
-      <div class="form-check form-switch">
-        <input (click)="abrirInactivar($event)" class="btn-swtich form-check-input" type="checkbox" role="switch"
-          id="flexSwitchCheck" formControlName="estado">
-        <span class="etiqueta_hover">Activar/Inactivar</span>
-      </div>
-    </div>
+    <angular-editor class="politicaHTML" [placeholder]="'Escriba un mensaje'" formControlName="version_html" [config]="editorConfig" ></angular-editor>
+
+
   </div>
   <div class="modal-footer acciones">
     <button type="button" class="btn boton_secundario" (click)="cancelar()">

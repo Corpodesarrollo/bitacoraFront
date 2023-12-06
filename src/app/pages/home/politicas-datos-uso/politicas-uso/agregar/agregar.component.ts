@@ -23,7 +23,6 @@ interface TinyMCEConfig {
 export class AgregarComponent {
 
   creandoVersion:boolean = false;
-  cargandoHtml:boolean = true;
   estado:boolean = true;
   formNuevaVersion!: FormGroup
 
@@ -33,14 +32,16 @@ export class AgregarComponent {
     spellcheck: true,
     height: '17rem',
     minHeight: '5rem',
-    placeholder: 'Enter text here...',
+    placeholder: 'Ingresar texto...',
     translate: 'no',
     defaultParagraphSeparator: 'p',
     defaultFontName: 'Arial',
     toolbarHiddenButtons: [
       ['backgroundColor'],
       ['insertImage', 'insertVideo'],
-      ['insertLink', 'unlink']
+      ['link', 'unlink' , 'undo', 'redo' ,
+      'textColor' , 'removeFormat', 'fontSize',
+      'heading', 'fontName' , 'customClasses' ,'insertHorizontalRule', 'toggleEditorMode']
     ],
     customClasses: []
   };
@@ -52,9 +53,6 @@ export class AgregarComponent {
     private serviciosPoliticas: PoliticasService
   ){
     this.construirFormulario();
-    setTimeout(() => {
-      this.cargandoHtml = false;
-    },2000)
   }
 
   construirFormulario() {
@@ -62,6 +60,47 @@ export class AgregarComponent {
       version_html: [],
       estado: [true]
     });
+  }
+
+  ngAfterViewInit() {
+      this.cambiarTooltip("bold-", "Negrilla");
+      this.cambiarTooltip("insertImage-", "Insertar imagen");
+      this.cambiarTooltip("italic-", "Cursiva");
+      this.cambiarTooltip("underline-", "Subrayar");
+      this.cambiarTooltip("strikeThrough-", "Tachar");
+      this.cambiarTooltip("subscript-", "Sub índice");
+      this.cambiarTooltip("superscript-", "Exponente");
+      this.cambiarTooltip("justifyLeft-", "Justificar a la izquierda");
+      this.cambiarTooltip("justifyCenter-", "Justificar al centro");
+      this.cambiarTooltip("justifyRight-", "Justificar a la derecha");
+      this.cambiarTooltip("justifyFull-", "Justificar");
+      this.cambiarTooltip("indent-", "Identar");
+      this.cambiarTooltip("outdent-", "Sangria");
+      this.cambiarTooltip("insertUnorderedList-", "Listar");
+      this.cambiarTooltip("insertOrderedList-", "Enumerar");
+      this.cambiarTooltip("foregroundColorPicker-", "Color");
+      this.cambiarTooltip("insertHorizontalRule-", "Linea horizontal");
+      this.cambiarTooltip("clearFormatting-", "Limpiar formato");
+      this.cambiarTooltip("backgroundColorPicker-", "Resaltar");
+      this.ocultarBotones("toggleEditorMode-");
+  }
+
+  ocultarBotones(idButton){
+    const boton = document.getElementById(idButton);
+    if (boton) {
+      boton.style.display = 'none';
+    }
+  }
+
+  cambiarTooltip(botonId: string, tooltip: string) {
+      try {
+        const elemento = document.getElementById(botonId);
+        if (elemento) {
+          elemento.title = tooltip;
+        }
+      } catch (error) {
+        console.log('Error al traducir ' + botonId);
+      }
   }
 
   crearVersion(){
@@ -76,7 +115,7 @@ export class AgregarComponent {
             error: false,
             esExitoso: 'done',
             titulo: 'Éxito',
-            mensaje: respuesta.message
+            mensaje: 'La política de uso fue creada Exitosamente!'
           }
           this.activeModal.close(true)
         }

@@ -1,11 +1,11 @@
-import { AfterContentInit, Component, ElementRef, EventEmitter, OnInit, Output, Renderer2 } from '@angular/core';
+import { AfterContentInit, Component, EventEmitter, OnInit, Output, Renderer2 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MensajesService } from 'src/app/services/api/mensajes/mensajes.service';
 import { UsuarioService } from 'src/app/services/api/usuario/usuario.service';
 import { MensajeModal } from '../mensaje-modal/mensaje-modal';
-import { NgbDate, NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { last, lastValueFrom } from 'rxjs';
+import { NgbDate, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { lastValueFrom } from 'rxjs';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { AccesoPerfil } from 'src/app/interfaces/acceso_perfil.interface';
 import { PermisosUsuarios } from 'src/app/enums/usuario-permisos';
@@ -29,14 +29,17 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
     spellcheck: true,
     height: '17rem',
     minHeight: '5rem',
-    placeholder: 'Enter text here...',
+    placeholder: 'Ingresar texto...',
     translate: 'no',
     defaultParagraphSeparator: 'p',
     defaultFontName: 'Arial',
     toolbarHiddenButtons: [
       ['backgroundColor'],
-      ['insertImage', 'insertVideo'],
-      ['insertLink', 'unlink'] 
+      [ 'insertVideo'],
+      ['insertLink', 'unlink', 'undo', 'redo',
+      'removeFormat', 'fontSize',
+        'heading', 'fontName', 'customClasses', 'insertHorizontalRule']
+
     ],
     customClasses: []
   };
@@ -144,6 +147,8 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
 
 
 
+
+
     if (this.datosUsuario.perfil.id == 410 || this.datosUsuario.perfil.id == 460 || this.datosUsuario.perfil.id == 423 || this.datosUsuario.perfil.id == 421 || this.datosUsuario.perfil.id == 422 || this.datosUsuario.perfil.id == 420 || this.datosUsuario.perfil.id == 424) {
       this.cargarInfoRector()
     }
@@ -177,6 +182,47 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
     }
 
 
+  }
+
+  ngAfterViewInit() {
+    this.cambiarTooltip("bold-", "Negrilla");
+    this.cambiarTooltip("insertImage-", "Insertar imagen");
+    this.cambiarTooltip("italic-", "Cursiva");
+    this.cambiarTooltip("underline-", "Subrayar");
+    this.cambiarTooltip("strikeThrough-", "Tachar");
+    this.cambiarTooltip("subscript-", "Sub índice");
+    this.cambiarTooltip("superscript-", "Exponente");
+    this.cambiarTooltip("justifyLeft-", "Justificar a la izquierda");
+    this.cambiarTooltip("justifyCenter-", "Justificar al centro");
+    this.cambiarTooltip("justifyRight-", "Justificar a la derecha");
+    this.cambiarTooltip("justifyFull-", "Justificar");
+    this.cambiarTooltip("indent-", "Identar");
+    this.cambiarTooltip("outdent-", "Sangria");
+    this.cambiarTooltip("insertUnorderedList-", "Listar");
+    this.cambiarTooltip("insertOrderedList-", "Enumerar");
+    this.cambiarTooltip("foregroundColorPicker-", "Color");
+    this.cambiarTooltip("insertHorizontalRule-", "Linea horizontal");
+    this.cambiarTooltip("clearFormatting-", "Limpiar formato");
+    this.cambiarTooltip("backgroundColorPicker-", "Resaltar");
+    this.ocultarBotones("toggleEditorMode-");
+  }
+
+  ocultarBotones(idButton) {
+    const boton = document.getElementById(idButton);
+    if (boton) {
+      boton.style.display = 'none';
+    }
+  }
+
+  cambiarTooltip(botonId: string, tooltip: string) {
+    try {
+      const elemento = document.getElementById(botonId);
+      if (elemento) {
+        elemento.title = tooltip;
+      }
+    } catch (error) {
+      console.log('Error al traducir ' + botonId);
+    }
   }
 
   construirFormulario() {
@@ -600,11 +646,15 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
     } else {
       this.localidad_id = ''
     }
-    this.formularioMensajes.controls['colegio_id'].disable();
-    this.formularioMensajes.get('colegio_id').reset();
-    this.desHabilitarColegios = true;
+
+    if (this.colegiosGuardados.length <= 0) {
+      this.formularioMensajes.controls['colegio_id'].disable();
+      this.formularioMensajes.get('colegio_id').reset();
+      this.cargandoColegiosSelect = false
+      this.desHabilitarColegios = true;
+    }
     if (agregarListadoColegio) {
-      if (this.tipoUsuario == 'Admin') {
+      if (this.tipoUsuario == 'Admin' || this.tipoUsuario == 'modoEditor') {
         if (this.datosUsuario.perfil.id == 110) {
           this.cargandoColegiosSelect = true;
           if (localidad_id != null) {
@@ -613,19 +663,15 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
             this.cargandoColegiosSelect = false;
             this.formularioMensajes.controls['colegio_id'].enable();
           } else {
-            this.desHabilitarColegios = true;
-            this.formularioMensajes.controls['colegio_id'].disable();
-            this.cargandoColegiosSelect = false;
+            if (this.colegiosGuardados.length <= 0) {
+              this.desHabilitarColegios = true;
+              this.formularioMensajes.controls['colegio_id'].disable();
+              this.cargandoColegiosSelect = false;
+            }
           }
         }
       }
     }
-    // if (this.tipoUsuario == 'Admin') {
-
-    //   if (this.datosUsuario.perfil.id == 410) {
-    //     // this.cargarInfoRector()
-    //   }
-    // }
   }
 
   async colegioSeleccionado(colegio_id: any, agregarListadoSedes: boolean = false) {
@@ -685,14 +731,12 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
       for (let i = 0; i < array.length; i++) {
         if (array[i].etiqueta == objeto.etiqueta) {
           return true;
-          break;
         }
       }
     } else {
       for (let i = 0; i < array.length; i++) {
         if (array[i].nombre == objeto.nombre) {
           return true;
-          break;
         }
       }
     }
@@ -739,9 +783,11 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
       case 'localidad':
 
         this.listadoLocalidades.map((localidad: any) => {
+          this.cargandoColegiosSelect = false
           if (this.localidad_id == localidad.id) {
             let elementoEnArray = this.verificarSiExisteEnArray(this.localidadesGuardadas, localidad, 'nombre')
             // console.log(elementoEnArray)
+            this.cargandoColegiosSelect = false
             if (!elementoEnArray) {
               if (localidad.nombre === "TODOS") {
 
@@ -760,6 +806,7 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
                 this.localidadesGuardadas.push(localidad)
                 this.deshabilitarLocalidadesFiltrar = false;
                 this.formularioMensajes.controls['localidadFiltrar_id'].enable();
+                this.formularioMensajes.controls['localidadFiltrar_id'].reset();
               }
             }
           }
@@ -792,8 +839,11 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
 
                 if (this.tipoUsuario == 'Admin') {
                   if (this.datosUsuario.perfil.id == 110) {
-                    this.desHabilitarColegiosFiltrar = false;
-                    this.formularioMensajes.controls['colegioFiltrar_id'].enable();
+                    if (this.localidadesGuardadas.length <= 0) {
+                    } else {
+                      this.desHabilitarColegiosFiltrar = false;
+                      this.formularioMensajes.controls['colegioFiltrar_id'].enable();
+                    }
                   }
                 }
 
@@ -885,7 +935,7 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
 
 
 
-        if(this.desHabilitarJornada){
+        if (this.desHabilitarJornada) {
           return
         }
         this.listadoJornadas.map((jornada: any) => {
@@ -904,8 +954,8 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
                 this.listadoJornadas.splice(indexJornada, 1);
 
                 this.jornadasGuardados = this.listadoJornadas;
-                this.formularioMensajes.get('jornada_id').reset(); 
-               
+                this.formularioMensajes.get('jornada_id').reset();
+
 
 
               } else {
@@ -946,336 +996,199 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
         }
 
 
-          // asda
+        // asda
 
-          break;
-
-        }
+        break;
 
     }
 
-    eliminarOpcionListadoSelecionado(nombreListado: string, id: string) {
+  }
 
-      switch (nombreListado) {
+  eliminarOpcionListadoSelecionado(nombreListado: string, id: string) {
 
-        case 'perfil':
+    switch (nombreListado) {
 
-          let indexPerfil = this.perfilesGuardados.findIndex(x => x.id === id);
-          this.perfilesGuardados.splice(indexPerfil, 1);
-          this.formularioMensajes.get('perfil_id').reset();
-          this.perfil_id = '';
+      case 'perfil':
+
+        let indexPerfil = this.perfilesGuardados.findIndex(x => x.id === id);
+        this.perfilesGuardados.splice(indexPerfil, 1);
+        this.formularioMensajes.get('perfil_id').reset();
+        this.perfil_id = '';
 
 
-          break;
+        break;
 
-        case 'localidad':
+      case 'localidad':
 
-          if (this.deshabilitarInputSelect == false) {
-            let indexLocalidad = this.localidadesGuardadas.findIndex(x => x.id === id);
-            this.localidadesGuardadas.splice(indexLocalidad, 1);
-            this.localidadesGuardadas = this.localidadesGuardadas;
+        if (this.deshabilitarInputSelect == false) {
+          let indexLocalidad = this.localidadesGuardadas.findIndex(x => x.id === id);
+          this.localidadesGuardadas.splice(indexLocalidad, 1);
+          this.localidadesGuardadas = this.localidadesGuardadas;
+          this.formularioMensajes.controls['localidadFiltrar_id'].reset();
+          this.formularioMensajes.controls['localidad_id'].reset();
 
+
+
+          if (this.datosUsuario.perfil.id == 110) {
+            // this.cargarInfoRector()
+            if (this.localidadesGuardadas.length <= 0) {
+              this.deshabilitarLocalidadesFiltrar = true;
+              this.formularioMensajes.controls['localidadFiltrar_id'].disable();
+              this.formularioMensajes.get('localidadFiltrar_id').reset();
+             
+              this.cargandoColegiosSelect = false;
+              this.formularioMensajes.controls['colegio_id'].disable();
+              this.formularioMensajes.get('colegio_id').reset();
+            }
+    
+          }
+
+        }
+
+        this.localidad_id = '';
+
+        break;
+
+      case 'colegio':
+
+        if (this.deshabilitarInputSelect == false) {
+
+          let indexColegio = this.colegiosGuardados.findIndex(x => x.id === id);
+          this.colegiosGuardados.splice(indexColegio, 1);
+          this.listadoFiltroColegio = this.colegiosGuardados;
+
+          if (this.tipoUsuario == 'Admin') {
             if (this.datosUsuario.perfil.id == 110) {
-              // this.cargarInfoRector()
-              if (this.localidadesGuardadas.length <= 0) {
-                this.deshabilitarLocalidadesFiltrar = true;
-                this.formularioMensajes.controls['localidadFiltrar_id'].disable();
-                this.formularioMensajes.get('localidadFiltrar_id').reset();
+              if (this.colegiosGuardados.length <= 0) {
+                this.desHabilitarColegiosFiltrar = true;
+                this.formularioMensajes.controls['colegioFiltrar_id'].disable();
+                this.formularioMensajes.get('colegioFiltrar_id').reset();
               }
             }
-
           }
 
-          this.localidad_id = '';
-
-          break;
-
-        case 'colegio':
-
-          if (this.deshabilitarInputSelect == false) {
-
-            let indexColegio = this.colegiosGuardados.findIndex(x => x.id === id);
-            this.colegiosGuardados.splice(indexColegio, 1);
-            this.listadoFiltroColegio = this.colegiosGuardados;
-
-            if (this.tipoUsuario == 'Admin') {
-              if (this.datosUsuario.perfil.id == 110) {
-                if (this.colegiosGuardados.length <= 0) {
-                  this.desHabilitarColegiosFiltrar = true;
-                  this.formularioMensajes.controls['colegioFiltrar_id'].disable();
-                  this.formularioMensajes.get('colegioFiltrar_id').reset();
-                }
-              }
-            }
-
-          }
-
-          this.colegio_id = '';
-
-          break;
-
-        case 'sede':
-
-          let indexSede = this.sedesGuardados.findIndex(x => x.id === id);
-          this.sedesGuardados.splice(indexSede, 1);
-
-          // if (this.tipoUsuario == 'Admin') {
-            // if (this.datosUsuario.perfil.id == 110) {
-              if (this.sedesGuardados.length <= 0) {
-                this.desHabilitarJornada = true;
-                this.formularioMensajes.controls['jornada_id'].disable();
-                this.formularioMensajes.get('jornada_id').reset();
-              }else{
-                this.desHabilitarJornada = true;
-              }
-            // }
-          // }
-
-          // this.formularioMensajes.get('sede_id').reset();
-
-          this.sede_id = '';
-
-          break;
-
-        case 'jornada':
-
-          this.jornada_id = '';
-
-          let indexJornada = this.jornadasGuardados.findIndex(x => x.id === id);
-          this.jornadasGuardados.splice(indexJornada, 1);
-
-
-          break;
-
-      }
-
-    }
-
-    obtenerFechas(data: any) {
-
-
-      // fecha_inicio: [Date, [Validators.required]],
-      // fecha_final: [
-      let fechaFinalizacionArray = data.fecha_finalizacion.split('T')
-      fechaFinalizacionArray = fechaFinalizacionArray[0].split('-')
-
-      let fechainicioArray = data.fecha_inicio.split('T')
-      fechainicioArray = fechainicioArray[0].split('-')
-
-      this.formularioMensajes.patchValue({
-        fecha_inicio: { year: + Number(fechainicioArray[0]), month: +Number(fechainicioArray[1]), day: +Number(fechainicioArray[2]) },
-        fecha_final: { year: +Number(fechaFinalizacionArray[0]), month: +Number(fechaFinalizacionArray[1]), day: +Number(fechaFinalizacionArray[2]) }
-      })
-
-      this.validarFecha()
-
-    };
-
-    validarFecha() {
-
-      const date = new Date();
-
-      let fechaActual = this.formatearFecha(new Date(date.getFullYear(), date.getMonth(), date.getDate(), 1), 'date')
-
-      let fechaInicio = this.formularioMensajes.get('fecha_inicio').value;
-      let fechaFin = this.formularioMensajes.get('fecha_final').value;
-
-      const fecha_inicio = this.formatearFecha(fechaInicio, "formateoObjeto")
-      const fecha_fin = this.formatearFecha(fechaFin, "formateoObjeto")
-
-
-      this.obtenerDistaniaFechas(fechaActual, fecha_inicio);
-      if (this.diasDiferencia <= 0) {
-        this.deshabilitarFechaInicio = true;
-        this.formularioMensajes.controls['fecha_inicio'].disable();
-      }
-
-      this.obtenerDistaniaFechas(fechaActual, fecha_fin);
-      if (this.diasDiferencia <= 0) {
-        this.deshabilitarFechaFin = true;
-        this.formularioMensajes.controls['fecha_final'].disable();
-      }
-
-    }
-
-
-    // `${date.getFullYear()}-${date.getDate()}-${(date.getMonth() + 1)}`
-    formatearFecha(fecha: any, tipoFormateo: any) {
-      if (tipoFormateo == 'formateoObjeto') {
-        return `${fecha.year}-${(fecha.month < 10 ? '0' : '').concat(fecha.month)}-${(fecha.day < 10 ? '0' : '').concat(fecha.day)}`;
-      }
-      if (tipoFormateo == 'date') {
-        const mes = fecha.getMonth() + 1;
-        const dia = fecha.getDate();
-        return `${fecha.getFullYear()}-${(mes < 10 ? '0' : '').concat(mes)}-${(dia < 10 ? '0' : '').concat(dia)}`
-      }
-      return null
-    };
-
-
-    obtenerDistaniaFechas(fecha_inicio: any, fecha_final: any) {
-      const fechaDesde = new Date(fecha_inicio);
-      const fechaHasta = new Date(fecha_final);
-      fechaDesde.setDate(fechaDesde.getDate() - 1);
-      fechaHasta.setDate(fechaHasta.getDate() + 1);
-      let diferenciaFechas = fechaHasta.getTime() - fechaDesde.getTime();
-      this.diasDiferencia = (diferenciaFechas / 1000 / 60 / 60 / 24) - 1;
-    }
-
-    crearMensaje() {
-
-      try {
-
-        this.enviarMensaje = true;
-
-        let datosUsuario: AccesoPerfil = this.usuarioService.obtenerAccesoSeleccionado();
-
-        const inicio = this.formularioMensajes.get('fecha_inicio')?.value;
-        const final = this.formularioMensajes.get('fecha_final')?.value;
-
-        const fecha_inicio = `${inicio.year}-${(inicio.month < 10 ? '0' : '').concat(inicio.month)}-${(inicio.day < 10 ? '0' : '').concat(inicio.day)}`;
-
-        const fecha_final = `${final.year}-${(final.month < 10 ? '0' : '').concat(final.month)}-${(final.day < 10 ? '0' : '').concat(final.day)}`;
-
-        this.obtenerDistaniaFechas(fecha_inicio, fecha_final);
-        // mensajeHtml
-        let mensajeHtml = this.formularioMensajes.get('mensajeHtml')?.value;
-
-        const informacionMensaje = {
-          "asunto": this.formularioMensajes.get('info_asunto')?.value, // listo
-          "fecha_inicio": fecha_inicio, // listo
-          "fecha_finalizacion": fecha_final, // listo
-          "contenido": mensajeHtml,
-          "enviado_por": 1, // listo
-          "perfiles": this.crearArrayId(this.perfilesGuardados), // listo
-          "localidades": this.crearArrayId(this.localidadesGuardadas), // listo
-          "colegios": this.crearArrayId(this.colegiosGuardados), // listo
-          "sedes": this.crearArrayId(this.sedesGuardados), // listo
-          "jornadas": this.crearArrayId(this.jornadasGuardados)  // listo
         }
 
-        if(this.formularioMensajes.get('info_asunto').status === "INVALID"){
+        this.colegio_id = '';
 
-          this.formularioMensajes.markAllAsTouched();
-          this.enviarMensaje = false;
-          let infoMensaje: any = {}
-          infoMensaje.ventanaEnviado = true;
-          infoMensaje.titulo = 'Error';
-          infoMensaje.mensaje = 'El campo asunto no está diligenciado';
-          const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
-          modalRef.componentInstance.infoMensaje = infoMensaje;
-          return
-        }
+        break;
 
-        if (this.diasDiferencia > 0) {
-          if (mensajeHtml!) {
-            if (this.formularioMensajes.status == 'VALID') {
+      case 'sede':
 
-              this.errorCampoMensajeVacio = false;
-              this.mensajesService.crearMensaje(this.usuarioLogueado.id, datosUsuario.perfil.id, informacionMensaje).subscribe((resp: any) => {
+        let indexSede = this.sedesGuardados.findIndex(x => x.id === id);
+        this.sedesGuardados.splice(indexSede, 1);
 
-                let infoMensaje: any = {}
-                console.log(resp)
-                if (resp.body.code == "200") {
-                  this.enviarMensaje = false;
-                  infoMensaje.ventanaEnviado = true;
-                  infoMensaje.titulo = 'Mensaje enviado';
-                  infoMensaje.mensaje = resp.body.message;
-                  const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
-                  modalRef.componentInstance.infoMensaje = infoMensaje;
-                  this.tabActivo.emit(2);
-                  this.router.navigate(['./home/gestion-administrativa/enviar-mensajes'])
-                  // modalRef.result.then(() => {
-                  //   console.log('cerrado modal');
-                  // })
-                  return
-                } else {
-                  this.formularioMensajes.markAllAsTouched();
-                  this.enviarMensaje = false;
-                  let infoMensaje: any = {}
-                  infoMensaje.ventanaEnviado = true;
-                  infoMensaje.titulo = 'Error';
-                  infoMensaje.mensaje = resp.body.message;
-                  const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
-                  modalRef.componentInstance.infoMensaje = infoMensaje;
-                  // modalRef.result.then(() => {
-                  //   console.log('cerrado modal');
-                  // })
-                  return
-                }
-
-              }, (err) => {
-                this.formularioMensajes.markAllAsTouched();
-                this.enviarMensaje = false;
-                let infoMensaje: any = {}
-                infoMensaje.ventanaEnviado = true;
-                infoMensaje.titulo = 'Error';
-                infoMensaje.mensaje = err.message;
-                const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
-                modalRef.componentInstance.infoMensaje = infoMensaje;
-                // modalRef.result.then(() => {
-                //   console.log('cerrado modal');
-                // })
-              });
-              return
-            } else {
-              this.formularioMensajes.markAllAsTouched();
-              this.enviarMensaje = false;
-              let infoMensaje: any = {}
-              infoMensaje.ventanaEnviado = true;
-              infoMensaje.titulo = 'Error';
-              infoMensaje.mensaje = 'No ha agregado ningún perfil';
-              const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
-              modalRef.componentInstance.infoMensaje = infoMensaje;
-              // modalRef.result.then(() => {
-              //   console.log('cerrado modal');
-              // })
-            }
-          } else {
-            this.enviarMensaje = false;
-            this.errorCampoMensajeVacio = true;
-            this.formularioMensajes.markAllAsTouched();
-            let infoMensaje: any = {}
-            infoMensaje.ventanaEnviado = true;
-            infoMensaje.titulo = 'Error';
-            infoMensaje.mensaje = 'Campo mensaje obligatorio ';
-            const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
-            modalRef.componentInstance.infoMensaje = infoMensaje;
-            // modalRef.result.then(() => {
-            //   console.log('cerrado modal');
-            // })
-            return
-          }
+        // if (this.tipoUsuario == 'Admin') {
+        // if (this.datosUsuario.perfil.id == 110) {
+        if (this.sedesGuardados.length <= 0) {
+          this.desHabilitarJornada = true;
+          this.formularioMensajes.controls['jornada_id'].disable();
+          this.formularioMensajes.get('jornada_id').reset();
         } else {
-          this.enviarMensaje = false;
-          this.formularioMensajes.markAllAsTouched();
-          let infoMensaje: any = {}
-          infoMensaje.ventanaEnviado = true;
-          infoMensaje.titulo = 'Error';
-          infoMensaje.mensaje = 'Verifique que las fechas esten bien diligenciadas';
-          const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
-          modalRef.componentInstance.infoMensaje = infoMensaje;
-          // modalRef.result.then(() => {
-          //   console.log('cerrado modal');
-          // })
-          return
+          this.desHabilitarJornada = true;
         }
+        // }
+        // }
+
+        // this.formularioMensajes.get('sede_id').reset();
+
+        this.sede_id = '';
+
+        break;
+
+      case 'jornada':
+
+        this.jornada_id = '';
+
+        let indexJornada = this.jornadasGuardados.findIndex(x => x.id === id);
+        this.jornadasGuardados.splice(indexJornada, 1);
 
 
-      } catch (error) {
-        // console.log("error")
-      }
+        break;
 
     }
 
+  }
 
-    actualizarMensaje() {
+  obtenerFechas(data: any) {
 
-      this.validarFecha()
 
-      this.actualizando = true;
+    // fecha_inicio: [Date, [Validators.required]],
+    // fecha_final: [
+    let fechaFinalizacionArray = data.fecha_finalizacion.split('T')
+    fechaFinalizacionArray = fechaFinalizacionArray[0].split('-')
+
+    let fechainicioArray = data.fecha_inicio.split('T')
+    fechainicioArray = fechainicioArray[0].split('-')
+
+    this.formularioMensajes.patchValue({
+      fecha_inicio: { year: + Number(fechainicioArray[0]), month: +Number(fechainicioArray[1]), day: +Number(fechainicioArray[2]) },
+      fecha_final: { year: +Number(fechaFinalizacionArray[0]), month: +Number(fechaFinalizacionArray[1]), day: +Number(fechaFinalizacionArray[2]) }
+    })
+
+    this.validarFecha()
+
+  };
+
+  validarFecha() {
+
+    const date = new Date();
+
+    let fechaActual = this.formatearFecha(new Date(date.getFullYear(), date.getMonth(), date.getDate(), 1), 'date')
+
+    let fechaInicio = this.formularioMensajes.get('fecha_inicio').value;
+    let fechaFin = this.formularioMensajes.get('fecha_final').value;
+
+    const fecha_inicio = this.formatearFecha(fechaInicio, "formateoObjeto")
+    const fecha_fin = this.formatearFecha(fechaFin, "formateoObjeto")
+
+
+    this.obtenerDistaniaFechas(fechaActual, fecha_inicio);
+    if (this.diasDiferencia <= 0) {
+      this.deshabilitarFechaInicio = true;
+      this.formularioMensajes.controls['fecha_inicio'].disable();
+    }
+
+    this.obtenerDistaniaFechas(fechaActual, fecha_fin);
+    if (this.diasDiferencia <= 0) {
+      this.deshabilitarFechaFin = true;
+      this.formularioMensajes.controls['fecha_final'].disable();
+    }
+
+  }
+
+
+  // `${date.getFullYear()}-${date.getDate()}-${(date.getMonth() + 1)}`
+  formatearFecha(fecha: any, tipoFormateo: any) {
+    if (tipoFormateo == 'formateoObjeto') {
+      return `${fecha.year}-${(fecha.month < 10 ? '0' : '').concat(fecha.month)}-${(fecha.day < 10 ? '0' : '').concat(fecha.day)}`;
+    }
+    if (tipoFormateo == 'date') {
+      const mes = fecha.getMonth() + 1;
+      const dia = fecha.getDate();
+      return `${fecha.getFullYear()}-${(mes < 10 ? '0' : '').concat(mes)}-${(dia < 10 ? '0' : '').concat(dia)}`
+    }
+    return null
+  };
+
+
+  obtenerDistaniaFechas(fecha_inicio: any, fecha_final: any) {
+    const fechaDesde = new Date(fecha_inicio);
+    const fechaHasta = new Date(fecha_final);
+    fechaDesde.setDate(fechaDesde.getDate() - 1);
+    fechaHasta.setDate(fechaHasta.getDate() + 1);
+    let diferenciaFechas = fechaHasta.getTime() - fechaDesde.getTime();
+    this.diasDiferencia = (diferenciaFechas / 1000 / 60 / 60 / 24) - 1;
+  }
+
+  crearMensaje() {
+
+    try {
+
+      this.enviarMensaje = true;
 
       let datosUsuario: AccesoPerfil = this.usuarioService.obtenerAccesoSeleccionado();
+
       const inicio = this.formularioMensajes.get('fecha_inicio')?.value;
       const final = this.formularioMensajes.get('fecha_final')?.value;
 
@@ -1284,8 +1197,9 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
       const fecha_final = `${final.year}-${(final.month < 10 ? '0' : '').concat(final.month)}-${(final.day < 10 ? '0' : '').concat(final.day)}`;
 
       this.obtenerDistaniaFechas(fecha_inicio, fecha_final);
-
+      // mensajeHtml
       let mensajeHtml = this.formularioMensajes.get('mensajeHtml')?.value;
+
       const informacionMensaje = {
         "asunto": this.formularioMensajes.get('info_asunto')?.value, // listo
         "fecha_inicio": fecha_inicio, // listo
@@ -1298,35 +1212,45 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
         "sedes": this.crearArrayId(this.sedesGuardados), // listo
         "jornadas": this.crearArrayId(this.jornadasGuardados)  // listo
       }
-      // console.log(this.formularioMensajes.value)
 
-      // if(this.perfilesGuardados){
-      //   this.formularioMensajes.get('perfil_id')?.setErrors({Invalid: false})
-      // }
+      if (this.formularioMensajes.get('info_asunto').status === "INVALID") {
 
+        this.formularioMensajes.markAllAsTouched();
+        this.enviarMensaje = false;
+        let infoMensaje: any = {}
+        infoMensaje.ventanaEnviado = true;
+        infoMensaje.titulo = 'Error.';
+        infoMensaje.mensaje = 'El campo asunto no está diligenciado.';
+        const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
+        modalRef.componentInstance.infoMensaje = infoMensaje;
+        return
+      }
 
-      if (mensajeHtml!) {
-        if (this.diasDiferencia > 0) {
+      if (this.diasDiferencia > 0) {
+        if (mensajeHtml!) {
           if (this.formularioMensajes.status == 'VALID') {
 
             this.errorCampoMensajeVacio = false;
-            this.mensajesService.editarMensaje(this.id_mensajeEditar, this.usuarioLogueado.id, datosUsuario.perfil.id, informacionMensaje).subscribe((resp: any) => {
-              let infoMensaje: any = {}
+            this.mensajesService.crearMensaje(this.usuarioLogueado.id, datosUsuario.perfil.id, informacionMensaje).subscribe((resp: any) => {
 
+              let infoMensaje: any = {}
+              console.log(resp)
               if (resp.body.code == "200") {
-                this.actualizando = false;
+                this.enviarMensaje = false;
                 infoMensaje.ventanaEnviado = true;
-                infoMensaje.titulo = 'Mensaje actualizado';
+                infoMensaje.titulo = 'Mensaje enviado.';
                 infoMensaje.mensaje = resp.body.message;
                 const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
                 modalRef.componentInstance.infoMensaje = infoMensaje;
+                this.tabActivo.emit(2);
+                this.router.navigate(['./home/gestion-administrativa/enviar-mensajes'])
                 // modalRef.result.then(() => {
                 //   console.log('cerrado modal');
                 // })
-                this.errorCampoMensajeVacio = false;
+                return
               } else {
-                this.actualizando = false;
                 this.formularioMensajes.markAllAsTouched();
+                this.enviarMensaje = false;
                 let infoMensaje: any = {}
                 infoMensaje.ventanaEnviado = true;
                 infoMensaje.titulo = 'Error';
@@ -1340,40 +1264,40 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
               }
 
             }, (err) => {
-              this.actualizando = false;
-              this.actualizando = false;
               this.formularioMensajes.markAllAsTouched();
+              this.enviarMensaje = false;
               let infoMensaje: any = {}
               infoMensaje.ventanaEnviado = true;
               infoMensaje.titulo = 'Error';
-              infoMensaje.mensaje = 'Verifique que las fechas esten bien diligenciadas';
+              infoMensaje.mensaje = err.message;
               const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
               modalRef.componentInstance.infoMensaje = infoMensaje;
-              return
-            })
-
+              // modalRef.result.then(() => {
+              //   console.log('cerrado modal');
+              // })
+            });
+            return
           } else {
-            this.actualizando = false;
             this.formularioMensajes.markAllAsTouched();
+            this.enviarMensaje = false;
             let infoMensaje: any = {}
             infoMensaje.ventanaEnviado = true;
             infoMensaje.titulo = 'Error';
-            infoMensaje.mensaje = 'Verifique el fomulario este bien diligenciado';
+            infoMensaje.mensaje = 'No ha agregado ningún perfil.';
             const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
             modalRef.componentInstance.infoMensaje = infoMensaje;
             // modalRef.result.then(() => {
             //   console.log('cerrado modal');
             // })
-            return
           }
-
         } else {
-          this.actualizando = false;
+          this.enviarMensaje = false;
+          this.errorCampoMensajeVacio = true;
           this.formularioMensajes.markAllAsTouched();
           let infoMensaje: any = {}
           infoMensaje.ventanaEnviado = true;
           infoMensaje.titulo = 'Error';
-          infoMensaje.mensaje = 'Verifique que las fechas esten bien diligenciadas';
+          infoMensaje.mensaje = 'Campo mensaje obligatorio.';
           const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
           modalRef.componentInstance.infoMensaje = infoMensaje;
           // modalRef.result.then(() => {
@@ -1381,16 +1305,13 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
           // })
           return
         }
-
-
       } else {
-        this.actualizando = false;
-        this.errorCampoMensajeVacio = true;
+        this.enviarMensaje = false;
         this.formularioMensajes.markAllAsTouched();
         let infoMensaje: any = {}
         infoMensaje.ventanaEnviado = true;
         infoMensaje.titulo = 'Error';
-        infoMensaje.mensaje = 'Campo mensajes obligatorio. ';
+        infoMensaje.mensaje = 'Verifique que las fechas estén bien diligenciadas.';
         const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
         modalRef.componentInstance.infoMensaje = infoMensaje;
         // modalRef.result.then(() => {
@@ -1400,24 +1321,151 @@ export class NuevoMensajeComponent implements OnInit, AfterContentInit {
       }
 
 
+    } catch (error) {
+      // console.log("error")
     }
 
-    crearArrayId(elementos: any[]): any {
-      let elementosId: any[] = [];
-      elementos.forEach((elemento: any) => {
-        elementosId.push(elemento.id.toString());
-      })
-      return elementosId;
+  }
+
+
+  actualizarMensaje() {
+
+    this.validarFecha()
+
+    this.actualizando = true;
+
+    let datosUsuario: AccesoPerfil = this.usuarioService.obtenerAccesoSeleccionado();
+    const inicio = this.formularioMensajes.get('fecha_inicio')?.value;
+    const final = this.formularioMensajes.get('fecha_final')?.value;
+
+    const fecha_inicio = `${inicio.year}-${(inicio.month < 10 ? '0' : '').concat(inicio.month)}-${(inicio.day < 10 ? '0' : '').concat(inicio.day)}`;
+
+    const fecha_final = `${final.year}-${(final.month < 10 ? '0' : '').concat(final.month)}-${(final.day < 10 ? '0' : '').concat(final.day)}`;
+
+    this.obtenerDistaniaFechas(fecha_inicio, fecha_final);
+
+    let mensajeHtml = this.formularioMensajes.get('mensajeHtml')?.value;
+    const informacionMensaje = {
+      "asunto": this.formularioMensajes.get('info_asunto')?.value, // listo
+      "fecha_inicio": fecha_inicio, // listo
+      "fecha_finalizacion": fecha_final, // listo
+      "contenido": mensajeHtml,
+      "enviado_por": 1, // listo
+      "perfiles": this.crearArrayId(this.perfilesGuardados), // listo
+      "localidades": this.crearArrayId(this.localidadesGuardadas), // listo
+      "colegios": this.crearArrayId(this.colegiosGuardados), // listo
+      "sedes": this.crearArrayId(this.sedesGuardados), // listo
+      "jornadas": this.crearArrayId(this.jornadasGuardados)  // listo
     }
+    // console.log(this.formularioMensajes.value)
 
-    ngAfterViewInit() {
+    // if(this.perfilesGuardados){
+    //   this.formularioMensajes.get('perfil_id')?.setErrors({Invalid: false})
+    // }
 
+
+    if (mensajeHtml!) {
+      if (this.diasDiferencia > 0) {
+        if (this.formularioMensajes.status == 'VALID') {
+
+          this.errorCampoMensajeVacio = false;
+          this.mensajesService.editarMensaje(this.id_mensajeEditar, this.usuarioLogueado.id, datosUsuario.perfil.id, informacionMensaje).subscribe((resp: any) => {
+            let infoMensaje: any = {}
+
+            if (resp.body.code == "200") {
+              this.actualizando = false;
+              infoMensaje.ventanaEnviado = true;
+              infoMensaje.titulo = 'Mensaje actualizado';
+              infoMensaje.mensaje = resp.body.message;
+              const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
+              modalRef.componentInstance.infoMensaje = infoMensaje;
+              // modalRef.result.then(() => {
+              //   console.log('cerrado modal');
+              // })
+              this.errorCampoMensajeVacio = false;
+            } else {
+              this.actualizando = false;
+              this.formularioMensajes.markAllAsTouched();
+              let infoMensaje: any = {}
+              infoMensaje.ventanaEnviado = true;
+              infoMensaje.titulo = 'Error';
+              infoMensaje.mensaje = resp.body.message;
+              const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
+              modalRef.componentInstance.infoMensaje = infoMensaje;
+              // modalRef.result.then(() => {
+              //   console.log('cerrado modal');
+              // })
+              return
+            }
+
+          }, (err) => {
+            this.actualizando = false;
+            this.actualizando = false;
+            this.formularioMensajes.markAllAsTouched();
+            let infoMensaje: any = {}
+            infoMensaje.ventanaEnviado = true;
+            infoMensaje.titulo = 'Error';
+            infoMensaje.mensaje = 'Verifique que las fechas esten bien diligenciadas';
+            const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
+            modalRef.componentInstance.infoMensaje = infoMensaje;
+            return
+          })
+
+        } else {
+          this.actualizando = false;
+          this.formularioMensajes.markAllAsTouched();
+          let infoMensaje: any = {}
+          infoMensaje.ventanaEnviado = true;
+          infoMensaje.titulo = 'Error';
+          infoMensaje.mensaje = 'Verifique el fomulario este bien diligenciado';
+          const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
+          modalRef.componentInstance.infoMensaje = infoMensaje;
+          // modalRef.result.then(() => {
+          //   console.log('cerrado modal');
+          // })
+          return
+        }
+
+      } else {
+        this.actualizando = false;
+        this.formularioMensajes.markAllAsTouched();
+        let infoMensaje: any = {}
+        infoMensaje.ventanaEnviado = true;
+        infoMensaje.titulo = 'Error';
+        infoMensaje.mensaje = 'Verifique que las fechas esten bien diligenciadas';
+        const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
+        modalRef.componentInstance.infoMensaje = infoMensaje;
+        // modalRef.result.then(() => {
+        //   console.log('cerrado modal');
+        // })
+        return
+      }
+
+
+    } else {
+      this.actualizando = false;
+      this.errorCampoMensajeVacio = true;
+      this.formularioMensajes.markAllAsTouched();
+      let infoMensaje: any = {}
+      infoMensaje.ventanaEnviado = true;
+      infoMensaje.titulo = 'Error';
+      infoMensaje.mensaje = 'Campo mensajes obligatorio. ';
+      const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
+      modalRef.componentInstance.infoMensaje = infoMensaje;
+      // modalRef.result.then(() => {
+      //   console.log('cerrado modal');
+      // })
+      return
     }
-
 
 
   }
-function callback(arg0: boolean) {
-  throw new Error('Function not implemented.');
-}
 
+  crearArrayId(elementos: any[]): any {
+    let elementosId: any[] = [];
+    elementos.forEach((elemento: any) => {
+      elementosId.push(elemento.id.toString());
+    })
+    return elementosId;
+  }
+}

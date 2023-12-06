@@ -59,7 +59,7 @@ export class SeleccionarPerfilComponent implements OnInit {
         next: (infoUsuario: InfoUsuario) => {
           //console.log("Info Usuarios: ", infoUsuario.registros);
           if(infoUsuario.registros){
-            this.serviciosUsuario.guardarInfoCargada(infoUsuario.registros);
+            /* this.serviciosUsuario.guardarInfoCargada(infoUsuario.registros); */
             this.configurarVista(infoUsuario.registros);
           }else{
             this.vistaSeleccion='sin_accesos';

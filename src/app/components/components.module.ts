@@ -27,7 +27,6 @@ import { ModalInformacionComponent } from './modal-informacion/modal-informacion
 import { SinRegistrosComponent } from './sin-registros/sin-registros.component';
 import { CarruselImagenesComponent } from './carrusel-imagenes/carrusel-imagenes.component';
 import { NoAutorizadoComponent } from './no-autorizado/no-autorizado.component';
-import { SesionAEComponent } from './sesion-ae/sesion-ae.component';
 import { FilaDinamicaTablaComponent } from './fila-dinamica-tabla/fila-dinamica-tabla.component';
 import { TablaRegistroDetalleComponent } from './tabla-registro-detalle/tabla-registro-detalle.component';
 
@@ -53,7 +52,6 @@ import { TablaRegistroDetalleComponent } from './tabla-registro-detalle/tabla-re
     SinRegistrosComponent,
     CarruselImagenesComponent,
     NoAutorizadoComponent,
-    SesionAEComponent,
     FilaDinamicaTablaComponent,
     TablaRegistroDetalleComponent
   ],
@@ -75,7 +73,6 @@ import { TablaRegistroDetalleComponent } from './tabla-registro-detalle/tabla-re
     SinRegistrosComponent,
     CarruselImagenesComponent,
     NoAutorizadoComponent,
-    SesionAEComponent,
     FilaDinamicaTablaComponent,
     TablaRegistroDetalleComponent
   ],

@@ -46,8 +46,8 @@ export class AccesosDirectosComponent {
 
   async abrirOpcion(ruta:string){
     let recursoUrl = await this.opcionesService.obtenerRecurso(ruta);
-    console.log("recursoUrl ==> ", recursoUrl);
-    this.router.navigate(['/home/ver', environment.URL_APOYO_ESCOLAR +  recursoUrl])
+    console.log("recursoUrl ACCESOS DIRECTOS ==> ", recursoUrl);
+    this.router.navigate(['/home/ver', recursoUrl])
   }
 
 }

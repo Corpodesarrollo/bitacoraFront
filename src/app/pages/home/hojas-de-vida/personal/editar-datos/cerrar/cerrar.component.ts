@@ -8,12 +8,21 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class CerrarComponent {
 
+  /**
+   * Servicio de Modal
+   */
   activeModal = inject(NgbActiveModal)
 
+  /**
+   * Meotdo para salir
+   */
   salir(){
     this.activeModal.close(true)
   }
 
+  /**
+   * Metodo para continuar en la vista
+   */
   continuar(){
     this.activeModal.close(false)
   }

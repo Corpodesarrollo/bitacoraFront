@@ -16,19 +16,23 @@ import { UsuarioService } from 'src/app/services/api/usuario/usuario.service';
 export class FiltrosComponent {
 
   formFiltros!: FormGroup;
-
   idColegio: number;
 
   @Input() cargandoRegistros: boolean = false;
   @Output() filtros = new EventEmitter<any>();
 
+  /**
+   * Listas generales
+   */
   sedes:any;
   jornadas:ListaJornadas[] = [];
   tiposIdentificacion:ListaGenerales[] = [];
   metodologias:any[] = [];
   vigencias:any[] = [];
 
-
+  /**
+   * Banderas para la lsitas
+   */
   cargandoJornadas:boolean = false;
   cargandoSedes:boolean = false;
   cargandoPerfiles:boolean = false;
@@ -47,6 +51,15 @@ export class FiltrosComponent {
     id_jornada: 0
   };
 
+
+  /**
+   *
+   * @param formBuilder
+   * @param personalService
+   * @param usuarioService
+   * Construye los servicios
+   * carga el id del colegio
+   */
   constructor(
     private formBuilder:FormBuilder,
     private personalService: PersonalService,
@@ -59,6 +72,9 @@ export class FiltrosComponent {
   }
 
 
+  /**
+   * Metodo que construy el fomulario
+   */
   construirFormularios(){
     this.formFiltros = this.formBuilder.group({
       sede: [-1],
@@ -72,10 +88,23 @@ export class FiltrosComponent {
     })
   }
 
+  /**
+   * Metodo que recibe el campo del formulario
+   * y valida si es valido
+   * @param campo
+   * @returns
+   */
   campoNoValido(campo:string){
     return this.formFiltros.get(campo)?.touched && this.formFiltros.get(campo)?.invalid
   }
 
+  /**
+   * Metodo que se encarga de cargar las listas
+   * que se vana mostrar en los selects
+   * Carrga sedes
+   * Carga Perfiles
+   *
+   */
   cargarListas(){
     this.cargandoSedes = true;
     this.cargandoPerfiles = true;
@@ -99,6 +128,11 @@ export class FiltrosComponent {
     })
   }
 
+
+  /**
+   * Metodo que carga la jornada
+   * acorde a la sede seleccionada
+   */
   cargarJornada(){
     let cod_sede = this.formFiltros.get('sede')?.value
     let campo_jornada = this.formFiltros.get('jornada')
@@ -127,6 +161,11 @@ export class FiltrosComponent {
     }
   }
 
+  /**
+   * Metodo para validar que no envie
+   * campos nulls y vacios
+   * @returns
+   */
   validarDatosIngresados(){
     const formValues = this.formFiltros.value;
     for (const value of Object.values(formValues)) {
@@ -137,11 +176,20 @@ export class FiltrosComponent {
     return false;
   }
 
+  /**
+   * Metodo para limpiar el
+   * formulario
+   */
   limmpiarDatos(){
     this.formFiltros.reset();
     this.jornadas  = []
   }
 
+  /**
+   * Metodo que se encarga de
+   * emitir el evento con los filtors seleccionados
+   * este evento se recibe en '../datos-funcionarios.component.ts'
+   */
   buscar(){
       this.parametrosFiltros.sede = this.formFiltros.get('sede')?.value == -1 ? "" : this.formFiltros.get('sede')?.value ;
       this.parametrosFiltros.jornada = this.formFiltros.get('jornada')?.value == -1 ? "" : this.formFiltros.get('jornada')?.value;

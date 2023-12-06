@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ContraseniaService } from 'src/app/services/api/contrasenia/contrasenia.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ModalInformacionComponent } from 'src/app/components/modal-informacion/modal-informacion.component';
 
 @Component({
   selector: 'app-recuperar-contrasenia',
@@ -43,7 +44,6 @@ export class RecuperarContraseniaComponent {
     const idUsuario = this.formulario.get('numeroUsuario')?.value;
     this.contrasenaService.recuperarContrasenia(idUsuario).subscribe(
       response => {
-        console.log(response);
         if (response.code === 200) {
           this.hayRespuesta = true;
           if(response.message === this.mensajeError) {
@@ -64,7 +64,19 @@ export class RecuperarContraseniaComponent {
 
             if (correoEncontrado) {
               this.parrafo1 = this.parrafo1.replace(correoEncontrado[0], `<strong>${correoEncontrado[0]}</strong>`);
+            }
           }
+        }
+        else{
+          this.ingresando = false;
+          this.hayRespuesta = false;
+          this.formulario.get('numeroUsuario').setValue('')
+          const modalInformacion = this.ngModal.open(ModalInformacionComponent, {size: 'md', backdrop: 'static', centered: true, animation: false})
+          modalInformacion.componentInstance.informacion = {
+            error: true,
+            esExitoso: 'error',
+            titulo: 'Error al recuperar contraseña',
+            mensaje: response.message
           }
         }
       },

@@ -13,21 +13,26 @@ import { DatosFuncionarios } from 'src/app/interfaces/datos_funcionarios.interfa
 export class AnuarioComponent {
 
   cargandoFotos:boolean = false
+  cargandoRegistros:boolean = false;
+  datosNoEncontrados:boolean = false;
   parametrosFiltros:any
   parametrosPagina:any
   totalResultados:any
   listaRegistrosAnuario:DatosFuncionarios[] = [];
   totalPaginas!:number;
-  cargandoRegistros:boolean = false;
   pagina:number = 0;
   pageSize:number = 8;
-  datosNoEncontrados:boolean = false;
 
   modalService = inject(NgbModal);
 
   constructor(
     private personalService: PersonalService) { }
 
+
+  /**
+   * Carga los parametros
+   * de la pagina para que resuelva por apellido
+   */
   ngOnInit(){
     this.parametrosPagina = {
       sort: 'primerApellido,asc',
@@ -36,6 +41,10 @@ export class AnuarioComponent {
     this.obtenerDatosAnuario();
   }
 
+  /**
+   * meotod que obtiene las fotos
+   * de los usuarios y las asigna al anuaria
+   */
   obtenerDatosAnuario(){
     this.cargandoFotos = true
     this.personalService.obtenerDatosFiltrados(this.parametrosFiltros, this.parametrosPagina).subscribe({
@@ -71,8 +80,12 @@ export class AnuarioComponent {
     })
   }
 
-  //Todo crear el metodo para llamar los datos ya filtrados.
-
+  /**
+   *
+   * @param registro
+   * Metodo que recibe el registro y abre la ista
+   * de editar Datos
+   */
   editarUsuario(registro:any){
     let registroUsuario = registro
     if(registroUsuario){
@@ -82,10 +95,10 @@ export class AnuarioComponent {
     }
   }
 
+  /**
+   * Metodo para cerrar el modal
+   */
   cerrar() {
     this.modalService.dismissAll()
   }
-
-
-
 }

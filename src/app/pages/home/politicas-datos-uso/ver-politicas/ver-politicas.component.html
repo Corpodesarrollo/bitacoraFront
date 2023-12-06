@@ -1,19 +1,23 @@
-<div class="cabecera">
-  <div class="titulos">
+
+<div class="container">
+  <div class="cabecera">
     <div class="volver">
       <span class="material-symbols-outlined" (click)="volver()">
         arrow_back_ios
       </span>
     </div>
-    <div *ngIf="politica">
-      {{ politica.tipoPolitica }}<br>
+    <div class="titulos">
+      <div *ngIf="politica">
+        Política de Uso de la Aplicación<br>
+        "Sistema de Apoyo Escolar"
+      </div>
     </div>
   </div>
-</div>
-<app-cargando *ngIf="cargandoVersion"></app-cargando>
-<div id="PoliticasSistema" *ngIf="!cargandoVersion && politica">
-  <div class="titulo">Fecha de entrada en vigencia: {{politica.fecha}}</div>
-  <div class="parrafo" [innerHTML]="contenido">
+  <app-cargando *ngIf="cargandoVersion"></app-cargando>
+  <div id="PoliticasSistema" *ngIf="!cargandoVersion && politica">
+    <div class="titulo">Fecha de entrada en vigencia: {{politica.fecha}}</div>
+    <div class="parrafo" [innerHTML]="contenido">
+    </div>
   </div>
 </div>
 

@@ -10,6 +10,10 @@
     width: 168px;
 }
 
+.input-wrapper input {
+  padding-right: 3.5rem !important;
+}
+
 .input-wrapper .error {
     border: 1px solid var(--error) !important;
 }
@@ -20,4 +24,10 @@
 
 .deshabilitarInputSelect {
     opacity: 0.5;
+}
+
+.fecha::placeholder{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

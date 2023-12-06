@@ -179,6 +179,24 @@
     padding: 1rem 0rem;
 }
 
+.fecha::placeholder {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 80%;
+    font-weight: bold;
+    opacity: 0.5;
+    color: red;
+}
+
+
+.mostrar{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 7px;
+}
+
 @media (max-width: 1199.98px) {
     .iconosListaBuscar {
         justify-content: flex-end;

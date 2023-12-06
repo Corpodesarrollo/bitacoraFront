@@ -144,7 +144,7 @@
 
 </form>
 <div *ngIf="!cargandoIntensidad" class="acciones">
-  <button (click)="cerrarModal()" class="btn boton_secundario">Cancelar</button>
+  <button [disabled]="guardandoMensaje" (click)="cerrarModal()" class="btn boton_secundario">Cancelar</button>
   <button *ngIf="!guardandoMensaje" [disabled]="desHabilitarGuardar" class="btn boton_primario"
     (click)="guardar()">Guardar</button>
   <button class="btn boton_primario d-flex align-items-center gap-2" *ngIf="guardandoMensaje">

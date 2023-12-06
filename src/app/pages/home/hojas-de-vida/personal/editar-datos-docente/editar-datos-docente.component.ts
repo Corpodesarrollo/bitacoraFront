@@ -14,29 +14,32 @@ import { UsuarioService } from 'src/app/services/api/usuario/usuario.service';
 })
 export class EditarDatosDocenteComponent {
 
-
+  /**Modales de confirmar y erro */
   @ViewChild("modalExito") modalExito: any;
   @ViewChild("modalError") modalError: any;
 
-  puedeVerAsignacion:boolean = false;
+  /**Banderas */
+  cargandoInformacion:boolean = false;
+  guardandoCorreo:boolean = false;
+  estaInactivo!:boolean;
   esDocente:any;
-  //Modal
+  esFotografia!:any;
+  permisosCapturarFotografia:boolean = true;
+  puedeVerAsignacion:boolean = false;
+
+  datosDocente:AccesoPerfil;
   idUsuario:number = 0;
   formDatosDocete!: FormGroup;
   tiposIdentificacion:any = [];
-  datosDocente:AccesoPerfil;
-
-  cargandoInformacion:boolean = false;
-  guardandoCorreo:boolean = false;
-  esFotografia!:any;
-
-  estaInactivo!:boolean;
-  permisosCapturarFotografia:boolean = true;
   identficacionUsuario!:string;
   fotoUsuario:string | any = ''
   urlFotoUsuario:string = ''
   mensajeError: string = ''
 
+  /**
+   * Metodo de parametros para
+   * actualizar el servicio
+   */
   parametrosFiltros = {
     sede: "",
     jornada: "",
@@ -64,7 +67,9 @@ export class EditarDatosDocenteComponent {
     this.cargarPermisos()
   }
 
-
+  /**
+   * Metodo para carrgar los permisos
+   */
   cargarPermisos(){
     this.usuarioServices.permisosActualizados$.subscribe((permisosActualizados) => {
       if (permisosActualizados) {
@@ -73,7 +78,9 @@ export class EditarDatosDocenteComponent {
     })
   }
 
-
+  /**
+   * Metodo para construir el fomulario
+   */
   construirFormularios(){
     this.formDatosDocete = this.formBuilder.group({
       tipo_identificacion: [{value: '', disabled: true}],
@@ -88,11 +95,19 @@ export class EditarDatosDocenteComponent {
 
   }
 
+  /**
+   * Metodo que recibe el campod el formulario y lo valida
+   * @param campo
+   * @returns
+   */
   campoNoValido(campo:string){
     return this.formDatosDocete.get(campo)?.touched && this.formDatosDocete.get(campo)?.invalid
   }
 
 
+  /**
+   * Metodo para cargar la listas de los select
+   */
   cargarListas(){
     this.personalServices.obtenerPerfiles().subscribe({
       next: (respuesta:any) => {
@@ -104,6 +119,10 @@ export class EditarDatosDocenteComponent {
     })
   }
 
+
+  /**
+   * Metodo que carga los datos del funcionario
+   */
   obtenerDatos(){
     let parametos = {
       identificacion: this.identficacionUsuario,
@@ -111,9 +130,6 @@ export class EditarDatosDocenteComponent {
       sede: this.datosDocente.sede ? this.datosDocente.sede.id : null,
       jornada: this.datosDocente.jornada ? this.datosDocente.jornada.id : null,
     }
-
-    console.log(parametos);
-
     this.cargandoInformacion = true
     this.personalServices.obtenerDatosSimple(parametos).subscribe({
       next: (respuesta:any) => {
@@ -149,14 +165,28 @@ export class EditarDatosDocenteComponent {
     })
   }
 
+  /**
+   * Metodo que recibe la foro cargada y la muestra
+   * @param event
+   */
   actualizarFoto(event:Event){
     this.fotoUsuario = event
   }
 
+  /**
+   * Metodo para validar la foto si es cargada
+   * o tomada por camara
+   * @param event
+   */
   esTomada(event:Event){
     this.esFotografia = event
   }
 
+  /**
+   * Metodo para actualizar el correo
+   * Valida si la foto cambio si cambio
+   * actualiza la foto mediante el servicio
+   */
   actualizarCorreo(){
     if (this.formDatosDocete.invalid ) {
       Object.values(this.formDatosDocete.controls).forEach((control: any) => {
@@ -213,6 +243,9 @@ export class EditarDatosDocenteComponent {
     }
   }
 
+  /**
+   * Metodo para redirigir a asignacion academica
+   */
   verAsignacionAcademica(){
     this.router.navigate(['../home/hojas-de-vida/personal/asignacion-docente']);
   }

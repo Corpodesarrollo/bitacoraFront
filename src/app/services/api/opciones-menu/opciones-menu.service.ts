@@ -16,10 +16,10 @@ export class OpcionesMenuService {
     private usuarioService: UsuarioService
   ){
     this.datosUsuario = this.usuarioService.obtenerAccesoSeleccionado()
-   
+    this.usuarioId = this.usuarioService.obtenerUsuario().id;
   }
 
-  async obtenerRecurso(url:any){
+  obtenerRecurso(url:any){
     let userId = Number(this.usuarioId !== null && this.usuarioId > 0 ? this.usuarioId : 0);
     let sede = (this.datosUsuario.sede !== null && this.datosUsuario.sede.id > 0 ? this.datosUsuario.sede.id : 0);
     let instituto = (this.datosUsuario.colegio !== null && this.datosUsuario.colegio.id > 0 ? this.datosUsuario.colegio.id : 0);
@@ -64,26 +64,8 @@ export class OpcionesMenuService {
 
         else this.recursoUrl = `${this.recursoUrl}?var=${userId}-${instituto}-${sede}-${jornada}`;
       }
-    }
-
-    if (url !== null &&  url.length > 0) {
-      // Se crea logica para agregar parametros a URL desde base de datos (Logica aplicativo NARANJA)
-      this.usuarioService.obtenerParametrosServMenu(null, url).subscribe(datos =>{
-        let resultadoLocal: any = datos;
-
-        if (resultadoLocal.code == 200) {
-          this.listaParamServicio = resultadoLocal.data;
-          
-          if (this.listaParamServicio.length > 0) {
-            this.listaParamServicio.forEach((reg) => {
-              this.recursoUrl += (this.recursoUrl.includes("?"))? `&${reg.nombre}=${reg.valor}` : `?${reg.nombre}=${reg.valor}`;
-            });
-          }
-          console.log("this.recursoUrl acceso rapido ==> ", this.recursoUrl);
-        }
-        return this.recursoUrl;
-      },);
-      
+    } else {
+      this.recursoUrl = environment.URL_APOYO_ESCOLAR + this.recursoUrl;
     }
 
     return this.recursoUrl;

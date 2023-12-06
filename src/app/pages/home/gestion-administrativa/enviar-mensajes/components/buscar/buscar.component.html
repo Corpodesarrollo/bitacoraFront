@@ -4,8 +4,22 @@
 
        <app-filtros (filtros)="filtros($event)"></app-filtros>
 
-       <div *ngIf="mensajes.length > 0" class="col-12 contenedorTablas">
-            <div class="tituloTotalRegistros col-12 col-md-6">Se encontraron {{totalRegistros}} resultados</div>
+       <div *ngIf="mensajes.length > 0" class="col-12 row contenedorTablas">
+            <div class="tituloTotalRegistros col-12 col-md-6">
+                Se encontraron {{totalRegistros}} resultados
+            </div>
+            <div *ngIf="totalRegistros > 10" class="mostrar col-12 col-md-6">
+                <span>Mostrar</span>
+                <ng-select [(ngModel)]="pageSize" [clearable]="false" [searchable]="false" class="select_lista"
+                    (change)="actualizarTamano($event)">
+                    <ng-option [value]="10">10</ng-option>
+                    <ng-option [value]="20">20</ng-option>
+                </ng-select>
+                <span>Resultados por página</span>
+            </div>
+            <!-- <div class="mostrar col-12 col-md-4">
+                <span>10 resultados por página</span>
+            </div> -->
             <div class="tabla">
                 <div class="row titulos">
                     <div class="col-2 titulo">Enviado por</div>

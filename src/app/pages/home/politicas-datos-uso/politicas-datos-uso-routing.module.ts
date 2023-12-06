@@ -4,6 +4,8 @@ import { ListarComponent } from './listar/listar.component';
 import { PoliticasDatosUsoComponent } from './politicas-datos-uso.component';
 import { PoliticasUsoComponent } from './politicas-uso/politicas-uso.component';
 import { VerPoliticasComponent } from 'src/app/pages/home/politicas-datos-uso/ver-politicas/ver-politicas.component';
+import { CanActivatePermisosGuard } from 'src/app/guards/permisos/permisos.guard';
+import { PermisosUsuarios } from 'src/app/enums/usuario-permisos';
 
 const routes: Routes = [{
   path: '',
@@ -12,14 +14,20 @@ const routes: Routes = [{
     {
       path: '',
       component: ListarComponent,
+      canActivate: [CanActivatePermisosGuard],
+      data: { permisos: PermisosUsuarios.POLITICAS_DATOS_USO }
     },
     {
-      path: 'politicas-uso',
+      path: 'cambiar-politicas-uso',
       component: PoliticasUsoComponent,
+      canActivate: [CanActivatePermisosGuard],
+      data: { permisos: PermisosUsuarios.POLITICAS_DATOS_USO }
     },
     {
-      path: 'politicas-uso/:id',
+      path: 'ver-politicas-uso/:id',
       component: VerPoliticasComponent,
+      canActivate: [CanActivatePermisosGuard],
+      data: { permisos: PermisosUsuarios.POLITICAS_DATOS_USO }
     },
     {
       path:'**',

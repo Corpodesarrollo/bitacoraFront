@@ -20,12 +20,13 @@ export class SubirComponent {
   @ViewChild('fileInput', { static: false }) fileInput!: ElementRef<HTMLInputElement>;
 
 
-  formulario!: FormGroup;
-  archivoSubido: boolean = false;
+  formularioCategoria!: FormGroup;
   archivoGuardado: boolean = false;
   archivoPesado: boolean = false;
   errorCategoria: boolean = false;
   tiposManuales: any;
+
+
   idCategoria: number = 0;
   categoriaSeleccionada: boolean = false;
   formData: FormData = new FormData();
@@ -39,7 +40,7 @@ export class SubirComponent {
   constructor(private servicioModal: NgbModal,
     private manualesService: ManualesService,
     private formBuilder: FormBuilder,
-    private router: Router,) {
+    private router: Router) {
     this.construirFormulario();
     this.obtenerTiposManuales();
   }
@@ -48,58 +49,58 @@ export class SubirComponent {
     this.router.navigateByUrl("/home/manuales-sistema")
   };
 
+  /**
+   * Metodo par abtener los tipos de manuales
+   */
   obtenerTiposManuales() {
     this.manualesService.obtenerCategorias().subscribe(
       (data: any) => {
         if (data) {
+          console.log(data.data);
           this.tiposManuales = data.data;
         }
       })
   }
 
   construirFormulario() {
-    this.formulario = this.formBuilder.group({
-      categoriaManual: [null, Validators.required]
+    this.formularioCategoria = this.formBuilder.group({
+      categoria_manual: [null, Validators.required]
     });
   }
 
-  categoriaManual(event: any) {
-    this.idCategoria = event.codigo;
-    this.categoriaSeleccionada = true;
-    this.errorCategoria = false;
-  }
-
   campoNoValidoFormulario(campo: string) {
-    return this.formulario.get(campo)?.invalid && this.formulario.get(campo)?.touched;
+    return this.formularioCategoria.get(campo)?.invalid && this.formularioCategoria.get(campo)?.touched;
   }
 
-  eventoClick() {
-    if (!this.categoriaSeleccionada) {
-      this.errorCategoria = true;
+  cargarArchivo() {
+    if (this.formularioCategoria.invalid) {
+      Object.values(this.formularioCategoria.controls).forEach((control: any) => {
+        control.markAsTouched();
+      });
+      const modalInformacion = this.servicioModal.open(ModalInformacionComponent,{size: 'md', centered: true, animation: true,backdrop: 'static'})
+      modalInformacion.componentInstance.informacion = {
+        esExitoso: 'warning',
+        titulo: '¡Advertencia!',
+        mensaje: 'Debe seleccionar primero una categoría.'
+      }
     }
   }
 
-  archivoSeleccionado() {
-    const documentos: FileList | null = this.fileInput.nativeElement.files;
-    if (documentos) {
-      for (let i = 0; i < documentos.length; i++) {
-        const documento: File | null = documentos.item(i);
-        if (documento) {
-          const tamanoDocumento = documento.size / 1024 / 1024;
-          if (tamanoDocumento > 10) {
-            this.archivoPesado = true;
-            this.fileInput.nativeElement.value = '';
-            this.abrirArchivoPesado();
-            continue;
-          } else {
-            if (documento.type === 'application/pdf') {
-              this.procesarPDF(documento);
-            } else {
-              this.abrirArchivoNoPdf();
-              this.fileInput.nativeElement.value = '';
-              continue;
-            }
-          }
+  archivoSeleccionado(event) {
+    const element = event.target as HTMLInputElement;
+    const archivo = element.files?.item(0);
+    if (archivo) {
+      const tamanoDocumento = archivo.size / 1024 / 1024;
+      if (tamanoDocumento > 10) {
+        this.archivoPesado = true;
+        this.fileInput.nativeElement.value = "";
+        this.abrirArchivoPesado();
+      } else {
+        if (archivo.type === 'application/pdf') {
+          this.procesarPDF(archivo);
+        } else {
+          this.abrirArchivoNoPdf();
+          this.fileInput.nativeElement.value = "";
         }
       }
     }
@@ -107,28 +108,22 @@ export class SubirComponent {
 
   procesarPDF(documento: File) {
     this.formData.append('manualFile', documento, documento.name);
-    this.archivoSubido = true;
     this.crearObjetoPdf();
   }
 
   crearObjetoPdf() {
-    if (!this.categoriaSeleccionada) {
-      this.errorCategoria = true;
-    }
-    else {
         this.cargandoArchivo = true;
-        this.manualesService.guardarManual(this.idCategoria, this.formData).subscribe(
+        let categoria_manual = this.formularioCategoria.get('categoria_manual')?.value
+        this.manualesService.guardarManual(categoria_manual, this.formData).subscribe(
           {
             next: (respuesta: any) => {
               if (respuesta.code === 200) {
                 this.archivoGuardado = true;
-                this.archivoSubido = false;
                 this.abrirArchivoCargado()
                 this.cargandoArchivo = false;
 
               }
               else if (respuesta.code === 204) {
-                this.archivoSubido = false;
                 this.archivoGuardado = false;
                 const modalInformacion = this.servicioModal.open(ModalInformacionComponent, {
                   size: 'md', animation: false, centered: true, backdrop: 'static'
@@ -143,8 +138,8 @@ export class SubirComponent {
               }
               else {
                 this.archivoGuardado = false;
-                this.archivoSubido = true;
                 this.cargandoArchivo = false;
+                this.fileInput.nativeElement.value = "";
                 const modalInformacion = this.servicioModal.open(ModalInformacionComponent, {
                   size: 'md', animation: false, centered: true, backdrop: 'static'
                 })
@@ -159,6 +154,7 @@ export class SubirComponent {
             error: (error) => {
               this.cargandoArchivo = false
               const manualInformacion = this.servicioModal.open(ModalInformacionComponent, { size: 'md', centered: true, animation: false, backdrop: 'static' })
+              this.fileInput.nativeElement.value = "";
               manualInformacion.componentInstance.informacion =
               {
                 error: true,
@@ -170,12 +166,12 @@ export class SubirComponent {
             }
           }
         )
-    }
+
   }
 
   resetearComponente() {
+    this.fileInput.nativeElement.value = "";
     setTimeout(() => {
-      this.archivoSubido = false;
       this.archivoGuardado = false;
       this.archivoPesado = false;
       this.errorCategoria = false;
@@ -208,13 +204,13 @@ export class SubirComponent {
   }
 
   recargar() {
-    this.archivoSubido = false;
+    this.fileInput.nativeElement.value = "";
     this.archivoGuardado = false;
     this.archivoPesado = false;
     this.errorCategoria = false;
     this.formData = new FormData();
     this.formDatas = [];
-    this.formulario.reset()
+    this.formularioCategoria.reset()
   }
 
   cerrar() {

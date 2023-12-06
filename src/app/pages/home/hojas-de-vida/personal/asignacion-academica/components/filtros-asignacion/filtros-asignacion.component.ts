@@ -127,7 +127,7 @@ export class FiltrosAsignacionComponent {
   }
 
   cargarJornada(e:any){
- 
+
     this.cargandoJornadas = true;
     // console.log(e)
     if(e){
@@ -135,7 +135,7 @@ export class FiltrosAsignacionComponent {
          id_colegio: this.idColegio,
          id_sede: this.formFiltros.get('id_sede')?.value
       }
-  
+
       if(parametros.id_sede === null || parametros.id_sede === ''){
         this.jornadas = []
         this.formFiltros.controls['id_jornada'].setValue(null);
@@ -210,7 +210,7 @@ export class FiltrosAsignacionComponent {
         setTimeout(()=>{
           this.cargandoRegistros = false;
         },1000)
-        this.infoMensaje.titulo = 'Filtros vacios';
+        this.infoMensaje.titulo = 'Filtros vacíos';
         this.infoMensaje.mensaje = 'Uno o más valores de los filtros están vacíos Por favor, seleccione valores en todos los filtros.';
         this.infoMensaje.botonesAsignacionErrorEliminar = true;
         this.infoMensaje.botonesAsignacionEliminar = false;

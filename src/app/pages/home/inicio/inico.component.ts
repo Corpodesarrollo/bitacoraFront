@@ -70,7 +70,7 @@ export class InicioComponent {
   cargarPermisos() {
     this.usuarioService.permisosActualizados$.subscribe((permisosActualizados) => {
       if (permisosActualizados) {
-        this.puedeVerMensajes = this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.VER_MENSAJE),
+        this.puedeVerMensajes = this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.VER_MENSAJE_HOME),
           this.puedeVerColegios = this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.HOME_LISTA_COLEGIOS),
           this.puedeVerEstudiantes = this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.HOME_LISTA_ESTUDIANTES)
         this.cargandoPermisos = false;

@@ -12,10 +12,10 @@
     </div>
 
     <div class="campo mt-4 col-12 col-md-4">
-        <div class="input-wrapper">
+        <div [class.deshabilitarInputSelect]="deshabilitarSelectLocalidad" class="input-wrapper">
             <label for="usuario" class="etiqueta_select"> Localidad:<span class="asterisco">*</span></label>
             <ng-select [items]="listadoLocalidades" bindValue="id" bindLabel="nombre"
-                (change)="localidadSeleccionado($event)" class="select" placeholder="Seleccione la localidad" formControlName="localidad_id">
+                (ngModelChange)="localidadSeleccionado($event)" class="select" placeholder="Seleccione la localidad" formControlName="localidad_id">
             </ng-select>
         </div>
         <div class="contenedor_errores"><span class="campo_requerido"></span>
@@ -35,9 +35,9 @@
 
     <div class="campo mt-2 col-12 col-md-5">
         <div class="input-wrapper">
-            <label for="usuario"> Fecha de inicio:<span class="asterisco">*</span></label>
+            <label for="usuario"> Fecha desde:<span class="asterisco">*</span></label>
             <span class="material-symbols-outlined input-icon"> account_circle </span>
-            <input type="text" placeholder="Seleccione la fecha de inicio" ng-reflect-name="fechaInicio" class=""
+            <input type="text" placeholder="Seleccione la fecha de inicio" ng-reflect-name="fechaInicio" class="fecha"
                 (click)="date.toggle()" value="05/02/2020" type="datetime" readonly 
                 ngbDatepicker #date="ngbDatepicker" formControlName="fecha_inicio" 
                 [ngClass]="{'error':  campoNoValido('fecha_inicio')}">
@@ -49,9 +49,9 @@
 
     <div class="campo mt-2 col-12 col-md-5">
         <div class="input-wrapper">
-            <label for="usuario"> Fecha de finalización:<span class="asterisco">*</span></label>
+            <label for="usuario"> Fecha hasta:<span class="asterisco">*</span></label>
             <span class="material-symbols-outlined input-icon"> account_circle </span>
-            <input type="text" placeholder="Seleccione la fecha de finalización" class="" (click)="date2.toggle()"
+            <input type="text" placeholder="Seleccione la fecha de finalización" class="fecha" (click)="date2.toggle()"
                 value="05/02/2023" type="datetime" readonly ngbDatepicker
                 #date2="ngbDatepicker" formControlName="fecha_final" [ngClass]="{'error':  campoNoValido('fecha_final')}">
             <span (click)="date2.toggle()" class="material-symbols-outlined inputIconDate"> today </span>

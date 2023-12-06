@@ -737,6 +737,10 @@ button.nav-link.active {
   background-color: var(--alterno) !important;
 }
 
+button#link- {
+  display: none;
+}
+
 .btn_acciones:hover {
   background-color: rgba(63, 72, 74, 0.08);
   border-radius: 50%;
@@ -790,6 +794,18 @@ button#link- {
 }
 
 .ql-tooltip {
+  display: none !important;
+}
+
+.tooltip-inner {
+  display: none !important;
+}
+
+.hidden-tooltip {
+  display: none !important;
+}
+
+::ng-deep .tox-notifications-container {
   display: none !important;
 }
 

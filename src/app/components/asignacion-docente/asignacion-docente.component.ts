@@ -51,7 +51,7 @@ export class AsignacionDocenteComponent implements OnInit{
     this.accesoSeleccionado = this.usuarioService.obtenerAccesoSeleccionado()
     this.identficacionUsuario = this.usuarioService.obtenerUsuario().id;
     // console.log(this.datos_usuario  ,     this.accesoSeleccionado )
-    this.obtenerDocentes();   
+    this.obtenerDocentes();
   }
 
   obtenerDatos(){
@@ -65,7 +65,7 @@ export class AsignacionDocenteComponent implements OnInit{
     this.personalServices.obtenerDatosSimple(parametos).subscribe({
       next: (respuesta:any) => {
         let datos = respuesta.data
-    
+
 
         this.infoDocenteLogueado.tipo_identificacion = datos.tipoIdentificacion;
         this.infoDocenteLogueado.numero_identificacion = datos.identificacion;
@@ -81,8 +81,8 @@ export class AsignacionDocenteComponent implements OnInit{
   }
 
   obtenerDocentes() {
-  
-    
+
+
     this.parametrosFiltros.sede_id='',
     this.parametrosFiltros.jornada_id= '';
     // console.log(this.infoFuncionario)
@@ -99,7 +99,7 @@ export class AsignacionDocenteComponent implements OnInit{
       this.parametrosFiltros.sede_id= this.datos_usuario.sede.id,
       this.parametrosFiltros.jornada_id= this.datos_usuario.jornada.id;
       this.parametrosFiltros.documento_docente= this.identficacionUsuario
-      
+
     }else{
       this.enInfoFuncionarioSeleccionado = false;
       // console.log('en pantalla rector')
@@ -116,12 +116,12 @@ export class AsignacionDocenteComponent implements OnInit{
       this.parametrosFiltros.documento_docente= this.infoFuncionario.funcionario.identificacion;
     }
 
-    
+
 
     this.asignacionAcademicaService.obtenerintensidadHoraria(this.parametrosFiltros).subscribe(async (resp: any) => {
 
 
-      // institucion_id, sede_id, jornada_id, 
+      // institucion_id, sede_id, jornada_id,
 
       if (resp.status == '200') {
         this.datosCargados = true;
@@ -141,7 +141,7 @@ export class AsignacionDocenteComponent implements OnInit{
         })
         this.cargandoDocentes = false;
       } else{
-        
+
         this.datosCargados = false;
         this.listadoDocentes = [];
         this.cargandoDocentes = false;
@@ -152,6 +152,9 @@ export class AsignacionDocenteComponent implements OnInit{
         this.infoMensaje.ventanaEnviado = true;
         const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
         modalRef.componentInstance.infoMensaje = this.infoMensaje;
+        setTimeout(()=>{
+          this.servicioModal.dismissAll();
+        },2000)
         this.router.navigate(['./home/hojas-de-vida/personal'])
       }
     })

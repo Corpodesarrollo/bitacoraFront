@@ -16,6 +16,7 @@ export const environment = {
   URL_BITACORAS: `${DOMAIN}/apoyo-api/api`,
   URL_APOYO_ESCOLAR: `${DOMAIN}/apoyo_escolar/`,
   URL_LOGIN_NARANJA:`${DOMAIN}/apoyo_escolar/autenticaPaginas?bandera=0&Hinicio=22&Hfin=6&ext=1&key={{key}}&cambio=&login={{usuario}}&password={{contrasenia}}&URLPag=${DOMAIN}/apoyo_escolar/bienvenida.do`,
+  URL_CIERRE_LOGIN_NARANJA: `${DOMAIN}/apoyo_escolar/autenticaPaginas?bandera=0&Hinicio=22&Hfin=6&ext=1&key=-1&cambio= `,
 
   VERSION: '1.2.20',
   msalConfig: {

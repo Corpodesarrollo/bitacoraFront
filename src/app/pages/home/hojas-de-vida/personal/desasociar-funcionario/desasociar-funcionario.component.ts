@@ -17,6 +17,7 @@ export class DesasociarFuncionarioComponent {
   modalService = inject(NgbModal)
   personalServices = inject(PersonalService)
   usuarioService = inject(UsuarioService);
+
   identificacion:any
   idColegio!:number
   desasociando:boolean = false
@@ -25,11 +26,17 @@ export class DesasociarFuncionarioComponent {
     this.activeModal.close()
   }
 
+  /**
+   * Metodo que carga el id del colegio
+   */
   ngOnInit(){
     let datosUsuario:AccesoPerfil  = this.usuarioService.obtenerAccesoSeleccionado();
     this.idColegio = datosUsuario.colegio.id;
   }
 
+  /**
+   * Metodo para desasociar el funcionario
+   */
   desasociarFuncionario(){
     this.desasociando = true;
     let parametros = {

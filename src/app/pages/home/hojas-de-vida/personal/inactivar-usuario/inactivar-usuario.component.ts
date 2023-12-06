@@ -12,18 +12,23 @@ import { UsuarioService } from 'src/app/services/api/usuario/usuario.service';
 })
 export class InactivarUsuarioComponent {
 
-  ngModal = inject(NgbActiveModal);
   registro:any
   idColegio!: number
   inactivando: boolean = false
   estaActivo!:boolean
 
+  /**Servicios */
+  ngModal = inject(NgbActiveModal);
   activeModal = inject(NgbActiveModal);
   modalService = inject(NgbModal)
   personalServices = inject(PersonalService)
   usarioService = inject(UsuarioService)
 
-
+  /**
+   * Valida el id del colegi
+   * y si tiene estado activo para el control
+   * de inactivar/activar
+   */
   ngOnInit() {
     let datos_usuario:AccesoPerfil  = this.usarioService.obtenerAccesoSeleccionado();
     this.idColegio = datos_usuario.colegio.id;
@@ -39,6 +44,10 @@ export class InactivarUsuarioComponent {
     this.ngModal.close()
   }
 
+  /**
+   * Metodo que inactiva/activa el funcionacio
+   * haciendo uso del servicio
+   */
   inactivarFuncionario() {
     this.inactivando = true;
     let estado_usuario;

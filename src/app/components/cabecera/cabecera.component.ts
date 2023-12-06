@@ -60,6 +60,7 @@ export class CabeceraComponent implements OnInit {
   };
 
   ngOnInit(): void {
+
     this.esMicrosoft = this.authService.instance.getAllAccounts().length > 0;
     const rutaActual = this.router.url;
     if (rutaActual === '/login' || rutaActual === '/login/seleccionar-perfil' || rutaActual === '/login/cambiar-contrasenia' || rutaActual === '/login/consultas') {
@@ -84,15 +85,35 @@ export class CabeceraComponent implements OnInit {
 
     const accesoSeleccionado = this.usuarioService.obtenerAccesoSeleccionado();
     if (accesoSeleccionado) {
-      this.fotoGuardada = accesoSeleccionado?.colegio?.foto_escudo?.codificacion;
+      if(accesoSeleccionado.colegio){
+        let id_colegio = accesoSeleccionado?.colegio.id
+        this.cargarFotoColegio(id_colegio)
+      }
       this.perfilUsuario = accesoSeleccionado;
       this.nivelUsuario = accesoSeleccionado.perfil.idPerfilNivel
     };
+
     this.nivelInstitucion = this.nivelUsuario == niveles.institucion_sede_jornada || this.nivelUsuario == niveles.institucion
     if(this.nivelInstitucion){
       this.texto_niveles = 'colegio o sede'
     }
   };
+
+
+  cargarFotoColegio(idColegio:any){
+    if(idColegio){
+      this.usuarioService.obtenerEscudoColegio(idColegio).subscribe({
+        next: (respuesta:any) => {
+          if(respuesta.status == 200){
+            this.fotoGuardada = respuesta.body.foto_escudo.codificacion
+          }
+          else{
+            this.fotoGuardada = 'assets/img/logo_alcaldia.svg'
+          }
+        }
+      })
+    }
+  }
 
   removerNulos(value: string): string {
     if (!value) return value;

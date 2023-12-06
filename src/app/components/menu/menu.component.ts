@@ -129,13 +129,12 @@ export class MenuComponent {
   }
 
   abrirUrl(opcion: any) {
-
+    this.opcionActiva = opcion;
     let userId = Number(this.usuarioId !== null && this.usuarioId > 0 ? this.usuarioId : 0);
     let sede = (this.datos_usuario.sede !== null && this.datos_usuario.sede.id > 0 ? this.datos_usuario.sede.id : 0);
     let instituto = (this.datos_usuario.colegio !== null && this.datos_usuario.colegio.id > 0 ? this.datos_usuario.colegio.id : 0);
     let jornada = (this.datos_usuario.jornada !== null && this.datos_usuario.jornada.id > 0 ? this.datos_usuario.jornada.id : 0);
 
-    // TODO validar de donde sacar estos tres datos
     let nivel = this.datos_usuario.perfil.idPerfilNivel !== null ? this.datos_usuario.perfil.idPerfilNivel : -1;
     let vigencia = (this.datos_usuario.colegio !== null && this.datos_usuario.colegio.vigencia > 0 ? this.datos_usuario.colegio.vigencia : 0);
     let municipio = 0;
@@ -182,7 +181,6 @@ export class MenuComponent {
       this.usuarioService.obtenerParametrosServMenu(Number(opcion.serCodigo), null).subscribe(datos =>{
         let resultadoLocal: any = datos;
         if (resultadoLocal.code == 200) {
-          console.log(resultadoLocal);
           this.listaParamServicio = resultadoLocal.data;
           if (this.listaParamServicio.length > 0) {
             this.listaParamServicio.forEach((reg) => {
@@ -199,7 +197,7 @@ export class MenuComponent {
         if (this.mostrarMenu && resolucion) {
           this.mostrarMenu = false
         }
-        this.opcionActiva = opcion
+
         if (opcion.serCodigo == 2) {
           this.cerrarSesion()
         }
@@ -208,7 +206,6 @@ export class MenuComponent {
         } else if (opcion.serTarget === "4") {
           this.router.navigate(['/home/ver', this.recursoUrl])
         } else {
-          this.opcionActiva = opcion;
           this.router.navigate([`/home/${this.recursoUrl}`]);
         }
       },);

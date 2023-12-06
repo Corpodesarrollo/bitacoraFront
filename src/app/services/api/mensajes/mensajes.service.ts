@@ -102,6 +102,10 @@ export class MensajesService {
             if(queryString != "?") queryString += "&"
             queryString += "pagina=" + parametros.pagina
          }
+         if(parametros.size != null){
+            if(queryString!="?") queryString+="&";
+            queryString+="size="+parametros.size
+          }
       }
       this.setearCabeceras();
       return this.http.get(`${this.URL_API}/apoyo/mensajes/mensaje${queryString}`, this.httpOptions)

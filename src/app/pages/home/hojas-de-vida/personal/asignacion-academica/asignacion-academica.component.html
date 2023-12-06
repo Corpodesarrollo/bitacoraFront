@@ -63,7 +63,7 @@
                     <p>Seleccionar todos:</p>
                 </div>
 
-                <div class="nomenclatura titulo" (click)="ordenarColumna('n')"
+                <div class="nomenclatura titulo" (click)="ordenarFormArray(this.listaHoras, 'nomenclatura')"
                     [class.no_ordenada]="columnaOrden !== 'n'">
                     Nº
                     <span *ngIf="ordenadaAscendente.n" class="material-symbols-outlined">arrow_drop_down</span>
@@ -91,7 +91,7 @@
                     </div>
                     <div class="tituloMobile">Nº:</div>
                     <div class="nomenclatura infoTabla">
-                        {{i + 1}}
+                        {{listaHoras.controls[i].value.nomenclatura}}
                     </div>
                     <div class="tituloMobile">Funcionario:</div>
                     <div class="funcionario infoTabla">

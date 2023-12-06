@@ -13,22 +13,22 @@
       <div class="titulos">
         <div class="col-nombres">Nombres</div>
         <div class="col-apellidos">Apellidos</div>
-        <div class="col-politicas-datos">Politica de datos personales</div>
-        <div class="col-politicas-uso">Politica de uso</div>
+        <div class="col-politicas-datos">Política de datos personales</div>
+        <div class="col-politicas-uso">Política de uso</div>
       </div>
       <div class="fila" *ngFor="let registro of listadoPersonas">
         <div class="titulo_movil">Nombres</div>
         <div class="col-nombres">{{ registro.nombres}}</div>
         <div class="titulo_movil">Apellidos</div>
         <div class="col-apellidos">{{registro.apellidos}}</div>
-        <div class="titulo_movil">Politica de datos personales</div>
+        <div class="titulo_movil">Política de datos personales</div>
         <div class="col-politicas-datos">
           <div class="estado" [ngClass]="registro.aceptaPoliticaDatos ? 'aceptado' : 'no_aceptado'">
             <span *ngIf="registro.aceptaPoliticaDatos">Aceptado</span>
             <span *ngIf="!registro.aceptaPoliticaDatos">No aceptado</span>
           </div>
         </div>
-        <div class="titulo_movil">Politica de uso</div>
+        <div class="titulo_movil">Política de uso</div>
         <div class="col-politicas-uso">
           <div class="estado" [ngClass]="registro.aceptaPoliticaUso ? 'aceptado' : 'no_aceptado'">
             <span *ngIf="registro.aceptaPoliticaUso">Aceptado</span>
@@ -58,7 +58,7 @@
         <div class="spinner-border float-end" role="status"></div>
       </div>
     </button>
-    <button class="btn boton_primario" type="button" routerLink="politicas-uso">
+    <button class="btn boton_primario" type="button" routerLink="cambiar-politicas-uso">
       Cambiar políticas de uso
     </button>
   </div>

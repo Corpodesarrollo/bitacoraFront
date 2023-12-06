@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -10,11 +10,10 @@ export class EliminarComponent {
 
   eliminandoPerfil:boolean = false;
 
-  constructor(
-    private activeModal: NgbActiveModal
-  ){
-  }
+  /**Servico */
+  activeModal = inject(NgbActiveModal)
 
+  /**Metodo para cerrar la vista dle modal */
   cerrar(valor:boolean){
     this.activeModal.close(valor)
   }

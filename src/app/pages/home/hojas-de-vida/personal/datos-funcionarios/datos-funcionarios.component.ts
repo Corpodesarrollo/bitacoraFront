@@ -20,6 +20,11 @@ import { PermisosUsuarios } from 'src/app/enums/usuario-permisos';
 })
 export class DatosFuncionariosComponent {
 
+  /**
+   * Variables globales
+   * Banderas para los Cargando y mostra filtors
+   */
+
   cargandoRegistros: boolean = false;
   cargandoDatos: boolean = false;
   cargandoPermisos: boolean = false;
@@ -27,6 +32,9 @@ export class DatosFuncionariosComponent {
   exportandoDatos: boolean = false;
   mostrarFiltros: boolean = true;
 
+  /**
+   * Banderas para el control de permisos
+   */
   permisosAsignacion: boolean = true;
   permisosDesasociar: boolean = true;
   permisosInactivar: boolean = true;
@@ -35,8 +43,16 @@ export class DatosFuncionariosComponent {
   permisosExportar: boolean = true;
   permisosAnuario: boolean = true;
 
+  /**
+   * Lista de registro que devuelve la consulta de filtros
+   *
+   */
   listaRegistros: DatosFuncionarios[] = [];
 
+  /**
+   * Variables par el manejo de paginación
+   * y ordenar las columans
+   */
   totalPaginas!: number;
   totalResultados!: number;
   pagina: number = 0;
@@ -45,12 +61,20 @@ export class DatosFuncionariosComponent {
   columnaOrden: string = 'primerNombre'
   esAscendente: boolean = true
 
+  /**
+   * Parametros que se usan
+   * para los filtors de las paginas
+   */
   parametrosPagina = {
     pagina: this.pagina,
     size: this.pageSize,
     sort: 'primerNombre,asc'
   }
 
+  /**
+   * Objecto para identificar bajo
+   * que columna debe ordenar acorde al clic
+   */
   ordenadaAscendente: any = {
     n: false,
     tipoIdentificacion: false,
@@ -60,6 +84,11 @@ export class DatosFuncionariosComponent {
     primerNombre: true,
   };
 
+  /**
+   * Parametros de busqueda que se reciben
+   * mediante un output del componente
+   * filtros ubicando en la ruta './filtros'
+   */
   parametrosFiltros = {
     sede: "",
     jornada: "",
@@ -72,6 +101,18 @@ export class DatosFuncionariosComponent {
     institucion: "",
   };
 
+
+  /**
+   *
+   * @param personalService
+   * @param modalService
+   * @param usuarioService
+   *
+   * Se contstruyen los servicios
+   * Adicional hablita la bandera para cargar serivicos
+   * y ejecuta la funcion que valida servicios
+   */
+
   constructor(
     private personalService: PersonalService,
     private modalService: NgbModal,
@@ -83,7 +124,7 @@ export class DatosFuncionariosComponent {
 
 
   /**
-   * metodo para cargar Permisos
+   * metodo para cargar  y validar Permisos
    */
   cargarPermisos() {
     this.usuarioService.permisosActualizados$.subscribe((permisosActualizados) => {
@@ -143,11 +184,10 @@ export class DatosFuncionariosComponent {
   }
 
   /**
-   * Construye los parametros recibidos del componente filtros
    * @param evento
-   * Pone la bandera de datos encontrados en 0 y en 1 el cargando registros
-   * En 3 linea reinica la lista de registros
-   * Em la 4 linea asigna el evento (los filtros)
+   * Construye los parametros mediante un event recibido del componente filtros
+   * habilitando la bandera, reinicinado la lista de registros y obteniendo los
+   * datos mediante la funcion obtener datos.
    */
   filtrar(evento: any) {
     this.cargandoRegistros = true
@@ -165,7 +205,8 @@ export class DatosFuncionariosComponent {
   }
 
   /**
-   * Nos permite actualizar el tamaño de la vista de la lista
+   * Metodo que contra la vista del tamaño de la lista
+   * Es decir pasarla de 10 a  20
    */
   actualizarTamano(valor: any) {
     this.parametrosPagina.size = valor;
@@ -181,7 +222,9 @@ export class DatosFuncionariosComponent {
   }
 
   /**
-   * Abre la vista para realizsar los filtors y renicia los valores
+   * Abre el icono y la vista
+   * para realizsar los filtors reniciando los valores
+   * por defecto
    */
   abrirFiltros() {
     this.listaRegistros = [];
@@ -285,7 +328,14 @@ export class DatosFuncionariosComponent {
   }
 
   /**
-   * Abre el componente para editar los datos del funcionario
+   * @param registro
+   * Metodo que abre el modal enviando el registro seleccionado
+   * para editar los datos del usuarios
+   * Modulo donde se permiten agregar perfiles acorde al sede, jornada,
+   * adicional permite editar el correo
+   * Se valida si el estado es inactivo --> Si lo es muestra advertencia
+   * Cuando el usuario cierra el Modal de editar datos
+   * --> Recarga la lista de funcionarios con los ultimos cambios
    */
   editarUsuario(registro: any) {
     let registroUsuario = registro
@@ -307,8 +357,13 @@ export class DatosFuncionariosComponent {
     }
   }
 
-  /**
-   * Agregar la fotografia del usaurio
+    /**
+   * @param registro
+   * Metodo que abre el modal enviando el registro seleccionado
+   * para administrar la foto del usuario
+   * Se valida si el estado es inactivo --> Si lo es muestra advertencia
+   * Cuando el usuario cierra el Modal de fotografa
+   * --> Recarga la lista de funcionarios con los ultimos cambios
    */
   editarFotografia(registro: any) {
     if (registro.estado === "INACTIVO" || registro.estado === "" || registro.estado === null) {
@@ -332,7 +387,11 @@ export class DatosFuncionariosComponent {
 
   /**
    * Exporta los datos en formato excel
-   * acorde a la busqueda y filtros del usuario.
+   * Se generan los titulos de la tabla mediante
+   * el uso de headers
+   * Luego se llama el servicio para obtener los datos filtros
+   * y se genera el excel correspondiente acorde
+   * a la respuesta del servicio
    */
   exportarDatos() {
     const nombreArchivo = 'resultados.xlsx';
@@ -401,6 +460,12 @@ export class DatosFuncionariosComponent {
     })
   }
 
+   /**
+   *
+   * Metodo que abre el modal del anuario
+   * Validando el tamaño de la pantalla para
+   * ajustar en la vista el numero de resultados
+   */
   abrirAnuario() {
     let modalSize = '';
     if (this.totalResultados == 1) {
@@ -424,6 +489,13 @@ export class DatosFuncionariosComponent {
   }
 
 
+
+    /**
+   * @param registro
+   * Metodo que abre el modal enviando el registro seleccionado
+   * para administrar el desasociar el funcionario
+   * --> Recarga la lista de funcionarios con los ultimos cambios
+   */
   abrirDesasociar(registro: any) {
     const modalDesasociar = this.modalService.open(DesasociarFuncionarioComponent, { size: '600px', centered: true, backdrop: 'static' });
     let identificacion = registro.identificacion
@@ -442,9 +514,17 @@ export class DatosFuncionariosComponent {
     })
   }
 
+   /**
+   * @param registro
+   * @param event
+   * Metodo que abre el modal enviando el registro seleccionado
+   * para administrar el inactivar/activar el funcionario
+   * Se recibe el event para prevenir que se ejecute doble
+   * vez el evento
+   * --> Recarga la lista de funcionarios con los ultimos cambios
+   */
   abrirInactivar(event: any, registro: any) {
     event.preventDefault();
-
     const modalInactivar = this.modalService.open(InactivarUsuarioComponent, { size: '600px', centered: true, backdrop: 'static' });
     modalInactivar.componentInstance.registro = registro
     modalInactivar.result.then((result) => {

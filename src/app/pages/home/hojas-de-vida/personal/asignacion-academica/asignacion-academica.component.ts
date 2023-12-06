@@ -58,7 +58,7 @@ export class AsignacionAcademicaComponent {
 
   ordenadaAscendente: any = {
     primerNombre: true,
-    n: true
+    n: false
   };
 
   listadosFuncionarios: any[] = [
@@ -102,6 +102,7 @@ export class AsignacionAcademicaComponent {
   habilitarBotonoCopiar: boolean;
   cargandoCopiado: boolean = false;
   cargandoEliminar: boolean;
+  nomenclaturaEstructura: number = 1;
 
   toggleAll() {
 
@@ -178,7 +179,9 @@ export class AsignacionAcademicaComponent {
   }
 
   agregarHoras(estructuraHorasAsignadas: any = null) {
-    this.listaHoras.push(this.nuevasEstructuraHoras(estructuraHorasAsignadas))
+
+      this.listaHoras.push(this.nuevasEstructuraHoras(estructuraHorasAsignadas))
+
   }
 
   nuevasEstructuraHoras(estructuraHorasAsignadas: any = null) {
@@ -186,6 +189,7 @@ export class AsignacionAcademicaComponent {
     let cedula = "";
     let funcionario = "";
     let checked = false;
+
     // console.log(estructuraHorasAsignadas)
     if (estructuraHorasAsignadas) {
       hora = estructuraHorasAsignadas.horas;
@@ -197,6 +201,7 @@ export class AsignacionAcademicaComponent {
       hora: [hora, [Validators.required]],
       cedula: [cedula, [Validators.required]],
       funcionario: [estructuraHorasAsignadas.funcionario, [Validators.required]],
+      nomenclatura: [this.nomenclaturaEstructura++],
       checked: [false, []],
       // !!Number(grupo.horasAsignadas)
     });
@@ -208,6 +213,8 @@ export class AsignacionAcademicaComponent {
  * @param columna
  */
   ordenarDatos(columna: string) {
+    this.nomenclaturaEstructura = 1;
+
     for (let col in this.ordenadaAscendente) {
       if (col != columna) {
         this.ordenadaAscendente[col] = false
@@ -351,7 +358,7 @@ export class AsignacionAcademicaComponent {
     };
 
     let sumatoria: number = 0;
-    
+
     const funcionariosSeleccionados = this.listaHoras.controls.filter((funcionario: any) => funcionario.value.checked);
 
     for (const funcionario of funcionariosSeleccionados) {
@@ -407,7 +414,7 @@ export class AsignacionAcademicaComponent {
           );
 
         break; // Termina la iteración después de encontrar un funcionario seleccionado
-      
+
     }
   }
 
@@ -597,6 +604,10 @@ export class AsignacionAcademicaComponent {
 
   filtrar(event: any) {
 
+    this.nomenclaturaEstructura = 1;
+    this.allChecked = false;
+    this.ocultarBotones = false;
+
     this.mensajeEnteros = false;
     this.listadosFuncionarios = []
 
@@ -624,7 +635,7 @@ export class AsignacionAcademicaComponent {
       this.listadosFuncionarios = [];
       this.cargandoDocentes = false;
       this.infoMensaje.titulo = '';
-      this.infoMensaje.mensaje = 'Filtros vacios';
+      this.infoMensaje.mensaje = 'Filtros vacíos';
       this.infoMensaje.botonesAsignacionErrorEliminar = true;
       this.infoMensaje.botonesAsignacionEliminar = false;
       this.infoMensaje.ventanaEnviado = true;
@@ -677,7 +688,7 @@ export class AsignacionAcademicaComponent {
           }
           //        hora = estructuraHorasAsignadas.horas;
           // cedula = estructuraHorasAsignadas.cedula;
-          // funcionario: estructuraHorasAsignadas.funcionario; 
+          // funcionario: estructuraHorasAsignadas.funcionario;
           this.agregarHoras(EstructuraHorasAsignadas)
         })
 
@@ -693,6 +704,7 @@ export class AsignacionAcademicaComponent {
         this.infoMensaje.botonesAsignacionErrorEliminar = true;
         this.infoMensaje.botonesAsignacionEliminar = false;
         this.infoMensaje.ventanaEnviado = true;
+        this.infoMensaje.mostrarAceptar = true;
         const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
         modalRef.componentInstance.infoMensaje = this.infoMensaje;
       }
@@ -800,8 +812,9 @@ export class AsignacionAcademicaComponent {
  * @param valor
  */
   cambiarPagina(valor?: string) {
-
+    this.nomenclaturaEstructura = 1;
     this.allChecked = false;
+    this.ocultarBotones = false;
     this.listadosFuncionarios = [];
 
     if (valor === 'siguiente') {
@@ -818,26 +831,42 @@ export class AsignacionAcademicaComponent {
     }
   }
 
-
-
-
   /**
    * Metodo que ordena la columna del indique acorde a los
    * datos visualizados en pantalla
    */
-  ordenarColumna(columna: string) {
-    this.ordenadaAscendente = Object.keys(this.ordenadaAscendente).reduce((acc, col) => {
-      acc[col] = col === columna ? !this.ordenadaAscendente[col] : false;
-      return acc;
-    }, {} as { [key: string]: boolean });
+  ordenarFormArray(formArray?: FormArray, columna?: string) {
+    // Obtener una copia de los controles
 
-    this.columnaOrden = columna;
+    this.ordenadaAscendente.n = !this.ordenadaAscendente.n;
 
-    this.listadosFuncionarios.sort((a: any, b: any) => {
-      const comparison = this.ordenadaAscendente[columna] ? 1 : -1;
-      return a.indice > b.indice ? comparison : -comparison;
+    const controles = formArray.controls.slice();
+
+    // Ordenar los controles según la columna proporcionada
+    controles.sort((a, b) => {
+      const valorA = a.get(columna)?.value;
+      const valorB = b.get(columna)?.value;
+
+      if (valorA === valorB) {
+        return 0;
+      }
+
+      if(this.ordenadaAscendente.n){
+        return valorB > valorA ? 1 : -1;
+      }else{
+        return valorA > valorB ? 1 : -1;
+      }
+
     });
+
+    // Limpiar el FormArray
+    formArray.clear();
+
+    // console.log(controles)
+    // Agregar los controles ordenados de nuevo
+    controles.forEach(control => formArray.push(control));
   }
+
 
   /**
     * Nos permite actualizar el tamaño de la vista de la lista

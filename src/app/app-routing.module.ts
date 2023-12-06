@@ -27,7 +27,7 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forRoot(routes,{
     useHash: true,
-    scrollPositionRestoration: 'enabled',
+    scrollPositionRestoration: 'top',
     initialNavigation: !BrowserUtils.isInIframe() && !BrowserUtils.isInPopup() ? 'enabledNonBlocking' : 'disabled' // Set to enabledBlocking to use Angular Universal
   })],
   exports: [RouterModule]

@@ -54,7 +54,10 @@ export class CamaraComponent {
     }
   }
 
-
+  /**
+   * Metodo que se ejecuta si hay un erro al iniciar
+   * @param error
+   */
   errorAlIniciar(error: WebcamInitError): void {
     console.log(error);
     if (error.mediaStreamError && error.mediaStreamError.name === "NotAllowedError") {

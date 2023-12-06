@@ -6,6 +6,7 @@ import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { asignacionAcademica } from '../../interfaces/asignacion-academica.interface';
 import { ModalInformacionComponent } from 'src/app/components/modal-informacion/modal-informacion.component';
 import { forkJoin } from 'rxjs';
+import { MensajeModal } from '../mensaje-modal/mensaje-modal';
 
 @Component({
   selector: 'app-copiar-asignacion-academica',
@@ -44,7 +45,8 @@ export class CopiarAsignacionAcademicaComponent implements OnInit, OnDestroy {
     private activeModal: NgbActiveModal,
     private serviciosModal: NgbModal,
     private asignacionAcademicaService: AsignacionAcademicaService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private servicioModal: NgbModal
   ) {
   }
 
@@ -108,10 +110,10 @@ export class CopiarAsignacionAcademicaComponent implements OnInit, OnDestroy {
     let funcionarioGroup = this.formBuilder.group({
       identificacion: identificacion,
       seleccionado: [false],
+      primer_apellido: primer_apellido,
+      segundo_apellido: segundo_apellido,
       primer_nombre: primer_nombre,
       segundo_nombre: segundo_nombre,
-      primer_apellido: primer_apellido,
-      segundo_apellido: segundo_nombre,
     });
 
     return funcionarioGroup
@@ -128,7 +130,21 @@ export class CopiarAsignacionAcademicaComponent implements OnInit, OnDestroy {
 
     this.asignacionAcademicaService.obtenerDocentesSinAsignacion(this.institucionId, this.sedeId, this.jornadId, this.metodologiaId, this.vigencia, this.parametrosFiltros).subscribe({
       next: (respuesta: any) => {
+        const infoMensaje: any = {}
         let funcionarios = respuesta.data.filter((docente: any) => docente.identificacion != this.docenteSeleccionado.identificacion);
+        if(funcionarios.length <= 0){
+          this.servicioModal.dismissAll();
+
+          infoMensaje.titulo = '';
+          infoMensaje.mensaje = 'No hay docentes que cumplan los criterios para copiar la Asignación Académica';
+          infoMensaje.botonesAsignacionErrorEliminar = true;
+          infoMensaje.botonesAsignacionEliminar = false;
+          infoMensaje.ventanaEnviado = true;
+          infoMensaje.cerradoTemporizador = true;
+          const modalRef = this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
+          modalRef.componentInstance.infoMensaje = infoMensaje;
+          return
+        }
         this.crearFuncionarios(funcionarios)
         this.parametrosFiltros.total_paginas = respuesta.data.totalPages;
         console.log(this.parametrosFiltros);
@@ -157,6 +173,7 @@ export class CopiarAsignacionAcademicaComponent implements OnInit, OnDestroy {
    * basado en la lista de docentes
    */
   crearFuncionarios(lista: any) {
+    console.log(lista)
     lista.forEach((docente: Docente) => {
       this.agregarElemento(docente)
     });

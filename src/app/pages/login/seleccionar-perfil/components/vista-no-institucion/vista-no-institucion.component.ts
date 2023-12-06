@@ -94,7 +94,7 @@ export class VistaNoInstitucionComponent implements OnInit {
   }
 
   seleccionPerfil(perfil:Perfil){
-    
+
     this.perfilSeleccionado = perfil;
     this.seleccionarLocalidad = false;
     this.dependencias=[];
@@ -125,7 +125,7 @@ export class VistaNoInstitucionComponent implements OnInit {
   agregarDependencia(dependencia:Dependencia){
     this.formNoInstitucion.get('dependencia_id').disable();
     this.formNoInstitucion.get('dependencia_id').clearValidators();
-    this.formNoInstitucion.get('dependencia_id').setValue("");
+    this.formNoInstitucion.get('dependencia_id').setValue(null);
     if(this.dependencias.length>0){
       let dependenciaEncontrada = this.dependencias.find((dependenciaAgregada:Dependencia)=> dependenciaAgregada.nombre==dependencia.nombre);
       if(!dependenciaEncontrada){
@@ -144,7 +144,7 @@ export class VistaNoInstitucionComponent implements OnInit {
   agregarLocalidad(localidad:Localidad){
     this.formNoInstitucion.get('localidad_id').disable();
     this.formNoInstitucion.get('localidad_id').clearValidators();
-    this.formNoInstitucion.get('localidad_id').setValue("");
+    this.formNoInstitucion.get('localidad_id').setValue(null);
     if(this.localidades.length>0){
       let localidadEncontrada = this.localidades.find((localidadAgregada:Localidad)=> localidadAgregada.nombre==localidad.nombre);
       if(!localidadEncontrada){

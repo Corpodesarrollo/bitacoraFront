@@ -26,7 +26,7 @@
                 </div>
             </div>
             <div *ngIf="mostrarElemento">
-                <button type="button" class="detalles_btn" (click)="toggleInfo()">
+                <button type="button" class="detalles_btn" (click)="toggleInfo()" tabindex="1">
                     <img class="id_icono" src="assets/iconos/id_icono.svg" alt="">
                     <p>Detalles del perfil y página</p>
                 </button>
@@ -58,8 +58,9 @@
           <div class="jornada" *ngIf="perfilUsuario?.jornada?.nombre"> <strong>Jornada:</strong> {{
             perfilUsuario.jornada.nombre | inicial}} </div>
         </ng-container>
-        <div class="jornada"  *ngIf="perfilUsuario?.localidad?.nombre"><strong>Localidad: </strong>{{ perfilUsuario.localidad.nombre }}</div>
-        <div class="jornada" *ngIf="perfilUsuario?.dependencia?.nombre"><strong>Dependencia: </strong>{{ perfilUsuario.dependencia.nombre }}</div>
+        <div class="jornada"  *ngIf="perfilUsuario?.localidad?.nombre && nivelUsuario == 2">
+          <strong>Localidad: </strong>{{ perfilUsuario.localidad.nombre }}</div>
+        <div class="jornada" *ngIf="nivelUsuario  == 0"><strong>Dependencia: </strong>{{ perfilUsuario?.dependencia?.nombre }}</div>
 
     </div>
     <div class="cambiar_contrasena" *ngIf="!esMicrosoft">

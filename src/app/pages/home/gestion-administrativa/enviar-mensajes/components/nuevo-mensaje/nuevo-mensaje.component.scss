@@ -1,4 +1,4 @@
-// $fa-font-path:"/assetssss/fonts" !default; 
+// $fa-font-path:"/assetssss/fonts" !default;
 
 .col-12.contenedorMensaje {
     /* display: flex; */
@@ -16,6 +16,10 @@
     color: #001A42;
     border-radius: 100px;
     background: #D8E2FF;
+}
+
+.fecha_i{
+    padding-right: 3.5rem !important;
 }
 
 .buttonActualizar{
@@ -174,6 +178,7 @@ p.perfilesAgref {
     align-items: center;
     gap: 8px;
     width: 168px;
+    line-height: 1;
 }
 
 .col-12.modoEditor {
@@ -204,6 +209,10 @@ angular-editor.ng-pristine.ng-invalid.error{
     border: 1px solid var(--error) !important;
 }
 
+.enviarMensaje{
+    margin-bottom: 5rem;
+}
+
 .spinner-border.float-end {
     width: 18px;
     height: 18px;
@@ -224,7 +233,6 @@ angular-editor.ng-pristine.ng-invalid.error{
 .deshabilitarInputSelect {
     opacity: 0.5;
 }
-
 
 
 @media (max-width: 767.98px) {

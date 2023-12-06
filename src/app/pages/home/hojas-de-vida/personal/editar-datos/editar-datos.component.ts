@@ -17,20 +17,22 @@ export class EditarDatosComponent {
 
   @Input() public registro: any
 
+  /**Listas */
   datosUsuario: any
   jornadas: any
   perfiles: any
+  perfilesUsuarios:any;
+  perfilesAsociados: any;
+
+  /**Banderas */
   cargandoPerfiles: boolean = true;
   eliminandoPerfil: boolean = false;
   yaSeEncuentraPerfil: boolean = false;
   estaInactivo:boolean = false;
+  guardandoDatos: boolean = false;
 
-  perfilesUsuarios:any;
   idColegio: number
   formDatosUsuario!: FormGroup;
-  //Todo Reemplazar esta variable con el formulario
-  perfilesAsociados: any;
-  guardandoDatos: boolean = false;
   urlFoto: string = '';
   correoInicial: string = ''
 
@@ -51,6 +53,9 @@ export class EditarDatosComponent {
     this.obtenerDatosUsuario();
   }
 
+  /**
+   * Metodo para construir el fomulario
+   */
   construirFormularios() {
     this.formDatosUsuario = this.formBuilder.group({
       tipo_identificacion: [{ value: null, disabled: true }],
@@ -64,10 +69,23 @@ export class EditarDatosComponent {
     })
   }
 
+  /**
+   * Metodo que recibe un campo del formulario
+   * y lo valida
+   * @param campo
+   * @returns
+   */
   campoNoValido(campo: string) {
     return this.formDatosUsuario.get(campo)?.touched && this.formDatosUsuario.get(campo)?.invalid
   }
 
+  /**
+   * metodo que valida los campos no validos
+   * en el formArray de lista_perfiles
+   * @param campo
+   * @param indice
+   * @returns
+   */
   campoNoValidoEnFormArray(campo: string, indice: number): boolean {
     const formArray = this.formDatosUsuario.get('lista_perfiles') as FormArray;
     if (indice >= 0 && indice < formArray.length) {
@@ -211,7 +229,7 @@ export class EditarDatosComponent {
   }
 
   /**
-   * Metodo que devuelve un control para crear nuevo perfil
+   * Metodo que devuelve un form control para crear nuevo perfil
    */
   nuevoPerfil(perfil: any = []) {
     let jerCodigo: any = null
@@ -381,7 +399,7 @@ export class EditarDatosComponent {
   }
 
   /**
-   * Metodo para validar si ya tieen selecicionada la sede y jornada.
+   * Metodo para validar si ya tiene selecicionada la sede y jornada.
    */
    /**
  * Metodo que valida si ya existe un perfil
@@ -397,6 +415,10 @@ export class EditarDatosComponent {
     }
   }
 
+  /**
+   * Metodo para contar las jornadas y sedes
+   * para el control de no repetidos por sede y jornada
+   */
   contarJornadasYSedes(perfil:any ) {
     let conteo = 0;
     this.listaPerfiles.controls.forEach((item: any) => {
@@ -426,6 +448,8 @@ export class EditarDatosComponent {
   /**
    * Metodo que guarda la informacion acrode al formulario,
    * validando que campos han sido editados para guardar dicha informacion
+   * si solo esta actualizando los perfiles ejecuta el metodo
+   * de actualizar perfiles
    */
   guardar() {
     if (this.formDatosUsuario.invalid) {
@@ -515,7 +539,8 @@ export class EditarDatosComponent {
 
 
   /**
-   * Metodo para actualizar los perfiles
+   * Metodo para actualizar y agregar nuevos perfiles
+   * acorde al ainformacion seleccionada por el usuario
    */
   actualizarPerfiles() {
     let errorEncontrado = false;
@@ -563,7 +588,6 @@ export class EditarDatosComponent {
         }
         if (!errorEncontrado && !errorDuplicado) {
           console.log('entra aqu sdadsai');
-          // Mostrar mensaje de éxito una vez que todas las solicitudes hayan terminado.
           const modalExito = this.modalService.open(ModalInformacionComponent, { size: 'lg', animation: false, backdrop: 'static', centered: true });
           modalExito.componentInstance.informacion = {
             error: false,
@@ -587,7 +611,6 @@ export class EditarDatosComponent {
         }
       },
       error: (error) => {
-        // Mostrar mensaje de error si ocurre un error en alguna de las solicitudes.
         const modalError = this.modalService.open(ModalInformacionComponent, { size: 'lg', animation: false, backdrop: 'static', centered: true });
         modalError.componentInstance.informacion = {
           error: true,
@@ -605,7 +628,8 @@ export class EditarDatosComponent {
   }
 
   /**
-   * Metodo para cerrar el modal
+   * Metodo que ejecuta el modal de confirmacion
+   * para cerrar la vista de editar perfil
    */
   cancelar(){
     if(this.formDatosUsuario.dirty && !this.estaInactivo){
@@ -644,6 +668,7 @@ export class EditarDatosComponent {
    * Metodo que habilita el modal para elimiar perfiles
    * validando si ha seleccioando o no
    * acorde a si esta seleccionado o no
+   * ejecuta la funcion para elimianr el perfil
    */
   abrirModalEliminarPerfil(){
     let estan_todos:number = 0;
@@ -655,7 +680,6 @@ export class EditarDatosComponent {
         cambios_sin_guardar = true;
       }
     });
-    //console.log("Perfil: ", );
     if(estan_todos === this.listaPerfiles.length && this.formDatosUsuario.get('cargo').value!='RECTOR(A)'){
       const modalError = this.modalService.open(ModalInformacionComponent, { size: 'md', animation: false, backdrop: 'static', centered: true })
       modalError.componentInstance.informacion = {
@@ -697,12 +721,12 @@ export class EditarDatosComponent {
     }
   }
 
-
-
-
   /**
    * Metodo que elimina el perfil
-   * acorde de si esta seleccionado o no
+   * validando si esta seleccionado el control
+   * del formulario
+   * Crea una lista de observables dodne valida que campos
+   * has sido modificados y acorde a esto los elimina
    */
   eliminarPerfil() {
     this.eliminandoPerfil = true
@@ -765,18 +789,12 @@ export class EditarDatosComponent {
     }
   }
 
+  /**
+   * Metodo para cerrar le modal
+   */
   cerrarModal(){
     this.activeModal.close()
   }
-
-  // enviarDatosFijos(){
-  //   let parametros = {"codJerarquia":44630,"codInstitucion":539,"sedCodigo":3,"jerJorn":0,"codPerfil":422,"activo":1,"numeroDocumento":"80814512"}
-  //   this.personalServices.actualizarPerfil2(parametros).subscribe({
-  //     next: (respuestas: any) => {
-  //       console.log("esta a les repuesta: ", respuestas);
-  //     }
-  //   })
-  // }
 
 }
 

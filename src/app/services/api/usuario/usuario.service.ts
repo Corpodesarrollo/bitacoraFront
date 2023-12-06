@@ -76,7 +76,7 @@ export class UsuarioService {
     await localStorage.clear();
     await sessionStorage.clear();
 
-    let url = `${environment.URL_APOYO_ESCOLAR}/autenticaPaginas?bandera=0&Hinicio=22&Hfin=6&ext=1&key=-1&cambio= `;
+    let url = environment.URL_CIERRE_LOGIN_NARANJA;
     var nuevaVentana =window.open(url,'_blank','toolbar=no,status=no,menubar=no,scrollbars=no,resizable=no,left=2000, top=2000, width=2, height=2, visible=none');
     nuevaVentana.resizeTo(0, 0);
     nuevaVentana.moveTo(10000, 10000);
@@ -208,5 +208,14 @@ export class UsuarioService {
     obtenerParametrosServMenu(codServicio:number,urlRecurso:string) {
       this.setearCabeceras();
       return this.http.get(`${environment.URL_API}/menu/getParamServicios/${codServicio}/${urlRecurso}`, this.httpOptions);
+    }
+
+
+    obtenerEscudoColegio(idColegio:number){
+      this.setearCabeceras();
+      return this.http.get(`${environment.URL_API}/apoyo/colegio/${idColegio}/escudo`, {
+        ...this.httpOptions,
+        observe: 'response'
+      });
     }
 }

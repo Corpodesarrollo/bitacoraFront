@@ -19,6 +19,7 @@ export class PoliticasUsoComponent {
   registroVersiones: any;
   idUsuario: number;
   puedeEliminar:boolean;
+  puedeCrearPolitica:boolean;
 
   constructor(
     private servicioModal: NgbModal,
@@ -28,6 +29,7 @@ export class PoliticasUsoComponent {
   ) {
     this.idUsuario = parseInt(this.serviciosUsuarios.obtenerUsuario().id);
     this.puedeEliminar = this.serviciosUsuarios.obtetenerPermisosPerfil(PermisosUsuarios.ELIMINAR_POLITICA_USO)
+    this.puedeCrearPolitica = this.serviciosUsuarios.obtetenerPermisosPerfil(PermisosUsuarios.CREAR_POLITICA_USO)
     this.obtenerPoliticas()
   }
 
@@ -125,7 +127,7 @@ export class PoliticasUsoComponent {
   }
 
   verPolitica(id: number) {
-    this.router.navigate(['/home/politicas-datos-uso/politicas-uso', id])
+    this.router.navigate(['/home/politicas-datos-uso/ver-politicas-uso', id])
   }
 
   volver(){

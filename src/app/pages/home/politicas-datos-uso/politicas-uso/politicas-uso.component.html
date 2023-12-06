@@ -10,7 +10,7 @@
 </div>
 <div  id="PoliticasUso">
   <div class="acciones col-12">
-    <button class="btn boton_primario" type="button" (click)="agregarVersion()">
+    <button class="btn boton_primario" type="button" (click)="agregarVersion()" *ngIf="puedeCrearPolitica">
       Agregar nueva versión
     </button>
   </div>

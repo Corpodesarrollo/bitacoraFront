@@ -13,16 +13,16 @@ import { PermisosUsuarios } from 'src/app/enums/usuario-permisos';
   templateUrl: './buscar.component.html',
   styleUrls: ['./buscar.component.scss']
 })
-export class BuscarComponent{
+export class BuscarComponent {
 
   fechaActual: any;
   confimarEliminar: any;
   totalRegistros: any;
 
-  pagina:number = 0;
-  pageSize:number = 10;
-
-  totalPaginas:number;
+  totalResultados!: number;
+  pagina: number = 0;
+  pageSize: number = 10;
+  totalPaginas: number;
 
   cargandoMensajes: boolean = false;
   mensajeSinDatosCargados: boolean = false;
@@ -31,17 +31,15 @@ export class BuscarComponent{
   permisosUsuario = {
     editar: false,
     ver: false,
-    eliminar:false,
-    puedeEnviarMensajes:false
+    eliminar: false,
+    puedeEnviarMensajes: false
   }
 
   mensajes: any[] = [];
 
   usuarioLogueado: any;
 
-  parametrosPagina = {
-
-  }
+  parametrosPagina = {}
 
   parametrosFiltros: any = {
     bandera: "2",
@@ -60,13 +58,13 @@ export class BuscarComponent{
     private usuarioService: UsuarioService,
     private router: Router,
     private servicioModal: NgbModal,
-    private utilsService:UtilsService) {
+    private utilsService: UtilsService) {
 
     //this.cargarMensajes();
     this.usuarioLogueado = this.usuarioService.obtenerUsuario();
     this.permisosUsuario = {
       editar: this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.EDITAR_MENSAJE),
-      ver:  this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.VER_MENSAJE),
+      ver: this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.VER_MENSAJE),
       eliminar: this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.ELIMINAR_MENSAJE),
       puedeEnviarMensajes: this.usuarioService.obtetenerPermisosPerfil(PermisosUsuarios.ENVIAR_MENSAJES)
     }
@@ -78,9 +76,9 @@ export class BuscarComponent{
     this.fechaActual = `${fechaArray[0]}-${fechaArray[2]}-${fechaArray[1]}`
     //console.log(this.fechaActual)
 
-    this.utilsService.mensajeBorrado.subscribe((resp:any)=>{
+    this.utilsService.mensajeBorrado.subscribe((resp: any) => {
       //console.log(resp)
-     this.confimarEliminar = resp;
+      this.confimarEliminar = resp;
     })
 
   }
@@ -106,7 +104,7 @@ export class BuscarComponent{
         this.totalPaginas = resp.data['numeroPaginas:'];
         this.totalRegistros = resp.data['totalRegistros:'];
         // console.log(this.mensajes)
-      } else{
+      } else {
         this.sinMensajesBuscar = false;
         this.mensajesCargados = false;
         this.cargandoMensajes = false;
@@ -116,14 +114,14 @@ export class BuscarComponent{
     })
   }
 
-   /**
-   * Funcion que recibe el numero de pagina
-   * y consulta los registros
-   * @param valor
-   */
-  cambiarPagina(valor?:string){
-    if(valor === 'siguiente'){
-      if( this.pagina < this.totalPaginas - 1){
+  /**
+  * Funcion que recibe el numero de pagina
+  * y consulta los registros
+  * @param valor
+  */
+  cambiarPagina(valor?: string) {
+    if (valor === 'siguiente') {
+      if (this.pagina < this.totalPaginas - 1) {
         this.pagina = this.pagina + 1
         this.parametrosFiltros.pagina = this.pagina
         this.mensajes = []
@@ -147,17 +145,17 @@ export class BuscarComponent{
     this.cargandoMensajes = true;
     let infoMensaje: any = {}
     infoMensaje.titulo = '';
-    infoMensaje.mensaje = 'Desea eliminar el mensaje';
+    infoMensaje.mensaje = '¿Desea eliminar el mensaje?';
     infoMensaje.ventanaEnviado = false;
     infoMensaje.id = id;
     const modalRef = await this.servicioModal.open(MensajeModal, { size: 'md', centered: true, backdrop: 'static' });
     modalRef.componentInstance.infoMensaje = infoMensaje;
     modalRef.result.then((resultados) => {
-      if(resultados == 'cerrado'){
-        setTimeout(()=>{
+      if (resultados == 'cerrado') {
+        setTimeout(() => {
           this.mensajes = [];
-           this.cargarMensajes(this.parametrosFiltros);
-        },1000)
+          this.cargarMensajes(this.parametrosFiltros);
+        }, 1000)
       }
     })
 
@@ -176,10 +174,7 @@ export class BuscarComponent{
       parametros_filtros.fecha_final = "";
     }
 
-    // let datosUsuario  = JSON.parse(sessionStorage.getItem('sap_acc_sel')!)
-
-    let datosUsuario:AccesoPerfil  = this.usuarioService.obtenerAccesoSeleccionado();
-
+    let datosUsuario: AccesoPerfil = this.usuarioService.obtenerAccesoSeleccionado();
 
     this.pagina = 0;
     this.parametrosFiltros.pagina = 0;
@@ -195,5 +190,22 @@ export class BuscarComponent{
 
     this.cargarMensajes(this.parametrosFiltros);
   }
+
+  /**
+   * Nos permite actualizar el tamaño de la vista de la lista
+   */
+  actualizarTamano(valor: any) {
+    this.parametrosFiltros.size = valor;
+    let nuevoTotalPaginas = Math.round(this.totalResultados / valor);
+    if (this.pagina >= nuevoTotalPaginas) {
+      this.pagina = Math.max(nuevoTotalPaginas - 1, 0)
+      this.parametrosFiltros.pagina = this.pagina;
+      this.cargarMensajes(this.parametrosFiltros);
+    }
+    else {
+      this.cargarMensajes(this.parametrosFiltros);
+    }
+  }
+
 
 }

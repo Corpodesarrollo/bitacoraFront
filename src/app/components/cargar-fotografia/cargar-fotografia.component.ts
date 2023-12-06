@@ -52,10 +52,6 @@ export class CargarFotografiaComponent {
     this.urlFoto = this.fotoUsuario
   }
 
-  /**
-   * Metodo que carga la fotografia previa del usuario
-   */
-
     /**
    * Metodo que al seleccionar el archivo lo valida y si está correcto lo aasigna para enviarlo posteriormente
    * @param evento
@@ -125,6 +121,11 @@ export class CargarFotografiaComponent {
     }
 
 
+  /**
+   * metodo para extraer la base 64 del archivo caargado.
+   * @param $event
+   * @returns
+   */
   extraerBase64 = async ($event: any) =>
   new Promise((resolve) => {
     try {
@@ -156,6 +157,10 @@ export class CargarFotografiaComponent {
     return ext
   }
 
+  /**
+   * Metodo que se ejecuta al momento
+   * de tomar la fotografia.
+   */
   tomarFoto(){
       this.urlNuevaFoto = ''
       this.fotoPrevisualizada = false

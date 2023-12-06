@@ -53,25 +53,31 @@ export class ListaEstudiantesComponent {
       id_Sede: this.idSede,
       id_jornada: this.idJornada,
     }
-    this.inicioServices.obtenerListaEstudiantes(parametros).subscribe({
-      next: (respuesta:any) => {
-        if(respuesta.code == 200){
-          let datos_estudiante = respuesta.data.data
-          this.estudiantes = this.validaNombres(datos_estudiante)
-          this.totalColegios = respuesta.data.totalRegistros
-          this.paginaActual = respuesta.data.paginaActual
-          this.totalPaginas = respuesta.data.numeroPaginas
-          this.cargandoEstudiantes =false;
+    if(this.idColegio && this.idSede && this.idJornada){
+      this.inicioServices.obtenerListaEstudiantes(parametros).subscribe({
+        next: (respuesta:any) => {
+          if(respuesta.code == 200){
+            let datos_estudiante = respuesta.data.data
+            this.estudiantes = this.validaNombres(datos_estudiante)
+            this.totalColegios = respuesta.data.totalRegistros
+            this.paginaActual = respuesta.data.paginaActual
+            this.totalPaginas = respuesta.data.numeroPaginas
+            this.cargandoEstudiantes =false;
+          }
+          else{
+            this.cargandoEstudiantes = false;
+          }
+        },
+        error: (error) => {
+          this.cargandoEstudiantes = false
+          console.log(error)
         }
-        else{
-          this.cargandoEstudiantes = false;
-        }
-      },
-      error: (error) => {
-        this.cargandoEstudiantes = false
-        console.log(error)
-      }
-    })
+      })
+    }
+    else{
+      this.estudiantes = []
+      this.cargandoEstudiantes = false;
+    }
   }
 
   validaNombres(lista_estudiantes:any){

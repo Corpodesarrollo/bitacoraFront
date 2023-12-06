@@ -10,14 +10,20 @@ import { PersonalService } from 'src/app/services/api/personal/personal.service'
 })
 export class EditarFotoUsuarioComponent {
 
+  /**
+   * visualiza lso componentes de los modales
+   * acorde a si es exitoso o no la carga de la foto
+   */
   @ViewChild("modalExito") modalExito:any
   @ViewChild("modalError") modalError:any
+
   guardandoFotografia:boolean = false;
-  identificacionUsuario!:number;
   traeMensaje:boolean = true
+  esFotografia:boolean | any
+
+  identificacionUsuario!:number;
   fotoUsuario:any
   registroUsuario:any
-  esFotografia:boolean | any
   urlFotoUsuario!:string
   mensajeModal:string = 'No se pudo actualizar la fotografía correctamente.'
 
@@ -30,23 +36,38 @@ export class EditarFotoUsuarioComponent {
 
   }
 
+  /**
+   * Metood que recibe la identificacion del usaurio
+   * y la url del la foto
+   * del registro recibido de datos-funcionarios
+   */
   ngOnInit(){
     this.identificacionUsuario = this.registroUsuario.identificacion
     this.urlFotoUsuario = this.registroUsuario.foto
   }
 
   /**
-   * Carga la foto del funcionario
+   * Metodo que actualiza la vista
+   * de la foto que carga el usuario
    */
-
   actualizarFoto(event:any){
     this.fotoUsuario = event
   }
 
+  /**
+   * @param event
+   * Recibe el evento
+   * para ver si la foto es tomada por camara
+   * o si es cargada
+   */
   esTomada(event:any){
     this.esFotografia = event
   }
 
+  /**
+   * Metodo que se encarga
+   * de guardar la foto
+   */
   guardarFoto(){
     this.guardandoFotografia = true
     if(this.fotoUsuario){
@@ -78,6 +99,9 @@ export class EditarFotoUsuarioComponent {
     }
   }
 
+  /**
+   * Metodo que cierra el modal
+   */
   cerrarModal(){
     this.modalService.dismissAll()
   }
