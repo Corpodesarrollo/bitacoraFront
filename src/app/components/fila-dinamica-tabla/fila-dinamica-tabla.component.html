@@ -1,8 +1,8 @@
 <div [ngClass]="{'active': isSelected}" class="contenedor-minitabla-general d-flex flex-column">
   <div [ngClass]="{'active': isSelected}" class="contenedor-minitabla d-flex flex-row justify-content-between">
     <div class="d-flex flex-column" *ngFor="let columna of columnasTabla">
-      <div>{{columna.titulo}}</div>
-      <div>{{fila[columna.campo]}}</div>
+      <div [innerHtml]="columna.titulo"></div>
+      <div [innerHtml]="fila[columna.campo]"></div>
     </div>
 
     <div class="d-flex flex-column justify-content-center align-items-center">
@@ -12,9 +12,9 @@
   <div [ngClass]="{'show': isSelected}" class="contenedor-minitabla-detalle">
     <div class="general-detalle">
       <div class="datos-detalle">
-        <label class="titulo-detalle"><strong>Descripcion</strong></label>
+        <label class="titulo-detalle"><strong>Descripción de log</strong></label>
         <div class="items-datos-detalle" *ngFor="let columna of columnasDetalle">
-          <div class="item" *ngIf="columna.titulo!=='***' && columna.campo!=='***'"><strong>{{columna.titulo}}</strong>:{{columna.campo[columna.titulo]}}</div>
+          <div class="item" *ngIf="columna.titulo!=='***' && columna.campo!=='***'"><strong [innerHtml]="columna.titulo"></strong>:<span [innerHtml]="columna.campo[columna.titulo]"></span></div>
           <div class="item" *ngIf="columna.titulo=='***' && columna.campo=='***'"><hr/></div>
         </div>
       </div>

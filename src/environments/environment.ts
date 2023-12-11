@@ -1,4 +1,4 @@
-const DOMAIN = "https://apoyofab.educacionbogota.edu.co:7733";
+const DOMAIN = "http://ec2-44-208-199-205.compute-1.amazonaws.com";
 export const environment = {
   DOMAIN: DOMAIN,
   production: false,

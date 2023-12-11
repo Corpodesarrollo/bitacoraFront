@@ -43,7 +43,7 @@ export class BitacoraComponent implements OnInit {
   public columnasTablaBitacora: ColumnaTabla[] = [
     { titulo: 'Fecha-Hora', campo: 'fechaRegistro' },
     { titulo: 'Usuario-Perfil', campo: 'usuario' },
-    { titulo: 'Modulo-submodulo', campo: 'submodulo' },
+    { titulo: 'Módulo-Submódulo', campo: 'submodulo' },
     { titulo: 'Tipo de Log', campo: 'tipoLog' },
   ];
 
@@ -179,7 +179,7 @@ export class BitacoraComponent implements OnInit {
       });
     }
   }
-  
+
   exportar(datos: any): void {
     if (datos?.tipo == 'pdf') {
       this.consultasService.exportarBitacoraPDF(datos?.fila?.id).subscribe((resultado:any) => {
@@ -201,5 +201,5 @@ export class BitacoraComponent implements OnInit {
     downloadLink.href = linkSource;
     downloadLink.download = fileName;
     downloadLink.click();
-}  
+}
 }
