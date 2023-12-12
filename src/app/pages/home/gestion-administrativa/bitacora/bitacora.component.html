@@ -1,10 +1,11 @@
-<div class="filter-container">
+<app-cargando *ngIf="cargandoInformacion"></app-cargando>
+<div class="filter-container" *ngIf="!cargandoInformacion">
   <h3>Bitácora</h3>
   <p>Seleccione un rango de fecha de acuerdo a lo que busca</p>
   <form [formGroup]="filtrosFormGroup">
     <div class="main-filters">
       <div class="row">
-        <div class="campo mt-2 col-4">
+        <div class="campo mt-2 col-md-5">
           <div class="input-wrapper">
             <label for="usuario">
               Fecha de inicio: <span class="asterisco">*</span>
@@ -13,6 +14,7 @@
               account_circle
             </span>
             <input
+              [ngStyle]="{'border-color':invalidFechaIni?'red':'black'}"
               formControlName="fechaInicio"
               type="text"
               placeholder="Seleccione la fecha de inicio"
@@ -31,10 +33,10 @@
             </span>
           </div>
           <div class="contenedor_errores">
-            <span class="campo_requerido">DD/MM/YYYY</span>
+            <span [ngStyle]="{'color':invalidFechaIni?'red':'black'}" class="campo_requerido">DD/MM/AAAA</span>
           </div>
         </div>
-        <div class="campo mt-2 col-4">
+        <div class="campo mt-2 col-md-5">
           <div class="input-wrapper">
             <label for="usuario">
               Fecha de finalizacion: <span class="asterisco">*</span>
@@ -43,8 +45,9 @@
               account_circle
             </span>
             <input
+              [ngStyle]="{'border-color':invalidFechaFin?'red':'black'}"
               formControlName="fechaFin"
-              placeholder="Seleccione la fecha de finalizacion"
+              placeholder="Seleccione la fecha de fin"
               class
               (click)="date2.toggle()"
               [minDate]="minDate"
@@ -59,10 +62,10 @@
             </span>
           </div>
           <div class="contenedor_errores">
-            <span class="campo_requerido">DD/MM/YYYY</span>
+            <span [ngStyle]="{'color':invalidFechaFin?'red':'black'}" class="campo_requerido">DD/MM/AAAA</span>
           </div>
         </div>
-        <div class="mb-2 mt-3 col-3">
+        <div class="mb-2 mt-3 col-md-2">
           <button
             type="submit"
             class="btn boton_secundario"
@@ -159,8 +162,10 @@
   [nPag]="nPag"
   [itemXpag]="itemXpag"
   [totalPag]="totalPag"
+  [totalReg]="totalReg"
   (exportarDatos)="exportar($event)"
   [datos]="datosBitacora"
   [columnasTabla]="columnasTablaBitacora"
   titulo="Log de acciones"
-  subtitulo="Descargar logs:"></app-tabla-registro-detalle>
+  subtitulo="Descargar logs:"
+  *ngIf="!cargandoInformacion"></app-tabla-registro-detalle>

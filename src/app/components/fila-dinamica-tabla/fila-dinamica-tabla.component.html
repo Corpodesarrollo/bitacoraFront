@@ -13,6 +13,9 @@
     <div class="general-detalle">
       <div class="datos-detalle">
         <label class="titulo-detalle"><strong>Descripción de log</strong></label>
+        <div class="items-datos-detalle">
+          <div class="item"><strong>Estado de la actividad</strong>:<span> Correcto</span></div>
+        </div>
         <div class="items-datos-detalle" *ngFor="let columna of columnasDetalle">
           <div class="item" *ngIf="columna.titulo!=='***' && columna.campo!=='***'"><strong [innerHtml]="columna.titulo"></strong>:<span [innerHtml]="columna.campo[columna.titulo]"></span></div>
           <div class="item" *ngIf="columna.titulo=='***' && columna.campo=='***'"><hr/></div>

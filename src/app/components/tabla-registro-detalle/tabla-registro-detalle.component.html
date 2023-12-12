@@ -28,17 +28,17 @@
   </ng-container>
   <div class="d-flex flex-row footer-tabla">
     <span class="paginacion-tabla">
-      {{nPag+1}} – {{itemXpag}} de {{totalPag}}
+      {{itemXpag}} Registros por página - Página {{nPag+1}} de {{totalPag}} paginas - Total de registros {{totalReg}}
     </span>
     <div class="paginacion-botones">
-      <img class="icono" src="assets//iconos/tabla_primer_pag_disabled.svg" *ngIf="nPag==0"/>
-      <img class="icono" src="assets//iconos/tabla_primer_pag.svg" *ngIf="nPag>0" (click)="primeraPag()"/>
-      <img class="icono" src="assets//iconos/tabla_pag_anterior_disabled.svg" *ngIf="nPag==0"/>
-      <img class="icono" src="assets//iconos/tabla_pag_anterior.svg" *ngIf="nPag>0" (click)="anteriorPag()"/>
-      <img class="icono" src="assets//iconos/tabla_pag_siguiente_disabled.svg" *ngIf="nPag==totalPag-1"/>
-      <img class="icono" src="assets//iconos/tabla_pag_siguiente.svg" *ngIf="nPag<totalPag-1" (click)="siguientePag()"/>
-      <img class="icono" src="assets//iconos/tabla_ultima_pag_disabled.svg" *ngIf="nPag==totalPag-1"/>
-      <img class="icono" src="assets//iconos/tabla_ultima_pag.svg" *ngIf="nPag<totalPag-1" (click)="ultimaPag()"/>
+      <img src="assets//iconos/tabla_primer_pag_disabled.svg" *ngIf="nPag==0"/>
+      <img style="cursor: pointer;" src="assets//iconos/tabla_primer_pag.svg" *ngIf="nPag>0" (click)="primeraPag()"/>
+      <img src="assets//iconos/tabla_pag_anterior_disabled.svg" *ngIf="nPag==0"/>
+      <img style="cursor: pointer;" src="assets//iconos/tabla_pag_anterior.svg" *ngIf="nPag>0" (click)="anteriorPag()"/>
+      <img src="assets//iconos/tabla_pag_siguiente_disabled.svg" *ngIf="nPag==totalPag-1"/>
+      <img style="cursor: pointer;" src="assets//iconos/tabla_pag_siguiente.svg" *ngIf="nPag<totalPag-1" (click)="siguientePag()"/>
+      <img src="assets//iconos/tabla_ultima_pag_disabled.svg" *ngIf="nPag==totalPag-1"/>
+      <img style="cursor: pointer;" src="assets//iconos/tabla_ultima_pag.svg" *ngIf="nPag<totalPag-1" (click)="ultimaPag()"/>
     </div>
   </div>
 </div>

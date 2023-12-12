@@ -27,6 +27,7 @@ export class BitacoraComponent implements OnInit {
   public mostrarFiltrosAvanzados: boolean = false;
 
   public filtrosFormGroup: FormGroup;
+  cargandoInformacion:boolean = false;
 
   public listaUsuarios: any[];
   public listaColegios: any[];
@@ -39,6 +40,7 @@ export class BitacoraComponent implements OnInit {
   public nPag:number = 0;
   public itemXpag:number = 5;
   public totalPag:number = 1;
+  public totalReg:number = 0;
 
   public columnasTablaBitacora: ColumnaTabla[] = [
     { titulo: 'Fecha-Hora', campo: 'fechaRegistro' },
@@ -52,6 +54,8 @@ export class BitacoraComponent implements OnInit {
   public informacionUsuario: AccesoPerfil;
   public idUsuario: string;
   public buscador: string = null;
+  public invalidFechaIni: boolean = false;
+  public invalidFechaFin: boolean = false;
 
   public constructor(
     private consultasService: ConsultasService,
@@ -82,10 +86,12 @@ export class BitacoraComponent implements OnInit {
     }
     this.initFiltros();
     this.filtrosFormGroup.get('fechaInicio').valueChanges.subscribe((value) => {
+      this.invalidFechaIni = false;
       this.consultarBitacora(0);
       //this.minDate = new NgbDate(value.year, value.month, value.day);
     });
     this.filtrosFormGroup.get('fechaFin').valueChanges.subscribe((value) => {
+      this.invalidFechaFin = false;
       this.consultarBitacora(0);
       //this.maxDate = new NgbDate(value.year, value.month, value.day);
     });
@@ -172,6 +178,7 @@ export class BitacoraComponent implements OnInit {
         this.datosBitacora = resultado.data as DatosBitacora[];
         if(this.datosBitacora.length > 0) {
           this.totalPag = Math.ceil(this.datosBitacora[0].totalPag/this.itemXpag);
+          this.totalReg = this.datosBitacora[0].totalPag;
         }
         this.datosBitacora.map((registro:DatosBitacora) => {
           registro.fechaRegistro = moment(registro.fechaRegistro).format('DD/MM/YYYY h:mm a');
@@ -187,12 +194,21 @@ export class BitacoraComponent implements OnInit {
           registro.detalle = decodeURIComponent(registro.detalle);
         })
       });
+    } else{
+      if (!datos.fechaInicio) {
+        this.invalidFechaIni = true;
+      }
+      if (!datos.fechaFin) {
+        this.invalidFechaFin = true;
+      }
     }
   }
 
   exportar(datos: any): void {
+    this.cargandoInformacion = true;
     if (datos?.tipo == 'pdf') {
       this.consultasService.exportarBitacoraPDF(datos?.fila?.id).subscribe((resultado:any) => {
+        console.log(resultado);
         if(resultado?.data)
           this.downloadFile(resultado?.data, "application/pdf", "Bitacora.pdf");
       });
@@ -211,5 +227,7 @@ export class BitacoraComponent implements OnInit {
     downloadLink.href = linkSource;
     downloadLink.download = fileName;
     downloadLink.click();
-}
+    this.cargandoInformacion = false;
+  }
+
 }

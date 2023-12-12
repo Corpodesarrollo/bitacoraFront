@@ -19,6 +19,7 @@ export class TablaRegistroDetalleComponent {
   @Input() nPag:number = 0;
   @Input() itemXpag:number = 5;
   @Input() totalPag:number = 5;
+  @Input() totalReg:number = 0;
 
   exportar(datos: any): void {
     let datosExportar: any;
