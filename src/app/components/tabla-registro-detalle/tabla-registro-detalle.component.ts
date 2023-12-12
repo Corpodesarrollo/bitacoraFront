@@ -15,6 +15,7 @@ export class TablaRegistroDetalleComponent {
   @Output() exportarDatos: EventEmitter<any> = new EventEmitter<any>();
   @Output() buscar: EventEmitter<string> = new EventEmitter<string>();
   @Output() consultarDatos: EventEmitter<any> = new EventEmitter<any>();
+  @Output() ordenar: EventEmitter<any> = new EventEmitter<any>();
 
   @Input() nPag:number = 0;
   @Input() itemXpag:number = 5;
@@ -29,6 +30,9 @@ export class TablaRegistroDetalleComponent {
       datosExportar = datos;
     }
     this.exportarDatos.emit(datosExportar);
+  }
+  ordenarDatos(): void {
+    this.ordenar.emit();
   }
   buscarDatos(datos: any): void {
     this.buscar.emit(datos.target.value);

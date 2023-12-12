@@ -56,6 +56,7 @@ export class BitacoraComponent implements OnInit {
   public buscador: string = null;
   public invalidFechaIni: boolean = false;
   public invalidFechaFin: boolean = false;
+  public ordenar: string = 'ASC'
 
   public constructor(
     private consultasService: ConsultasService,
@@ -81,9 +82,7 @@ export class BitacoraComponent implements OnInit {
   ngOnInit(): void {
     this.idUsuario = this.usuarioService.obtenerUsuario()?.id;
     this.informacionUsuario = this.usuarioService.obtenerUsuarioPerCol();
-    if (this.informacionUsuario.perfil.id !== Perfiles.ADMINISTRADOR) { // Valida si es administrador
-      this.getColegios(this.idUsuario, true);
-    }
+    this.getColegios(this.idUsuario, true);
     this.initFiltros();
     this.filtrosFormGroup.get('fechaInicio').valueChanges.subscribe((value) => {
       this.invalidFechaIni = false;
@@ -95,21 +94,29 @@ export class BitacoraComponent implements OnInit {
       this.consultarBitacora(0);
       //this.maxDate = new NgbDate(value.year, value.month, value.day);
     });
-    this.usuarioService.obtenerMenu({perfil_id:0,institucion_id:this.informacionUsuario.colegio.id}).subscribe((respuesta: any) => {
+    if (this.informacionUsuario.perfil.id !== Perfiles.ADMINISTRADOR) { // Valida si es administrador
+      this.usuarioService.obtenerMenu({perfil_id:0,institucion_id:this.informacionUsuario.colegio.id}).subscribe((respuesta: any) => {
         this.listaModulos = respuesta?.data?.menuServiceCatalog;
         this.listaSubModulos = respuesta?.data?.subMenuGeneralPrivate;
     });
+    }
   }
 
   private initFiltros(): void {
+    let institucion = null;
+    if (this.informacionUsuario.perfil.id !== Perfiles.ADMINISTRADOR) { // Valida si es administrador
+      institucion = this.informacionUsuario.colegio.id;
+    }
     let bodyUsuarios = {
       nivelPerfil: this.informacionUsuario.perfil.idPerfilNivel,
       perfil: this.informacionUsuario.perfil.id,
-      institucion: this.informacionUsuario.colegio.id
+      institucion: institucion
     }
-    this.usuarioFiltrosService.obtenerUsarios(bodyUsuarios).subscribe((response: any) => {
-      this.listaUsuarios = response?.data as [];
-    });
+    if (this.informacionUsuario.perfil.id !== Perfiles.ADMINISTRADOR) {
+      this.usuarioFiltrosService.obtenerUsarios(bodyUsuarios).subscribe((response: any) => {
+        this.listaUsuarios = response?.data as [];
+      });
+    }
 
     this.tipoLogService.obtenerTiposLog().subscribe((response: any) => {
       this.listaTiposLog = response?.data;
@@ -122,7 +129,7 @@ export class BitacoraComponent implements OnInit {
     }
     this.colegioService.obtenerColegios(bodyColegios).subscribe((response: any) => {
       this.listaColegios = response?.data;
-      if (disableInput) {
+      if (disableInput && this.informacionUsuario.perfil.id !== Perfiles.ADMINISTRADOR) {
         this.filtrosFormGroup.controls['colegio'].setValue({codigo: this.informacionUsuario.colegio.id, nombre: this.informacionUsuario.colegio.nombre});
         this.filtrosFormGroup.get('colegio').disable();
         this.getSedes(this.informacionUsuario.colegio.id)
@@ -144,6 +151,16 @@ export class BitacoraComponent implements OnInit {
       this.listaJornadas = [];
       this.filtrosFormGroup.get('jornada').reset();
     });
+    if (this.informacionUsuario.perfil.id == Perfiles.ADMINISTRADOR) {
+      let bodyUsuarios = {
+        nivelPerfil: 6,
+        perfil: this.informacionUsuario.perfil.id,
+        institucion: idColegio
+      }
+      this.usuarioFiltrosService.obtenerUsarios(bodyUsuarios).subscribe((response: any) => {
+        this.listaUsuarios = response?.data as [];
+      });
+    }
 
   }
 
@@ -162,6 +179,15 @@ export class BitacoraComponent implements OnInit {
     this.consultarBitacora(0);
   }
 
+  public ordenarDatos(){
+    if (this.ordenar == 'ASC') {
+      this.ordenar = 'DESC';
+    } else{
+      this.ordenar = 'ASC';
+    }
+    this.consultarBitacora(0);
+  }
+
   public consultarBitacora(nPag?:number): void {
     this.nPag = nPag;
     let datos:any = this.filtrosFormGroup.getRawValue();
@@ -173,8 +199,8 @@ export class BitacoraComponent implements OnInit {
       filtros.paginaActual = nPag;
       filtros.itemsPagina = this.itemXpag;
       filtros.descripcion = this.buscador;
+      filtros.ordenar = this.ordenar;
       this.consultasService.consultaBitacoras(filtros).subscribe((resultado:any) => {
-        console.log(resultado);
         this.datosBitacora = resultado.data as DatosBitacora[];
         if(this.datosBitacora.length > 0) {
           this.totalPag = Math.ceil(this.datosBitacora[0].totalPag/this.itemXpag);

@@ -8,5 +8,6 @@ export interface DatosFiltrados {
     tipoLogBitacora:number,
     descripcion: string,
     paginaActual: number,
-    itemsPagina: number
+    itemsPagina: number,
+    ordenar: string
 }

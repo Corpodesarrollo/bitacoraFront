@@ -77,7 +77,7 @@
     </div>
     <div class="row advanced-filters" *ngIf="mostrarFiltrosAvanzados">
       <h6>Filtros avanzados</h6>
-      <div class="col-4">
+      <div class="col-md-4">
         <div class="input-wrapper">
           <label for="usuario" class="etiqueta_select"> Usuario:</label>
           <ng-select
@@ -91,7 +91,7 @@
           </ng-select>
         </div>
       </div>
-      <div class="col-4">
+      <div class="col-md-4">
         <div class="input-wrapper">
           <label for="usuario" class="etiqueta_select"> Colegio:</label>
           <ng-select
@@ -104,7 +104,7 @@
           </ng-select>
         </div>
       </div>
-      <div class="col-4">
+      <div class="col-md-4">
         <div class="input-wrapper">
           <label for="usuario" class="etiqueta_select"> Sede: </label>
           <ng-select
@@ -118,7 +118,7 @@
           </ng-select>
         </div>
       </div>
-      <div class="col-4">
+      <div class="col-md-4">
         <div class="input-wrapper">
           <label for="usuario" class="etiqueta_select"> Jornada: </label>
           <ng-select
@@ -131,7 +131,7 @@
           </ng-select>
         </div>
       </div>
-      <div class="col-4">
+      <div class="col-md-4">
         <div class="input-wrapper">
           <label for="usuario" class="etiqueta_select"> Tipo de log: </label>
           <ng-select
@@ -144,7 +144,7 @@
           </ng-select>
         </div>
       </div>
-      <div class="mb-2 mt-3 col-4 submit-button">
+      <div class="mb-2 mt-3 col-md-4 submit-button">
         <button
           type="submit"
           class="btn boton_primario"
@@ -158,6 +158,7 @@
 
 <app-tabla-registro-detalle
   (buscar)="buscarEnTabla($event)"
+  (ordenar)="ordenarDatos()"
   (consultarDatos)="consultarBitacora($event)"
   [nPag]="nPag"
   [itemXpag]="itemXpag"
