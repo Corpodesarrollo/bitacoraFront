@@ -9,8 +9,9 @@ export interface DatosBitacora {
   jornada:number,
   sede:number,
   perfil:number,
-  detalle:string
-  totalPag:number
+  detalle:string,
+  totalPag:number,
+  nomPerfil:string
 }
 
 

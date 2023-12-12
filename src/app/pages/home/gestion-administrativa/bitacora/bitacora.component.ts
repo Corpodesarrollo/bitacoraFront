@@ -51,6 +51,8 @@ export class BitacoraComponent implements OnInit {
 
   public informacionUsuario: AccesoPerfil;
   public idUsuario: string;
+  public buscador: string = null;
+
   public constructor(
     private consultasService: ConsultasService,
     private formBuilder: FormBuilder,
@@ -149,17 +151,24 @@ export class BitacoraComponent implements OnInit {
 
   }
 
+  public buscarEnTabla(buscar: string){
+    this.buscador = buscar;
+    this.consultarBitacora(0);
+  }
+
   public consultarBitacora(nPag?:number): void {
     this.nPag = nPag;
     let datos:any = this.filtrosFormGroup.getRawValue();
     if(datos.fechaInicio && datos.fechaFin) {
-      datos.fechaInicio = new Date(datos.fechaInicio.year,datos.fechaInicio.month-1,datos.fechaInicio.day,-5,0,0);
-      datos.fechaFin = new Date(datos.fechaFin.year,datos.fechaFin.month-1,datos.fechaFin.day,18,59,59);
+      datos.fechaInicio = new Date(datos.fechaInicio.year,datos.fechaInicio.month-1,datos.fechaInicio.day,0,0,0);
+      datos.fechaFin = new Date(datos.fechaFin.year,datos.fechaFin.month-1,datos.fechaFin.day,23,59,59);
       datos.colegio = datos?.colegio?.codigo;
       let filtros:DatosFiltrados = datos;
       filtros.paginaActual = nPag;
       filtros.itemsPagina = this.itemXpag;
+      filtros.descripcion = this.buscador;
       this.consultasService.consultaBitacoras(filtros).subscribe((resultado:any) => {
+        console.log(resultado);
         this.datosBitacora = resultado.data as DatosBitacora[];
         if(this.datosBitacora.length > 0) {
           this.totalPag = Math.ceil(this.datosBitacora[0].totalPag/this.itemXpag);
@@ -167,6 +176,7 @@ export class BitacoraComponent implements OnInit {
         this.datosBitacora.map((registro:DatosBitacora) => {
           registro.fechaRegistro = moment(registro.fechaRegistro).format('DD/MM/YYYY h:mm a');
           registro.usuario = this.listaUsuarios?.find(usuario => usuario.codigo === registro.usuario)?.nombre;
+          registro.usuario = registro.usuario + ' - ' + registro.nomPerfil;
           registro.modulo = this.listaModulos?.find(modulo => Number(modulo.serCatCodigo) === registro.modulo)?.catNombre;
           registro.submodulo = this.listaSubModulos?.find(submodulo => Number(submodulo.serCodigo) === registro.submodulo)?.serNombre;
           if(registro.modulo && registro.submodulo)

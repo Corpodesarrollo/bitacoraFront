@@ -6,7 +6,7 @@ export interface DatosFiltrados {
     sede:number,
     jornada:number,
     tipoLogBitacora:number,
-    descripcion: null,
+    descripcion: string,
     paginaActual: number,
     itemsPagina: number
 }

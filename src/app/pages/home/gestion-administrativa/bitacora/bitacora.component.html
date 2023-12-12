@@ -1,5 +1,5 @@
 <div class="filter-container">
-  <h3>Bitacora</h3>
+  <h3>Bitácora</h3>
   <p>Seleccione un rango de fecha de acuerdo a lo que busca</p>
   <form [formGroup]="filtrosFormGroup">
     <div class="main-filters">
@@ -154,6 +154,7 @@
 </div>
 
 <app-tabla-registro-detalle
+  (buscar)="buscarEnTabla($event)"
   (consultarDatos)="consultarBitacora($event)"
   [nPag]="nPag"
   [itemXpag]="itemXpag"
@@ -162,4 +163,4 @@
   [datos]="datosBitacora"
   [columnasTabla]="columnasTablaBitacora"
   titulo="Log de acciones"
-  subtitulo="Decargar logs:"></app-tabla-registro-detalle>
+  subtitulo="Descargar logs:"></app-tabla-registro-detalle>
